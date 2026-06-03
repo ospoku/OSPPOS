@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Identity;
 using DMX.ViewModels;
-using DMX.Models;
+using OSPPOS.Models;
 
 namespace DMX.ViewComponents
 {

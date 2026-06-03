@@ -3,12 +3,12 @@ using AspNetCoreHero.ToastNotification.Extensions;
 using DMX.Authorization;
 using DMX.Data;
 using OSPPOS.Helpers;
-using DMX.Models;
 using DMX.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
+using OSPPOS.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);

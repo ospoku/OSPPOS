@@ -1,4 +1,5 @@
 ﻿using DMX.Data;
+using OSPPOS.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 

@@ -4,6 +4,7 @@ using DMX.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OSPPOS.Models;
 using System.Threading.Tasks;
 
 namespace DMX.Controllers

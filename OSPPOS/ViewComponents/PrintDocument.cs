@@ -5,6 +5,7 @@ using DMX.ViewModels;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using OSPPOS.Models;
 using System.Web;
 
 namespace DMX.ViewComponents

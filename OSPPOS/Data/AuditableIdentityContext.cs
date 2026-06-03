@@ -1,9 +1,9 @@
-﻿using DMX.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using OSPPOS.Enums;
+using OSPPOS.Models;
 
-namespace DMX.Data
+namespace OSPPOS.Data
 {
 
 

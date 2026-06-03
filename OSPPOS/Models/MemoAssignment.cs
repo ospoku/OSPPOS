@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using DMX.Data;
+using OSPPOS.Models;
 
 namespace DMX.Models
 {

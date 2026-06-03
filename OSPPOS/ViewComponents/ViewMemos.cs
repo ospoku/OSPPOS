@@ -1,10 +1,10 @@
 ﻿using DMX.Data;
-using DMX.Models;
 using DMX.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OSPPOS.Models;
 using static DMX.Constants.Permissions;
 
 

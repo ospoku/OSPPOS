@@ -1,4 +1,4 @@
-﻿namespace DMX.Data
+﻿namespace OSPPOS.Data
 {
     public class Audit
     {

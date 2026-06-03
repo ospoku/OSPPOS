@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace DMX.Models
+namespace OSPPOS.Models
 {
     public class AppRole : IdentityRole
     {

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using DMX.Data;
-using DMX.Models;
 using DMX.ViewModels;
+using OSPPOS.Models;
 
 namespace DMX.ViewComponents
 {

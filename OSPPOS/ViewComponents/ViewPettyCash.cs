@@ -2,7 +2,7 @@
 using DMX.Data;
 using DMX.ViewModels;
 using Microsoft.AspNetCore.Identity;
-using DMX.Models;
+using OSPPOS.Models;
 namespace DMX.ViewComponents
 {
     public class ViewPettyCash(XContext dContext, UserManager<AppUser> userManager) : ViewComponent

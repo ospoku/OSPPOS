@@ -1,8 +1,8 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using DMX.Data;
-using DMX.Models;
 using DMX.ViewModels;
 using Microsoft.AspNetCore.Identity;
+using OSPPOS.Models;
 using System.Security.Claims;
 using static DMX.Constants.Permissions;
 

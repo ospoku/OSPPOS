@@ -1,6 +1,7 @@
 ﻿using DMX.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using OSPPOS.Models;
 using System.Security.Claims;
 
 namespace DMX.Data

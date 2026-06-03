@@ -4,6 +4,7 @@ using DMX.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using OSPPOS.Models;
 using System.Xml.Linq;
 
 namespace DMX.ViewComponents

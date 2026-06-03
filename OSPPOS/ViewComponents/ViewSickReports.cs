@@ -3,7 +3,7 @@ using DMX.Data;
 using DMX.ViewModels;
 using static DMX.Constants.Permissions;
 using Microsoft.AspNetCore.Identity;
-using DMX.Models;
+using OSPPOS.Models;
 
 namespace DMX.ViewComponents
 {

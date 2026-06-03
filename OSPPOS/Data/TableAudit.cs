@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DMX.Data
+namespace OSPPOS.Data
 {
     public class TableAudit
     {

@@ -9,6 +9,7 @@ using DMX.ViewModels;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using OSPPOS.Models;
 using System.Data;
 using System.Globalization;
 namespace DMX.Controllers

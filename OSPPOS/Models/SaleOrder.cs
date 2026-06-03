@@ -1,6 +1,4 @@
-﻿using DMX.Models;
-
-namespace OSPPOS.Models
+﻿namespace OSPPOS.Models
 {
    
 

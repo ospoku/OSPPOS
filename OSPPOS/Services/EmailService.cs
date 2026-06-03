@@ -1,6 +1,6 @@
-﻿using DMX.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using NuGet.Protocol.Plugins;
+using OSPPOS.Models;
 using System.Net;
 using System.Net.Mail;
 using static DMX.Constants.Permissions;

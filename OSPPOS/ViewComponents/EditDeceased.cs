@@ -1,5 +1,4 @@
 ﻿using DMX.Data;
-using DMX.Models;
 using DMX.ViewModels;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
@@ -7,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.DotNet.Scaffolding.Shared;
 using Microsoft.EntityFrameworkCore;
+using OSPPOS.Models;
 using System.Web;
 
 namespace DMX.ViewComponents

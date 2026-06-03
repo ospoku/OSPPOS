@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using DMX.Helpers;
 using DMX.Services;
 using Microsoft.AspNetCore.Components.Web;
+using OSPPOS.Models;
 
 
 namespace DMX.Controllers

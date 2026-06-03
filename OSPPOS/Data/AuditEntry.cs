@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using OSPPOS.Enums;
 
-namespace DMX.Data
+namespace OSPPOS.Data
 
 {
     public class AuditEntry(EntityEntry entry)

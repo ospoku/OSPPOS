@@ -3,6 +3,7 @@ using DMX.Models;
 using Humanizer.Localisation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using OSPPOS.Models;
 using System.Security.Claims;
 
 namespace DMX.Authorization

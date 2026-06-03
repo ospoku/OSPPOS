@@ -2,10 +2,10 @@
 using DMX.Data;
 using DMX.ViewModels;
 using Microsoft.AspNetCore.Identity;
-using DMX.Models;
 using DMX.Services;
 using System;
 using Microsoft.EntityFrameworkCore;
+using OSPPOS.Models;
 
 namespace DMX.ViewComponents
 {

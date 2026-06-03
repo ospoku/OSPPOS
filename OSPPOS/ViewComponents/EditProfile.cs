@@ -1,7 +1,7 @@
-﻿using DMX.Models;
-using DMX.ViewModels;
+﻿using DMX.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using OSPPOS.Models;
 using static DMX.Constants.Permissions;
 
 namespace DMX.ViewComponents

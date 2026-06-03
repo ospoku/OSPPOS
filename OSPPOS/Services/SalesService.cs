@@ -1,12 +1,11 @@
-﻿using DrinksPOS.ViewModels;
+﻿
+using Microsoft.EntityFrameworkCore;
 using OSPPOS.Models;
 using System;
 
 namespace OSPPOS.Services
 {
-    public class SalesService
-    {
-
+   
 
         public interface ISalesService
         {
@@ -19,15 +18,15 @@ namespace OSPPOS.Services
 
         public class SalesService : ISalesService
         {
-            private readonly AppDbContext _db;
-            public SalesService(AppDbContext db) => _db = db;
+            private readonly XContext ctx;
+        public SalesService(XContext ctx) => this.ctx = ctx;
 
             public async Task<(bool, string, SaleOrder?)> CreateSaleAsync(CreateSaleVm vm, string userId)
             {
                 // Validate stock availability
                 foreach (var item in vm.Items)
                 {
-                    var product = await _db.Products.FindAsync(item.ProductId);
+                    var product = await ctx.Products.FindAsync(item.ProductId);
                     if (product is null) return (false, $"Product id {item.ProductId} not found.", null);
                     if (product.CurrentStock < item.Quantity)
                         return (false, $"Insufficient stock for {product.Name}. Available: {product.CurrentStock}", null);
@@ -58,12 +57,12 @@ namespace OSPPOS.Services
                     });
 
                     // Deduct stock
-                    var product = await _db.Products.FindAsync(item.ProductId);
+                    var product = await ctx.Products.FindAsync(item.ProductId);
                     if (product is not null) product.CurrentStock -= item.Quantity;
                 }
 
-                _db.SaleOrders.Add(order);
-                await _db.SaveChangesAsync();
+                ctx.SaleOrders.Add(order);
+                await ctx   .SaveChangesAsync();
 
                 // Record initial payment for cash sales
                 if (vm.SaleType == SaleType.Cash && vm.CashReceived > 0)
@@ -85,7 +84,7 @@ namespace OSPPOS.Services
 
             public async Task<(bool, string)> RecordPaymentAsync(RecordPaymentVm vm, string userId)
             {
-                var order = await _db.SaleOrders
+                var order = await ctx.SaleOrders
                     .Include(o => o.Payments)
                     .FirstOrDefaultAsync(o => o.Id == vm.SaleOrderId);
 
@@ -104,7 +103,7 @@ namespace OSPPOS.Services
                     RecordedById = userId
                 };
 
-                _db.Payments.Add(payment);
+                ctx.Payments.Add(payment);
 
                 // Reload payments to recalculate
                 var totalPaid = order.Payments.Sum(p => p.Amount) + vm.Amount;
@@ -112,12 +111,12 @@ namespace OSPPOS.Services
                     ? PaymentStatus.Paid
                     : totalPaid > 0 ? PaymentStatus.Partial : PaymentStatus.Unpaid;
 
-                await _db.SaveChangesAsync();
+                await ctx.SaveChangesAsync();
                 return (true, string.Empty);
             }
 
             public async Task<SaleOrder?> GetOrderAsync(int id) =>
-                await _db.SaleOrders
+                await ctx.SaleOrders
                     .Include(o => o.Items).ThenInclude(i => i.Product)
                     .Include(o => o.Customer)
                     .Include(o => o.Payments)
@@ -144,7 +143,7 @@ namespace OSPPOS.Services
             public async Task<string> GenerateOrderNumberAsync()
             {
                 var year = DateTime.Today.Year;
-                var count = await _db.SaleOrders.CountAsync(o => o.OrderDate.Year == year);
+                var count = await ctx.SaleOrders.CountAsync(o => o.OrderDate.Year == year);
                 return $"INV-{year}-{(count + 1):D5}";
             }
         }
