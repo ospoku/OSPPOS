@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
+using OSPPOS.Data;
 using OSPPOS.Models;
 using System;
 
