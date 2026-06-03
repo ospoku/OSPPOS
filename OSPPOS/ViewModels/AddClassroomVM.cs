@@ -3,20 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using OSPPOS.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace DMX.ViewModels
-{
-    public class AddClassroomVM
-    {
-      
-      public int Capacity { get; set; }
-        public string Name { get; set; }
-
-    }
-}
-using DrinksPOS.Models;
-using System.ComponentModel.DataAnnotations;
- 
-namespace DrinksPOS.ViewModels;
 
 // ─── Stock Intake ──────────────────────────────────────────────
 public class CreateStockBatchVm
