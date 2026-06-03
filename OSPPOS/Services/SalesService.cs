@@ -6,13 +6,7 @@ namespace OSPPOS.Services
 {
     public class SalesService
     {
-        Salesservice · CS
-using DrinksPOS.Data;
-using DrinksPOS.Models;
-using DrinksPOS.ViewModels;
-using Microsoft.EntityFrameworkCore;
- 
-namespace DrinksPOS.Services;
+
 
     public interface ISalesService
     {
