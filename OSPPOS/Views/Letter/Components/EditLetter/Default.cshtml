@@ -1,0 +1,120 @@
+﻿
+@model DMX.ViewModels.EditLetterVM;
+
+
+<div class="modal-header">
+
+                <h6>Edit Letter</h6>
+    <button type="button" onclick="document.getElementById('EditLetterDialog').close()" aria-label="Close" class="btn btn-sm btn-outline-danger">Close</button>
+
+            </div>
+            <div class="modal-body">
+                        
+    <input type="hidden" asp-for="@Model.Id" />
+                                @using (Html.BeginForm("EditLetter", "Letter", FormMethod.Post, new { enctype = "multipart/form-data", id="editLetterForm" }))
+                                {
+   
+                    <div class="floating-group">
+                        <input type="text" asp-for="@Model.Subject"  placeholder="" required />
+                        <label >Subject</label>
+                    </div>
+                    <div class="floating-group">
+                        <input type="text" asp-for="Source"  placeholder="" required />
+                        <label >Document Source</label>
+                    </div>
+                    <div class="floating-group">
+                        <input type="date" asp-for="@Model.DateReceived"   placeholder="" required />
+                        <label >Receipt Date</label>
+                    </div>
+                    <div class="floating-group">
+                        <input type="date" asp-for="@Model.DocumentDate"   placeholder="" required />
+                        <label >Document Date</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="file" id="formFile" name="formFile" asp-for="UploadFile" hidden />
+                        <label for="formFile" class="uploadLabel">
+                            <i class="fa fa-cloud-upload" style="color: #1e4c82; font-size: medium"></i>
+                            <label id="sFile">Select file</label>
+                            <span id="file-chosen">No file chosen</span>
+                        </label>
+                    </div>
+                    <div class="floating-group">
+                        <input  asp-for="@Model.AdditionalNotes" type="text" placeholder="" required />
+                        <label >Additional Notes</label>
+                    </div>
+                    <div class="floating-group">
+                        <select id="usersEditLetter" class="dmx-choices" asp-items="@Model.UsersList" asp-for="@Model.SelectedUsers"></select>
+                        <label >Select Users</label>
+                    </div>
+                    <button id="saveButton" type="button" class="btn btn-block btn-primary">Save</button>
+                }
+            </div>
+ 
+
+<script>
+    $(document).ready(function () {
+        $('#usersEditLetter').select2({ dropdownParent: $('#EditLetter') });
+
+        const actualBtn = document.getElementById('formFile');
+        const selectFile = document.getElementById('sFile');
+        const fileChosen = document.getElementById('file-chosen');
+
+        actualBtn.addEventListener('change', function () {
+            fileChosen.textContent = this.files[0].name;
+            selectFile.textContent = "Selected file";
+        });
+
+//         document.getElementById("saveButton").addEventListener("click", function (event) 
+//         {
+//             event.preventDefault(); // Prevent immediate submission
+//                 const dialog = document.getElementById('EditLetterDialog');
+
+//     dialog.close(); // hide dialog first
+//             Swal.fire({
+//                 title: 'Are you sure?',
+//                 text: "Do you really want to save this record?",
+//                 icon: 'warning',
+//                 showCancelButton: true,
+//                 confirmButtonColor: '#3085d6',
+//                 cancelButtonColor: '#d33',
+//                 confirmButtonText: 'Yes, save it!'
+//             }).then((result) => {
+//                 if (result.isConfirmed) {
+//                     document.getElementById("editLetterForm").submit(); // Correct form ID
+//                 }
+//             });
+//         });
+//     });
+// 
+
+
+
+    document.getElementById("saveButton").addEventListener("click", function (event) {
+        event.preventDefault(); // prevent form from submitting immediately
+
+        const dialog = document.getElementById('EditLetterDialog');
+        const form = document.getElementById("editLetterForm");
+            dialog.close();
+        // ✅ Keep the dialog open while showing SweetAlert
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you really want to save this record?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, save it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // ✅ Submit the form and close the dialog only on confirmation
+                form.submit();
+                dialog.close();
+            } else {
+                // ✅ If canceled, just restore focus to the dialog
+                dialog.showModal(); // re-show if needed
+                dialog.focus();
+            }
+        });
+    });
+});
+</script>

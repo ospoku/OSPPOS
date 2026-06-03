@@ -1,0 +1,162 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model DMX.ViewModels.MemoCommentVM
+@inject UserManager<AppUser> usm
+
+ <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Memo Printing</title>
+    <style type="text/css">
+        body {
+            font-family: Arial;
+            font-size: 15.6px;
+        }
+
+        .pos {
+            position: absolute;
+            z-index: 0;
+            left: 0px;
+            top: 0px;
+        }
+
+        .center {
+            text-align: center;
+            width: 100%;
+        }
+
+        .memo-content {
+            word-wrap: break-word; /* Ensure long words break and wrap */
+            word-break: break-word; /* Ensure words break to prevent overflow */
+            margin-top: 75px; /* Add space after the <hr> */
+            padding: 10px; /* Add padding to ensure content doesn't touch the edges */
+        }
+
+        hr {
+            border: 1px solid #007BFF;
+            width: 100%;
+            margin-top: 10px; /* Adjust margin for the horizontal line */
+            margin-bottom: 20px; /* Adjust margin for the horizontal line */
+        }
+    </style>
+</head>
+<body>
+    <!-- Logo -->
+    <div class="pos" id="_0:0" style="top:15px">
+        <img name="_1100:850" src="~/images/Logo.jpg" height="150" width="100" border="0" usemap="#Map">
+    </div>
+
+    <!-- Address and other details -->
+    <div class="pos" id="_517:39" style="top:39px;left:500px">
+        <span id="_16.1" style="font-weight:bold; font-family:Arial; font-size:12px; color:#221f1f">
+            P. O. BOX 26, Bolgatanga
+        </span>
+    </div>
+    <div class="pos" id="_150:44" style="top:44px;left:120px">
+        <span id="_26.8" style="font-weight:bold; font-family:Arial; font-size:26.8px; color:#000000">
+            GHANA
+        </span>
+    </div>
+    <div class="pos" id="_517:68" style="top:58px;left:500px">
+        <span id="_16.1" style="font-weight:bold; font-family:Arial; font-size:12px; color:#221f1f">
+            Digital Address: UB-0093-1594
+        </span>
+    </div>
+    <div class="pos" id="_150:81" style="top:81px;left:120px">
+        <span id="_26.8" style="font-weight:bold; font-family:Arial; font-size:26.8px; color:#000000">
+            HEALTH
+        </span>
+    </div>
+    <div class="pos" id="_517:95" style="top:90px;left:480px">
+        <span id="_10.3" style="font-family:Arial; font-size:10.3px; color:#221f1f">
+            Quote this number and date on all correspondence
+        </span>
+    </div>
+    <div class="pos" id="_516:115" style="top:115px;left:516px">
+        <span id="_10.6" style="font-family:Arial; font-size:10.6px; color:#221f1f">
+            My Ref. No.   <u> </u><u> </u>
+        </span>
+    </div>
+    <div class="pos" id="_756:115" style="top:115px;left:756px">
+        <span id="_9.8" style="font-family:Arial; font-size:9.8px; color:#221f1f">
+        </span>
+    </div>
+    <div class="pos" id="_150:118" style="top:118px;left:120px">
+        <span id="_27.2" style="font-weight:bold; font-family:Arial; font-size:27.2px; color:#000000">
+            SERVICE
+        </span>
+    </div>
+    <div class="pos" id="_516:136" style="top:136px;left:516px">
+        <span id="_10.8" style="font-family:Arial; font-size:10.8px; color:#221f1f">
+            Your Ref. No. <u> </u>
+        </span>
+    </div>
+    <div class="pos" id="_756:136" style="top:136px;left:756px">
+        <span id="_9.8" style="font-family:Arial; font-size:9.8px; color:#221f1f">
+        </span>
+    </div>
+    <div class="pos" id="_150:152" style="top:152px;left:120px">
+        <span id="_12.1" style="font-weight:bold; font-family:Arial; font-size:12.1px; color:#221f1f">
+            UPPER EAST REGIONAL HOSPITAL
+        </span>
+    </div>
+    <div class="pos" id="_516:157" style="top:157px;left:516px">
+        <span id="_10.1" style="font-family:Arial; font-size:10.1px; color:#221f1f">
+            Date.   <u> </u>
+        </span>
+    </div>
+
+    <!-- Centered "INTERNAL MEMO" -->
+    <div class="center" style="margin-top:201px">
+        <span id="_16.0" style="font-weight:bold; font-family:Arial; font-size:16.0px; color:#000000">
+            INTERNAL MEMO
+        </span>
+    </div>
+
+    <!-- From, To, Subject -->
+    <div class="pos" id="_100:233" style="top:233px;left:10px">
+        <span id="_12.0" style="font-weight:bold; font-family:Arial; font-size:12.0px; color:#000000">
+            From: @Model.Sender
+        </span>
+    </div>
+    <div class="pos" id="_100:261" style="top:261px;left:10px">
+        <span id="_12.0" style="font-weight:bold; font-family:Arial; font-size:12.0px; color:#000000">
+            To:
+        </span>
+    </div>
+    <div class="pos" id="_100:289" style="top:289px;left:10px">
+        <span id="_12.0" style="font-weight:bold; font-family:Arial; font-size:12.0px; color:#000000">
+            Subject:@Model.Title
+        </span>
+    </div>
+
+    <!-- Horizontal Line -->
+    <hr />
+
+    <!-- Memo Content -->
+    <div class="memo-content">
+        @Html.Raw(@Model.MemoContent)
+    </div>
+
+    <!-- Footer -->
+    <div class="pos" id="_576:1017" style="top:1017px;left:576px">
+        <span id="_12.0" style="font-weight:bold;font-style:italic; font-family:Times New Roman; font-size:12.0px; color:#000000">
+            Tel:            +233 (0) 545 585 600
+        </span>
+    </div>
+    <div class="pos" id="_576:1033" style="top:1033px;left:576px">
+        <span id="_12.0" style="font-weight:bold;font-style:italic; font-family:Times New Roman; font-size:12.0px; color:#000000">
+            Email:        uppereast.rhuer@ghs.gov.gh
+        </span>
+    </div>
+    <div class="pos" id="_576:1050" style="top:1050px;left:576px">
+        <span id="_12.0" style="font-weight:bold;font-style:italic; font-family:Times New Roman; font-size:12.0px; color:#221f1f">
+            Website:     www.ghs.gov.gh
+        </span>
+    </div>
+</body>
+</html>
+ 
+
+
+

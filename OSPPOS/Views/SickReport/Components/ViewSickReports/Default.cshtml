@@ -1,0 +1,74 @@
+﻿
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService auth
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model IEnumerable<DMX.ViewModels.ViewSickReportsVM>;
+
+
+<div id="PlaceHolderHere"></div>
+
+<div class="card shadow mb-4">    
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary d-inline">Sick Report</h6>
+
+        <button class="btn btn-sm btn-rounded  btn-outline-primary fa-pull-right" data-bs-toggle="ajax-modal" data-bs-target="#AddSickReport" data-bs-url="@Url.Action("AddSickReport")"><i class="fa fa-fw fa-plus-circle"></i>Add Sick Report</button>    </div>    <div class="card-body">
+        <div class="card-body">
+            <div class="table-responsive">
+            <table class="table dataTables_wrapper">
+        
+            
+                <thead>
+                    <tr>
+                       
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Username</th>  
+                        <th>Username</th>   
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                      @foreach (var s in Model)
+                {
+                    <tr>
+                        
+                          <td>@s.SickReportId</td>
+                        <td> @s.SickReportId</td>
+
+                        <td>@s.SickReportId</td>
+                        <td>@s.SickReportId</td>
+                           <td>
+                                        <div class="btn-group" role="group">
+                                            <button id="btnGroupDrop1" type="button" class="btn btn-sm btn-rounded btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Select Action
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                     
+                                            <button data-bs-toggle="ajax-modal" data-bs-url="@Url.Action("EditSickReport")" class="dropdown-item-custom" data-bs-target="#EditMemo"><i style="width:15px; height:15px" class=" fa fa-edit mr-3"></i>Edit</button>
+                                        
+                                       
+                                        <a class="dropdown-item-custom" asp-action="PrintProfile" asp-controller="Client" asp-route-Id="protector.Protect(s.SickReportId)"><i style="width:15px; height:15px" class="fa fa-print mr-3"></i>Print</a>
+                                        
+                                      
+                                            <button type="button" data-bs-toggle="ajax-modal" data-bs-url="@Url.Action("ClientProfile")" class="dropdown-item-custom" data-bs-target="#ClientProfile"><i style="width:15px; height:15px" class="fa fa-comments mr-3"></i>Comment</button>
+                                         
+                                      
+                                                    <form asp-action="DeleteClient" asp-route-Id="" onsubmit="return jQueryAjaxDelete(this);">
+                                                        <button type="submit" class="dropdown-item-custom"><i style="width:15px; height:15px" class="fa fa-trash mr-3"></i>Delete</button>
+                                                </form>
+                                                
+                                            </div>
+                                        </div>
+
+
+                                    </td>
+                    </tr>
+             }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>

@@ -1,0 +1,24 @@
+﻿.dropdown-item-custom {
+    /*display: block;*/
+    width:auto;
+    padding: 0.25rem 1.0rem;
+    clear: both;
+    font-weight: 400;
+    color: #212529;
+    text-align: inherit;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+}
+
+    .dropdown-item-custom:hover, .dropdown-item-custom:focus {
+        /* color: #fff;*/
+     /*   text-decoration: none;
+         background-color: #448aff;*/
+    }
+
+    .dropdown-item-custom.active, .dropdown-item-custom:active {
+        /* color: #fff;*/
+/*        text-decoration: none;
+         background-color: #448aff;*/
+    }

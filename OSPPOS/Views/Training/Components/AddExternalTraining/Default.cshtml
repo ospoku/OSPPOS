@@ -1,0 +1,66 @@
+﻿
+@model DMX.ViewModels.AddExternalTrainingVM;
+
+<div class="modal fade" id="AddExternalTraining" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h6>Add Training</h6>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn btn-sm btn-outline-danger">Close</button>
+            </div>
+             @using (Html.BeginForm("AddExternalTraining", "Training", FormMethod.Post))
+            {
+            <div class="modal-body">
+
+           
+
+
+                    <div class="floating-group">
+                        <input type="text" asp-for="@Model.WorkshopTitle"  placeholder="" required/>
+                        <label >Workshop Title</label>
+                    </div>
+                    <div class="floating-group">
+                        <input type="text" asp-for="@Model.Description"  placeholder="" required />
+                        <label >Workshop Description</label>
+                    </div>
+                    <div class="floating-group">
+                        <input type="date" asp-for="@Model.TrainingDate"  asp-format="dd-MMM-yyyy" placeholder="" required/>
+                        <label >Date</label>
+                    </div>
+                    <div class="floating-group">
+                        <input type="number" asp-for="@Model.NumberofDays"  placeholder="" required/>
+                        <label >Number of Days</label>
+                    </div>
+                    <div class="floating-group">
+                        <input type="date" asp-for="@Model.DepartureDate"  asp-format="dd-MMM-yyyy" placeholder="" required />
+                        <label >Departure Date</label>
+                    </div>
+                    <div class="floating-group">
+                        <input type="date" asp-for="@Model.ReturnDate"  asp-format="dd-MMM-yyyy" placeholder="" required />
+                        <label >Return Date</label>
+                    </div>
+                    
+
+                    <div class="floating-group">
+
+                        <select id="selectExtUser" class="did-floating-select" style="width:100%" required asp-items="@Model.Users" asp-for="@Model.SelectedUsers"></select>
+                        <label >Select Users</label>
+                    </div>
+
+
+
+                    </div>
+                    <div class="modal-footer"><button class="btn btn-block btn-primary">Save</button></div>
+                }
+            </div>
+    </div>
+</div>
+
+    
+<script>
+    $(document).ready(function () {
+        $('#selectExtUser').select2({dropdownParent: $('#AddExternalTraining') });
+    });
+</script>

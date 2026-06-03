@@ -1,0 +1,43 @@
+﻿@using DMX.ViewComponents
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ul class="nav nav-pills nav-fill gap-2 p-1 small bg-primary rounded-1 shadow-sm" id="pillNav2" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link custom-tab rounded-1 active" id="pills-deceased-tab" data-bs-toggle="pill" data-bs-target="#pills-deceased" type="button" role="tab" aria-controls="pills-deceased" aria-selected="true"><i class="fas fa-fw fa-bed-pulse mr-1 text-danger"></i>Deceased Types</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link custom-tab rounded-1" id="pills-traveltypes-tab" data-bs-toggle="pill" data-bs-target="#pills-traveltypes" type="button" role="tab" aria-controls="pills-traveltypes" aria-selected="true"><i class="fas fa-fw fa-car mr-1 text-success"></i>Travel Types</button>
+        </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link custom-tab rounded-1" id="pills-departments-tab" data-bs-toggle="pill" data-bs-target="#pills-departments" type="button" role="tab" aria-controls="pills-departments" aria-selected="true"><i class="fas fa-fw fa-institution mr-1 text-info"></i>Departments</button>
+    </li>
+    <li class="nav-item" role="presentation">
+
+        <button class="nav-link custom-tab rounded-1" id="pills-transportModes-tab" data-bs-toggle="pill" data-bs-target="#pills-transportModes" type="button" role="tab" aria-controls="pills-transportModes" aria-selected="true"><i class="fas fa-fw fa-plane-departure mr-1 text-warning"></i>Transport Modes</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link custom-tab  rounded-1" id="pills-fees-tab" data-bs-toggle="pill" data-bs-target="#pills-pettycash" type="button" role="tab" aria-controls="pills-fees" aria-selected="true"><i class="fas fa-fw fa-cash-register mr-1 text-dark"></i>Cash Limit</button>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <button class="nav-link custom-tab rounded-1 " id="pills-fees-tab" data-bs-toggle="pill" data-bs-target="#pills-fees" type="button" role="tab" aria-controls="pills-fees" aria-selected="true"><i class="fas fa-fw fa-cart-shopping mr-1 text-dark"></i>Fees & Charges</button>
+    </li>
+    
+    <li class="nav-item" role="presentation">
+        <button class="nav-link custom-tab rounded-1" id="pills-perdiem-tab" data-bs-toggle="pill" data-bs-target="#pills-perdiem" type="button" role="tab" aria-controls="pills-perdiem" aria-selected="true"><i class="fas fa-fw fa-money-check-dollar mr-1 text-secondary"></i>Per Diems</button>
+    </li>
+    
+    </ul>
+<div class="tab-content mt-3" id="pills-tabContent">
+    <div class="tab-pane fade show active" id="pills-deceased" role="tabpanel" aria-labelledby="pills-deceased-tab">@await Component.InvokeAsync(nameof(ViewDeceasedTypes))</div>
+    <div class="tab-pane fade" id="pills-traveltypes" role="tabpanel" aria-labelledby="pills-traveltypes-tab">@await Component.InvokeAsync(nameof(ViewTravelTypes))</div>  
+    <div class="tab-pane fade" id="pills-transportModes" role="tabpanel" aria-labelledby="pills-transportModes-tab">@await Component.InvokeAsync(nameof(ViewModesOfTransport))</div>
+    <div class="tab-pane fade" id="pills-departments" role="tabpanel" aria-labelledby="pills-departments-tab">@await Component.InvokeAsync(nameof(ViewDepartments))</div>
+    <div class="tab-pane fade" id="pills-pettycash" role="tabpanel" aria-labelledby="pills-pettycash-tab">@await Component.InvokeAsync(nameof(ViewCashLimit))</div>
+    <div class="tab-pane fade" id="pills-fees" role="tabpanel" aria-labelledby="pills-fees-tab">@await Component.InvokeAsync(nameof(ViewFeesNCharges))</div>
+    <div class="tab-pane fade" id="pills-perdiem" role="tabpanel" aria-labelledby="pills-perdiem-tab">@await Component.InvokeAsync(nameof(ViewPerDiems))</div>
+</div>
+
+

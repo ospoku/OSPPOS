@@ -1,0 +1,35 @@
+﻿
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<AppUser> usm;
+@model DMX.ViewModels.ManageUserRolesVM;
+
+<dialog class="modal fade" id="ManageUserRoles">
+    
+            <div class="modal-header">
+                    <h6>Add/Remove Roles for<br /> <b>@usm.FindByIdAsync(@Model.UserId).Result.Fullname</b></h6> <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn btn-sm btn-outline-danger">Close</button>
+                </div>
+                @using (Html.BeginForm("ManageUserRoles","Account",FormMethod.Post))
+                { 
+                <div class="modal-body">
+                    @for (int i = 0; i < Model.UserRoles.Count(); i++)
+                    {
+                        <div class="form-check m-1">
+                            <input type="hidden" asp-for="@Model.UserRoles[i].Id" />
+                            <input type="hidden" asp-for="@Model.UserRoles[i].RoleName" />
+                            <input asp-for="@Model.UserRoles[i].Selected" class="form-check-input" />
+                            <label class="form-check-label" asp-for="@Model.UserRoles[i].Selected">
+                                @Model.UserRoles[i].RoleName
+                            </label>
+                        </div>
+                    }
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary btn-block">Update</button>
+              
+                </div>
+                }
+       
+      
+  
+</dialog>

@@ -1,0 +1,19 @@
+﻿
+.ellipsed-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px; /* Adjust based on your cell size */
+}
+
+.table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+}
+
+.table td, .table th {
+    vertical-align: middle;
+}
+
+

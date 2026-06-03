@@ -1,0 +1,141 @@
+﻿@model DMX.ViewModels.ServiceRequestCommentVM;
+
+<div class="modal fade" id="CommentServiceRequest" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="CommentMemoLabel">
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h6 id="CommentMemoLabel">Add Comment</h6>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn btn-sm btn-outline-danger">Close</button>
+            </div>
+            <div class="modal-body">
+                <div class="container mt-0">
+
+
+
+                    <!-- Nav pill tabs -->
+                    <ul class="nav nav-pills nav-fill gap-2 p-1 small bg-primary rounded-1 shadow-sm" id="memoPillTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link rounded-1 custom-tab active" id="memo-content-pill-tab" data-bs-toggle="pill" data-bs-target="#memo-content-pill" type="button" role="tab" aria-controls="memo-content-pill" aria-selected="true">Memo Content</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link rounded-1 custom-tab" id="comments-pill-tab" data-bs-toggle="pill" data-bs-target="#comments-pill" type="button" role="tab" aria-controls="comments-pill" aria-selected="false">Comments <span class="badge bg-danger">@Model.CommentCount</span></button>
+
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link rounded-1 custom-tab" id="new-comment-pill-tab" data-bs-toggle="pill" data-bs-target="#new-comment-pill" type="button" role="tab" aria-controls="new-comment-pill" aria-selected="false">New Comment</button>
+                        </li>
+                    </ul>
+
+                    <!-- Pill tab panes -->
+                    <div class="tab-content p-1" id="memoPillTabsContent">
+
+                        <!-- Memo Content -->
+                        <div class="tab-pane fade active show border-1 border-dark p-1 memo-content card border-1 border-dark-subtle" id="memo-content-pill" role="tabpanel" aria-labelledby="memo-content-pill-tab">
+                            <p>Travel Type: <span>@Model.Title</span></p>
+                            <p>Purpose: <span>@Model.Title</span></p>
+                      @*       <p>Start Date: <span>@Model..ToString("yyyy-MMM-dd")</span></p>
+                            <p>End Date: <span>@Model.EndDate.ToString("yyyy-MMM-dd")</span></p> *@
+                        </div>
+
+                        <!-- Comments -->
+                        <div class="tab-pane fade p-0" id="comments-pill" role="tabpanel" aria-labelledby="comments-pill-tab">
+
+
+                            @foreach (var comment in Model.Comments)
+                            {
+                                <div class="card mb-3">
+                                    <div class="card-body d-flex align-items-start">
+
+                                        <!-- Check if User Picture is available -->
+                                        @{
+                                            var userPicture = comment.AppUser?.Picture;
+                                            var pictureBase64 = userPicture != null ? Convert.ToBase64String(userPicture) : null;
+
+                                            var defaultImagePath = Url.Content("~/images/default-user.png");
+
+                                        }
+
+                                        <!-- User Picture -->
+
+                                        <img src="@(!string.IsNullOrEmpty(pictureBase64) ? $"data:image/png;base64,{pictureBase64}" : defaultImagePath)"
+                                             alt="@comment.AppUser?.Fullname " User picture""
+                                             class="rounded-circle me-3"
+                                             style="width: 40px; height: 40px; object-fit: cover;">
+
+
+                                        <div class="flex-grow-1 memo-content">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <small class="fw-bold">@comment.AppUser?.Fullname</small>
+                                                <small class="fa-pull-right">
+                                                    <time class="timeago" datetime="@comment.CreatedDate?.ToString("o")"></time>
+                                                </small>
+                                            </div>
+                                            <p> @Html.Raw(comment.Message)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <!-- New Comment -->
+                        <div class="tab-pane fade p-0" id="new-comment-pill" role="tabpanel" aria-labelledby="new-comment-pill-tab">
+                            <form method="post" asp-action="CommentTravelRequest" asp-controller="TravelRequest">
+
+                                <div class="mb-3">
+                                    <textarea id="newComment" asp-for="NewComment" placeholder="write your comment here........"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit Comment</button>
+                            </form>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+      $(document).ready(function () {
+        // Initialize timeago for comment timestamps
+        $('time.timeago').timeago();
+
+        // Modal selector for reusability
+        const modalSelector = '#CommentTravelRequest';
+        const commentSelector = '#newComment';
+
+        // Initialize TinyMCE when the modal is shown
+        $(modalSelector).off('shown.bs.modal').on('shown.bs.modal', function () {
+            if (!tinymce.get(commentSelector.substring(1))) { // Check if TinyMCE is not already initialized
+                try {
+                    tinymce.init({
+                        selector: commentSelector,
+                        menubar: true,
+                        toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright',
+                        height: 300, // Set a default height
+                    });
+                } catch (e) {
+                    console.error('TinyMCE initialization failed:', e);
+                }
+            }
+        });
+
+        // Remove TinyMCE instance on modal close
+        $(modalSelector).off('hidden.bs.modal').on('hidden.bs.modal', function () {
+            try {
+                tinymce.remove(commentSelector);
+            } catch (e) {
+                console.error('TinyMCE removal failed:', e);
+            }
+        });
+    });
+
+</script>
+<style>
+    .memo-content {
+        word-wrap: break-word; /* Ensure long words break and wrap */
+        word-break: break-word; /* Ensure words break to prevent overflow */
+    }
+</style>

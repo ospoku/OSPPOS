@@ -1,0 +1,44 @@
+﻿
+@model DMX.ViewModels.TrainingAttendanceVM;
+
+<div class="modal fade" id="TrainingAttendance" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h6>Add Meeting</h6>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn btn-sm btn-outline-danger">Close</button>
+            </div>
+             @using (Html.BeginForm("TrainingAttendance", "Training", FormMethod.Post))
+            {
+            <div class="modal-body">
+
+          
+                    <div class="floating-group">
+                        <input type="text" asp-for="@Model.EventName"  placeholder=""/>
+                        <label >Meeting Name</label>
+                    </div>
+
+                    <div class="floating-group">
+                        <input type="text" asp-for="@Model.EventId"   placeholder=""/>
+                        <label >Meeting Description</label>
+                    </div>
+                    
+                    <div class="floating-group">
+                        <select id="UserList" class="did-floating-select" style="width:100%" required asp-items="@Model.Attendees" asp-for="@Model.SelectedParticipants"></select>
+                    <label >Select Attendees</label>
+                    </div>
+                    </div>
+                    <div class="modal-footer"><button class="btn btn-block btn-primary">Save</button></div>
+                }
+            </div>
+    </div>
+</div>
+<script>
+       $(document).ready(function () {
+
+            $('#UserList').select2({ dropdownParent: $('#AddAttendance') });
+        });
+</script>
+    

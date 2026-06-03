@@ -1,0 +1,22 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<ul class="nav nav-pills nav-fill gap-0 p-1 small bg-primary rounded-5 shadow-sm" id="pillNav2" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link rounded-5 active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">User Details</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link  rounded-5" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="true">Account Details</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link  rounded-5" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="true">Contact</button>
+    </li>
+</ul>
+<div class="tab-content mt-3" id="pills-tabContent">
+    <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab"> @await Component.InvokeAsync("EditProfile")</div>
+    <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab"> @await Component.InvokeAsync("EditProfile")</div>
+    <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">Contact</div>
+</div>

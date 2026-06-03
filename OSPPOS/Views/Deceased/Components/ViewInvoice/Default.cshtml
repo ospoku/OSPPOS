@@ -1,0 +1,95 @@
+﻿@model DMX.ViewModels.ViewInvoiceVM
+
+<div class="modal fade" id="ViewInvoice" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h6>Add Deceased</h6>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn btn-sm btn-outline-danger">Close</button>
+            </div>
+            <div class="invoice-details">
+                <h3>Invoice Details</h3>
+
+                <!-- Display deceased information -->
+                <div class="deceased-info">
+                    <p><strong>Deceased Name:</strong> @Model.DeceasedName</p>
+                    <p><strong>Created Date:</strong> @Model.CreatedDate.ToString("yyyy-MMM-dd")</p>
+                    <p><strong>Total Days:</strong> @Model.TotalDays</p>
+                    <p><strong>Total Invoice Amount:</strong> @Model.TotalInvoiceAmount.ToString("C", new System.Globalization.CultureInfo("en-GH"))</p>
+
+                    <p><strong>Base Fee:</strong> @Model.BaseFee.ToString("C", new System.Globalization.CultureInfo("en-GH"))</p>
+                    <p><strong>Extra Services Fee:</strong> @Model.ExtraServicesFee
+
+                </div>
+
+                <!-- Display tier charges in a table -->
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Min Days</th>
+                            <th>Max Days</th>
+                            <th>Days Charged</th>
+                            <th>Fee (per day)</th>
+                            <th>Total Charge</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var tier in Model.TierCharges)
+                        {
+                            <tr>
+                                <td>@tier.MinDays</td>
+                                <td>@tier.MaxDays</td>
+                                <td>@tier.DaysCharged</td>
+                                <td>@tier.Fee.ToString("C", new System.Globalization.CultureInfo("en-GH"))</td>
+                                <td>@tier.TotalCharge.ToString("C", new System.Globalization.CultureInfo("en-GH"))</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <style>
+                .invoice-details {
+                    margin: 20px;
+                    padding: 20px;
+                    border: 1px solid #ddd;
+                    border-radius: 5px;
+                    background-color: #f9f9f9;
+                }
+
+                .deceased-info {
+                    margin-bottom: 20px;
+                }
+
+                    .deceased-info p {
+                        margin: 5px 0;
+                    }
+
+                .table {
+                    width: 100%;
+                    margin-bottom: 1rem;
+                    color: #212529;
+                }
+
+                .table-bordered {
+                    border: 1px solid #dee2e6;
+                }
+
+                    .table-bordered th,
+                    .table-bordered td {
+                        border: 1px solid #dee2e6;
+                    }
+
+                .table thead th {
+                    vertical-align: bottom;
+                    border-bottom: 2px solid #dee2e6;
+                }
+
+                .table tbody + tbody {
+                    border-top: 2px solid #dee2e6;
+                }
+            </style>
+            </div>
+            </div>
+            </div>

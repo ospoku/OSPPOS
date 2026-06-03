@@ -1,0 +1,35 @@
+﻿.toggle-checkbox {
+    display: none;
+}
+
+
+
+.toggle-switch {
+    margin-left: 50px;
+}
+
+    .toggle-switch.opt1 {
+        color: navy;
+    }
+
+    .toggle-switch.opt2 {
+        color: brown;
+        display: none;
+    }
+
+.toggle-checkbox:checked + .slider::before {
+    background-color: lightsalmon;
+}
+
+.toggle-checkbox:checked + .slider::after {
+    background-color: maroon;
+    transform: translateX(16px);
+}
+
+.toggle-checkbox:checked ~ .slider > .toggle-switch.opt1 {
+    display: none;
+}
+
+.toggle-checkbox:checked ~ .slider > .toggle-switch.opt2 {
+    display: inline-block;
+}

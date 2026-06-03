@@ -1,0 +1,99 @@
+﻿
+
+@using DMX.ViewComponents
+@using Microsoft.AspNetCore.Authorization
+@using System.Web
+@inject IAuthorizationService auth
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@inject Microsoft.AspNetCore.DataProtection.IDataProtectionProvider DataProtectionProvider
+@using Microsoft.AspNetCore.DataProtection
+@{
+    // Optional: create protector in view (same purpose string)
+    var protector = DataProtectionProvider.CreateProtector("IdProtector");
+}
+@model IEnumerable<DMX.ViewModels.ViewExcuseDutiesVM>;
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary d-inline">Excuse Duties</h6>
+       
+
+
+        <button id="btnAddExcuseDuty" class="btn btn-sm btn-rounded  btn-outline-primary fa-pull-right" onclick="document.getElementById('AddExcuseDutyDialog').showModal()"><i class="fa fa-fw fa-plus-circle"></i>Add ExcuseDuty</button>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table dataTables_wrapper" id="dataTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Sender</th>
+                        <th>Excuse Days</th>
+                        <th>Diagnosis</th>
+                        <th>Date of Discharge</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var Excuse in Model)
+                    {
+                        <tr>
+                            <td>@Excuse.ExcuseDays</td>
+                            <td>@Excuse.Sender</td>
+                            <td>@Excuse.ExcuseDays</td>
+                            <td class="ellipsed-text">@Excuse.OperationDiagnosis</td>
+                            <td>@Excuse.DateofDischarge.ToString("yyyy-MMM-dd")</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <button id="btnGroupDrop1" type="button" class="btn btn-sm btn-rounded btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Select Action
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+
+                                            <button type="button"  class="dropdown-item-custom" onclick="openDialogFromData(this)" data-url="EditExcuseDuty" data-user-id="@protector.Protect(Excuse.PublicId.ToString())" data-dialog-id="EditExcuseDutyDialog"><i style="width:15px; height:15px" class=" fa fa-edit bg-warning"></i>Edit</button>
+
+                                        
+                                            <button type="button" onclick="openDialogFromData(this)"  data-url="CommentExcuseDuty"data-user-id="protector.Protect(Excuse.PublicId.ToString())" class="dropdown-item-custom bg-dark">
+                                                <i style="width:15px; height:15px" class="fa fa-comments text-white"></i>Comment
+                                            </button>
+                                  
+                                            <button type="button" class="btn btn-primary" onclick="printExcuseDutyIframe('@protector.Protect(Excuse.PublicId.ToString())')">
+                                                <i style="width:15px; height:15px" class="fa fa-print"></i>
+                                            </button>
+                                        
+                                            
+                                                <button type="button" class="btn btn-primary">
+                                                    <i style="width:15px; height:15px" class="fa fa-trash"></i>
+                                                </button>
+                                          
+                                        
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                   }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer"></div>
+</div>
+<dialog id="EditExcuseDutyDialog" class="rounded border-0 col-md-4"><div id="EditExcuseDutyDialogContent"></div></dialog>
+@await Component.InvokeAsync(nameof(AddExcuseDuty));
+<iframe id="printFrame" style="display:none;"></iframe>
+
+    <script type="text/javascript">
+    function printExcuseDutyIframe(ExcuseDutyId) {
+        const printFrame = document.getElementById('printFrame');
+        printFrame.src = `/ExcuseDuty/PrintExcuseDuty?Id=${ExcuseDutyId}`;
+        printFrame.onload = function () {
+            printFrame.contentWindow.focus();
+            printFrame.contentWindow.print();
+        };
+    }
+
+    
+</script>

@@ -1,0 +1,11 @@
+﻿
+
+.nav-pills .custom-tab {
+    color: white !important;
+    font-weight: 600;
+}
+.nav-pills .custom-tab.active{
+    color: black !important;
+    font-weight: 600;
+    background-color:white!important;
+}

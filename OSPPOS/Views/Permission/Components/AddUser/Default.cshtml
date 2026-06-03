@@ -1,0 +1,89 @@
+﻿
+@model DMX.ViewModels.AddUserVM
+
+
+   
+
+<dialog id="AddUserDialog" class="border-0 rounded p-0 col-md-4">
+    <div class="card-header">
+      
+                <h6>Add User</h6>
+                <button type="button"  onclick="document.getElementById('AddUserDialog').close()" class="btn btn-sm btn-outline-danger">Close</button>
+            </div> 
+            @using (Html.BeginForm("AddUser", "Permission", FormMethod.Post,new{id="addUserForm"}))
+            {
+            <div class="modal-body">
+            <div class="input-group">
+                <div class="input-group-text">
+                    <i class="fas fa-user-lock"></i>
+                </div>
+                <div class="did-floating-label-content">
+                        <input class="did-floating-input" asp-for="@Model.Username" placeholder="" required />
+                        <label class="did-floating-label" >Username</label>
+                       </div>
+                       </div>
+            <div class="input-group">
+                <div class="input-group-text">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="did-floating-label-content">
+                    <div class="floating-group">
+                        <input class="did-floating-input" asp-for="@Model.Firstname" placeholder="" required />
+                        <label class="did-floating-label">Firstname</label>
+                    </div>
+                    </div>
+                    </div>
+                <div class="input-group">
+                    <div class="input-group-text">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="did-floating-label-content">
+                        <input  class="did-floating-input" asp-for="@Model.Lastname" placeholder="" required />
+                        <label class="did-floating-label" >Lastname</label>
+                    </div>
+                    </div>
+            <div class="input-group">
+                <div class="input-group-text">
+                    <i class="fas fa-envelopes-bulk"></i>
+                </div>
+                <div class="did-floating-label-content">
+                        <input class="did-floating-input" type="email" asp-for="@Model.Email" placeholder="" required />
+                        <label class="did-floating-label" >Email</label>
+                    </div>
+                    </div>
+            <div class="input-group">
+                <div class="input-group-text">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <div class="did-floating-label-content">
+   
+                                    <input  class="did-floating-input" type="password" asp-for="@Model.Password" placeholder="" required  />
+                        <label class="did-floating-label" >Password</label>
+                                </div>
+                 </div>
+                    <select id="selectRole" class="dmx-choices" asp-for="ApplicationRoleId" asp-items="@Model.ApplicationRoles"><option value="">Select Roles</option></select>
+                           
+                    </div>
+                <div class="modal-footer">  <button id="btnAddUser" class="btn btn-block btn-primary"><i class="fa fa-fw fa-lg"></i>Save</button></div>
+                }
+
+              
+         
+</dialog>
+
+            
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+

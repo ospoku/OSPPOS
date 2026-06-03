@@ -1,0 +1,138 @@
+﻿
+@model DMX.ViewModels.AddDeceasedVM;
+
+
+<dialog id="AddDeceasedDialog" class="border-0 rounded p-0 col-md-4">
+
+            <div class="modal-header">
+
+                <h6 class="fw-bold">Add Deceased</h6>
+        <button type="button" aria-label="Close" class="btn btn-sm btn-outline-danger" onclick="document.getElementById('AddDeceasedDialog').close()">Close</button>
+            </div>
+
+             @using (Html.BeginForm("AddDeceased", "Deceased", FormMethod.Post, new { enctype = "multipart/form-data", id="addDeceasedForm"}))
+            {
+                <div class="modal-body">
+
+            <div class="input-group">
+                <div class="input-group-text">
+                    <i class="fas fa-bed-pulse"></i>
+                </div>
+                <div class="did-floating-label-content">
+                        <input class="did-floating-input" type="text" asp-for="@Model.DeceasedName"  placeholder="" required/>
+                        <label class="did-floating-label">Deceased</label>
+                     
+                    </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                    <div class="input-group">
+                        <div class="input-group-text">
+                            <i class="fas fa-folder-plus"></i>
+                        </div>
+                        <div class="did-floating-label-content">
+                                <input class="did-floating-input" type="text" asp-for="@Model.FolderNo"  placeholder="" required/>
+                                <label class="did-floating-label" >Folder No</label>
+                        
+                            </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                    <div class="input-group">
+                        <div class="input-group-text">
+                            <i class="fas fa-user-tag"></i>
+                        </div>
+                        <div class="did-floating-label-content">
+                                <input class="did-floating-input" type="text" asp-for="@Model.TagNo"  placeholder="" required/>
+                        <label class="did-floating-label" >Tag No</label>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="btn-group-sm">
+                         @foreach(var dead in @Model.DeceasedTypes)
+                         {
+                               
+                                <label class=" btn btn-sm btn-outline-primary">
+
+                                    <input type="radio" asp-for="@Model.DeceasedTypeId"  class="option-input radio" value="@dead.Value" id="Dead@(dead)"  required/>
+                                    @dead.Text
+                                </label>
+
+                         }
+                  
+                            </div>
+
+                        </div>
+
+                    </div>
+
+            <div class="input-group">
+                <div class="input-group-text">
+                    <i class="fas fa-diagnoses"></i>
+                </div>
+                <div class="did-floating-label-content">
+                        <input  class=" did-floating-input" type="text" asp-for="@Model.Diagnoses" placeholder="" required/>
+                            <label class="did-floating-label">Final Diagnoses</label>
+             
+                    </div>
+                    </div>
+            <div class="input-group">
+                <div class="input-group-text">
+                    <i class="fas fa-user-nurse"></i>
+                </div>
+                <div class="did-floating-label-content">
+                        <input class="did-floating-input" type="text" asp-for="@Model.WardInCharge"  placeholder="" required />
+                        <label class="did-floating-label" >In-Charge</label>
+                 
+                    </div>
+                    </div>
+            <div class="input-group">
+                <div class="input-group-text">
+                    <i class="fas fa-user-alt-slash"></i>
+                </div>
+                <div class="did-floating-label-content">
+                        <input class="did-floating-input" type="text" asp-for="@Model.Depositor"  placeholder="" required>
+                        <label class="did-floating-label" >Depositor</label>
+                    
+                    </div>
+                    </div>
+            <div class="input-group">
+                <div class="input-group-text">
+                    <i class="fas fa-location-arrow"></i>
+                </div>
+                <div class="did-floating-label-content">
+                        <input class="did-floating-input" type="text" title="Depositor Address"  asp-for="@Model.DepositorAddress"  placeholder="" required>
+                        <label  class="did-floating-label" >Depositor Address</label>
+                     
+                    </div>
+                    </div>
+                    <div class="form-group">
+                        <fieldset class="fieldset">
+                            <legend class="legend">Select Category</legend>
+                            @for (int i = 0; i < Model.MorgueServices.Count(); i++)
+                            {
+                                <div class="custom-checkbox">
+                                    <input id="chk@(i)" type="checkbox" title="@Model.MorgueServices[i].Description"  asp-for="@Model.MorgueServices[i].IsChecked" class="custom-checkbox" />
+                                    <label for="chk@(i)">@Model.MorgueServices[i].Name  - GHC @Model.MorgueServices[i].Amount</label>
+                                    <input type="hidden" asp-for="@Model.MorgueServices[i].Id" />
+                                </div>
+                            }
+                        </fieldset>
+                    </div>
+                    
+                        <select id="selectPatientUser"  class="dmx-choices" asp-items="@Model.UsersList" asp-for="@Model.SelectedUsers"><option value="">Select User(s)</option></select>
+              
+              
+                </div>
+
+
+                <div class="modal-footer">
+                    <button id="btnAddDeceased" class="btn btn-block btn-primary">Save</button></div>
+            }
+        
+
+</dialog>
+
+
+    

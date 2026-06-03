@@ -1,0 +1,27 @@
+﻿.fieldset { 
+    margin: 0 0 0px 0;
+    border: 1px solid #3d85d8;
+    border-radius: 4px;
+    color: #323840;
+    font-size: 12px;
+    position: relative; /* Ensure the legend is positioned relative to the fieldset */
+    padding: 0px 0px 0px 5px;
+}
+
+.legend {
+    margin-top: -10px;
+    color: #1e4c82;
+    display: block;
+    font-size: 13px;
+    z-index: 4;
+    background-color: white;
+    padding: 0 5px;
+    position: relative; /* Change to relative positioning */
+    top: 0;
+    left: 15px;
+    box-shadow: 0 0 0 2px white;
+    width:fit-content;
+}
+
+
+

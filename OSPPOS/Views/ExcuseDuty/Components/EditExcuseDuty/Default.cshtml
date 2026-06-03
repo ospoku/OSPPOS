@@ -1,0 +1,99 @@
+﻿
+@model DMX.ViewModels.EditExcuseDutyVM;
+
+
+<div class="modal fade" id="EditExcuseDuty" data-bs-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h6>Edit Excuse Duty </h6>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn btn-sm btn-outline-danger">Close</button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("EditExcuseDuty","Document",FormMethod.Post, new{id="editExcuseDutyForm"}))
+                {
+                    
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="floating-group">
+                                <input type="text"  asp-for="@Model.Name" placeholder="" required />
+
+                                <label >Patient Name</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="floating-group">
+                                <input type="text"  asp-for="@Model.PatientId" placeholder="" required />
+
+                                <label >Patient Id</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="floating-group">
+                        <input type="text"  asp-for="@Model.Diagnosis" placeholder=""/>
+                        <label >Diagnosis</label>
+                    </div>
+                    <div class="floating-group">
+                        <input type="date" asp-for="@Model.DateofDischarge"  />
+                        <label >Date of Discharge</label>
+                    </div>
+                    <div class="floating-group">
+                        <input type="number"  asp-for="@Model.ExcuseDays" placeholder="" />
+                        <label >Excuse Days</label>
+                    </div>
+                    <div class="floating-group">
+                        <select id="usersEditExcuseDuty" type="select" class="did-floating-select" asp-items="@Model.UsersList" asp-for="@Model.SelectedUsers" placeholder="" required></select>
+                        <label > Select Users</label>
+                    </div>
+                    <div class="form-group">
+                        <button id="btnEditExcuseDuty" class="btn btn-block btn-primary">Update</button>
+                    </div>
+                }
+                </div>
+                </div>
+                </div>
+                </div>
+<script>
+    $(document).ready(function () {
+
+        const formSelector='#editExcuseDutyForm';
+        $('#usersEditExcuseDuty').select2({
+            dropdownParent: $('#EditExcuseDuty')
+        });
+          document.getElementById("btnEditExcuseDuty").addEventListener("click", function (event) {
+            event.preventDefault();
+
+            const form = document.querySelector(formSelector);
+                 if (!form.checkValidity()) {
+                form.reportValidity(); // Display browser validation messages
+                return; // Stop further execution if validation fails
+            }
+
+            // Validate fields
+
+            // Show error if invalid
+
+
+            // Confirm save
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you really want to save this record?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, save it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+
+
+
+
+</script>

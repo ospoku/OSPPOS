@@ -1,0 +1,165 @@
+﻿
+@model DMX.ViewModels.AddTravelRequestVM;
+
+<dialog class="border-0 p-0 rounded col-md-4" id="AddTravelRequestDialog">
+   
+            <div class="modal-header">
+
+                <h6>Add Travel Request</h6>
+                <button type="button" aria-label="Close" class="btn btn-sm btn-outline-danger" onclick="document.getElementById('AddTravelRequestDialog').close()">Close</button>
+            </div>
+             @using (Html.BeginForm("AddTravelRequest", "TravelRequest", FormMethod.Post, new {id="addTravelRequestForm"}))
+            {
+               
+            <div class="modal-body">
+
+
+            <select id="selectTravelType" type="select" asp-for="@Model.TravelTypeId" asp-items="@Model.TravelTypes" class="dmx-choices" multiple="multiple"><option value="">Select TravelType</option></select>
+                    <div class="input-group">
+                        <did class="input-group-text">
+                            <i class="fas fa-arrows-spin"></i>
+                        </did>
+                        <div class="did-floating-label-content">
+                            <input type="text" asp-for="@Model.Purpose"  class="did-floating-input" placeholder="" required/>
+                            <label class="did-floating-label" >Purpose</label>
+                    </div>
+                    </div>
+                  
+                        @foreach (var mode in Model.TransportModes)
+                        {
+                            <label class=" btn btn-sm btn-outline-primary">
+                                <input type="radio" asp-for="@Model.TransportModeId" class="option-input radio" value="@mode.Value" id="Mode@(mode)" />
+                                @mode.Text
+                            </label> 
+                        }
+                    
+
+                    <div class="row">
+                        <div class="col">
+                    <div class="input-group">
+                        <div class="input-group-text">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="did-floating-label-content">
+                        <input type="date" class="did-floating-input" asp-for="@Model.StartDate"  asp-format="{0:dd/MMM/yyyy}" required />
+                        <label class="did-floating-label">Start Date</label>
+                        </div>
+                    </div>
+                    </div>
+                <div class="col">
+                    <div class="input-group">
+                        <div class="input-group-text">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                            <div class="did-floating-label-content">
+                                <input type="date" class="did-floating-input" asp-for="@Model.EndDate"  asp-format="{0:dd/MMM/yyyy}" required />
+                                <label class="did-floating-label">End Date</label>
+                            </div>
+                            </div>
+                            </div>
+                            </div>
+                    <div class="row">
+                        <div class="col">
+                    <div class="input-group">
+                        <div class="input-group-text">
+                            <i class="fas fa-sort-amount-up"></i>
+                        </div>
+                        <div class="did-floating-label-content">
+                                <input type="number" class="did-floating-input" step="0.0001" asp-for="@Model.ConferenceFee"  required />
+                                <label class="did-floating-label">Seminar Fees</label>
+
+                        </div>
+                    </div>
+                        </div>
+                        <div class="col">
+                    <div class="input-group">
+                        <div class="input-group-text">
+                            <i class="fas fa-sort-amount-asc"></i>
+                        </div>
+                        <div class="did-floating-label-content">
+                                <input class="did-floating-input" type="number" step="0.0001" asp-for="@Model.FuelClaim"  required />
+                                <label class="did-floating-label" >Fuel Claim</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                    <div class="input-group">
+                        <div class="input-group-text">
+                            <i class="fas fa-sort-amount-up"></i>
+                        </div>
+                        <div class="did-floating-label-content">
+                                <input class="did-floating-input" type="number" step="0.0001" asp-for="@Model.OtherExpenses"  required />
+                                <label class="did-floating-label">Other Expenses</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+            <div class="input-group">
+                <div class="input-group-text">
+                    <i class="fas fa-note-sticky"></i>
+                </div>
+                <div class="did-floating-label-content">
+
+                        <input class="did-floating-input" asp-for="@Model.AdditionalNotes" type="text" placeholder="" required/>
+                        <label class="did-floating-label" >AdditionalNotes</label>
+                        </div>
+                   </div>
+                      
+                <select id="selectUserTravelRequest" class="dmx-choices" type="select" asp-items="@Model.UsersList" asp-for="@Model.SelectedUsers">   <option value="">Select Approver(s)</option></select>
+                    
+                   
+        </div>
+            <div class="modal-footer">
+                        <button id="btnAddTravelRequest" class="btn btn-block btn-primary">Save</button>
+            </div>
+        
+          
+         
+            }
+        </dialog>
+    
+
+
+<script>
+    $(document).ready(function () {
+     const addTravelRequestFormSelector = '#addTravelRequestForm';
+   
+         document.getElementById("btnAddTravelRequest").addEventListener("click", function (event) {
+            event.preventDefault();
+
+            const form = document.querySelector(addTravelRequestFormSelector);
+                 if (!form.checkValidity()) {
+                form.reportValidity(); // Display browser validation messages
+                return; // Stop further execution if validation fails
+            }
+
+            // Validate fields
+
+            // Show error if invalid
+
+
+            // Confirm save
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you really want to save this record?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, save it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+
+</script>
+
+
+  

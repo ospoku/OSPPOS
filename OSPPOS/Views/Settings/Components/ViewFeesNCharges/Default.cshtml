@@ -1,0 +1,30 @@
+﻿@using DMX.ViewComponents
+
+
+@model IEnumerable<DMX.ViewModels.ViewFeeStructuresVM>
+
+
+
+
+<div class="custom-tabs card shadow mb-4">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Fee Structures</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Morgue Services</button>
+            </li>
+          
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            @await Component.InvokeAsync(nameof(ViewFeeStructures))
+           
+            </div>
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+           
+            @await Component.InvokeAsync(nameof(ViewMorgueServices))
+            </div>
+
+        </div>
+    </div>

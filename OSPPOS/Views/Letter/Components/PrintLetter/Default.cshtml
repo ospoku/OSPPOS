@@ -1,0 +1,56 @@
+﻿
+@model DMX.ViewModels.PrintDocumentVM;
+
+
+
+<div class="col-md-12">
+      
+            <div class="card" id="PrintArea">
+                <div class="card-header">
+                    <h5 class="card-header-text">Document Content</h5>
+                </div>
+                <div class="card-block">
+                                        @Model.ReferenceNumber
+
+                                <div class="accordion-content accordion-desc">
+                                    <p>
+                                        @Model.AdditionalNotes
+                                    </p>
+                                </div>
+                 </div>
+                <div class="card-header">
+                    <h5 class="card-header-text">Minutes/Comments</h5>
+                </div>
+               
+                    <div class="card-block">
+                        <div id="accordion" role="tablist" aria-multiselectable="true">
+                           
+                            <div class="accordion-panel">
+                              
+                                @foreach (var comment in Model.Comments.OrderBy(x=>x.CreatedDate))
+                                {
+ 
+                                     <div class="card p-3 mt-1">
+                                                            <div class="justify-content-between align-items-center">
+                                                                <div class="align-items-center">
+
+                                                                    <small class="font-weight-bold text-primary">@comment.CreatedBy</small>
+    <small class="fa-pull-right">
+
+        @comment.CreatedDate.Value.ToString("F")
+
+    </small>
+
+                                                                    <div>@comment.Message</div>
+</div>
+</div>
+</div>
+   }
+ </div>                      
+   </div>
+   </div>
+     </div> 
+ <button class="btn btn-block btn-primary" onclick="printForm()">Print</button>
+     </div>
+
+

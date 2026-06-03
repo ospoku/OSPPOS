@@ -1,0 +1,16 @@
+﻿.avatar-circle {
+    background-color: #ccc;
+    border-radius: 50%;
+    height: 40px;
+    text-align:center;
+    width: 40px;
+}
+
+.initials {
+    font-size: 15px; /* 50% of parent */
+    line-height: 1;
+    position: relative;
+    top: 7.5px; /* 25% of parent */
+    color:black;
+    font-weight:bold;
+}

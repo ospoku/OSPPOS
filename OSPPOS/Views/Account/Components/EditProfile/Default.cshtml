@@ -1,0 +1,138 @@
+﻿
+@model DMX.ViewModels.EditProfileVM
+
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<AppUser> usm;
+
+@inject Microsoft.AspNetCore.DataProtection.IDataProtectionProvider DataProtectionProvider
+@using Microsoft.AspNetCore.DataProtection
+@{
+    // Optional: create protector in view (same purpose string)
+    var protector = DataProtectionProvider.CreateProtector("IdProtector");
+}
+<div class="card">
+<div class="card-header py-3">
+    <h6 class="m-0 font-weight-bold text-primary">Edit Profile</h6>
+</div>
+    @using (Html.BeginForm("EditProfile", "Account",  FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+<div class="card-body">
+            <div class="row">
+      <div class="col">
+                  
+                        <div class="card border-1">
+                        <div class="card-body">
+                            <div class="card-title">Personal Details</div>
+                            <div class="floating-group">
+                                <input  type="text" asp-for="@Model.Firstname" placeholder="" />
+                                <label >Firstname</label>
+                            </div>
+
+                            <div class="floating-group">
+                                <input  type="text" asp-for="@Model.Lastname" placeholder="" />
+                                <label >Othername</label>
+                            </div>
+
+                            <div class="floating-group">
+                                <input  asp-for="@Model.Username" placeholder="" />
+                                <label >Email</label>
+                            </div>
+                            <div class="floating-group">
+                                <input  type="email" asp-for="@Model.Email" placeholder="" />
+                                <label >Email</label>
+                            </div>
+                            <div class="floating-group">
+                                <input  type="text" asp-for="@Model.Telephone" placeholder="" />
+                                <label >Telephone</label>
+                            </div>
+                        </div>
+                        </div>
+                        </div>
+                        <div class="col">
+                        <div class="card border-1 text-center">
+                            <div class="card-body">
+                                <div class="card-title">Profile Picture</div>
+                        <div class="form-group">
+                             
+                                    <img id="imagePreview" class="img-profile" height="170" width="150" src="data:image/jpeg;base64,@Model.Picture" alt="N Image" />
+                            
+                  </div>
+                            <div class="form-group text-center">
+                       
+                                <div class="btn btn-group" role="group">
+                              @*   <div class="button-wrapper">
+                                    <span class="label">
+                                           <i class="fa fas fa-upload"></i> Upload File
+                                    </span> *@
+                                    
+                                    <input type="file" class="btn border-1 border-dark w-100 mr-3 rounded" id="upload" name="formFile"  asp-for="@Model.UploadFile" onchange="ShowImagePreview(this)"/>
+
+                                    <button  asp-action="DeletePhoto" asp-route-Id="@protector.Protect(usm.GetUserAsync(User).Result?.Id)" asp-controller="Account" class="btn btn-danger w-100 rounded" onclick="return jQueryAjaxDeletePhoto(this)" >
+                                        <i style="width:15px; height:15px" class="fa fa-trash">
+                                        </i> Delete Photo
+                                     </button>
+                           
+                          </div>
+                          
+                         
+                            </div>
+                        </div>
+                       </div>
+                </div>
+                    </div>
+
+               </div>
+             
+        <div class="card-footer text-center">
+            <button class="btn btn-primary">Update</button>
+        </div>
+  }
+    
+        </div>
+<script type="text/javascript">
+    //Image Upload Preview
+    function ShowImagePreview(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#imagePreview').prop('src', e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+      document.getElementById("btnAddMemo").addEventListener("click", function (event) {
+            event.preventDefault();
+
+            const form = document.querySelector(addMemoFormSelector);
+                 if (!form.checkValidity()) {
+                form.reportValidity(); // Display browser validation messages
+                return; // Stop further execution if validation fails
+            }
+
+            // Validate fields
+
+            // Show error if invalid
+
+
+            // Confirm save
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you really want to save this record?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, save it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+
+
+
+
+</script>
+

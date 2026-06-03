@@ -1,0 +1,65 @@
+﻿
+.option-input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    position: relative;
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 13px;
+    width: 13px;
+    transition: all 0.15s ease-out 0s;
+    background: #cbd1d8;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    margin-right: 0.5rem;
+    outline: none;
+    position: relative;
+    vertical-align: middle;
+}
+
+    .option-input:hover {
+        background: #9faab7;
+    }
+
+    .option-input:checked {
+        background: #593bdb;
+    }
+
+        .option-input:checked::before {
+            width: 13px;
+            height: 13px;
+            display: flex;
+            content: '\f00c';
+            font-size: 10px;
+            font-weight: bold;
+            position: absolute;
+            align-items: center;
+            justify-content: center;
+            font-family: 'FontAwesome';
+        }
+
+        .option-input:checked::after {
+            -webkit-animation: click-wave 0.65s;
+            -moz-animation: click-wave 0.65s;
+            animation: click-wave 0.65s;
+            background: #40e0d0;
+            content: '';
+            display: block;
+            position: relative;
+            z-index: 100;
+        }
+
+    .option-input.radio {
+        border-radius: 50%;
+    }
+
+        .option-input.radio::after {
+            border-radius: 50%;
+        }

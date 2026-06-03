@@ -1,0 +1,53 @@
+﻿/*dataTables buttons start*/
+.collectionButton {
+    background-color: white;
+    color: #593bdb
+}
+
+.csvButton {
+    background-color: white;
+    color: #593bdb;
+    border-color: #593bdb;
+    margin: 2px;
+    border-radius: 20px;
+}
+
+.pdfButton {
+    background-color: white;
+    color: #593bdb;
+    border-color: #593bdb;
+    margin: 2px;
+    border-radius: 20px;
+}
+
+.printButton {
+    background-color: white;
+    color: #593bdb;
+    border-color: #593bdb;
+    margin: 2px;
+    border-radius: 20px;
+}
+
+.copyButton {
+    background-color: white;
+    color: #593bdb;
+    border-color: #593bdb;
+    margin: 2px;
+    border-radius: 20px;
+}
+
+.colvisButton {
+    background-color: white;
+    color: #593bdb;
+    border-color: #593bdb;
+    margin: 2px;
+    border-radius: 20px;
+}
+
+.searchBuilderButton {
+    background-color: white;
+    color: #593bdb;
+    border-color: #593bdb;
+    margin: 2px;
+    border-radius: 20px;
+}

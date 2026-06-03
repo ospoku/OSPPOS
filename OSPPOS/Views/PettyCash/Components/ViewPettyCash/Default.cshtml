@@ -1,0 +1,86 @@
+﻿
+@using DMX.ViewComponents
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService auth
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model IEnumerable<DMX.ViewModels.ViewPettyCashVM>;
+
+@inject Microsoft.AspNetCore.DataProtection.IDataProtectionProvider DataProtectionProvider
+@using Microsoft.AspNetCore.DataProtection
+@{
+    // Optional: create protector in view (same purpose string)
+    var protector = DataProtectionProvider.CreateProtector("IdProtector");
+}
+
+
+
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary d-inline">Cash Till</h6>
+
+     
+         <button id="btnAddPettyCash" class="btn btn-sm btn-rounded  btn-outline-primary fa-pull-right" onclick="document.getElementById('AddPettyCashDialog').showModal()"><i class="fa fa-fw fa-plus-circle"></i>Add PettyCash</button>
+   
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table dataTables_wrapper">
+        
+                <thead>
+                    <tr>
+                       
+                            <th>SN</th>
+                            <th>RefN</th>
+                            <th>Date</th>
+                  
+                    <th>Purpose</th>
+                    <th>Amount</th>
+                    <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                      @foreach (var petty in Model)
+                {
+                        <tr>
+                            <td></td>
+                        <td>@petty.ReferenceNumber</td>
+                        <td>@petty.CreatedDate?.ToString("dd-MMM-yyyy")</td>
+                         
+                        <td>@petty.Purpose </td>
+
+                        <td>@petty.Amount</td>
+                       
+                           <td>
+                                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                                    <div class="btn-group me-2" role="group" aria-label="First group">
+
+                                            <button data-bs-toggle="ajax-modal" data-bs-url="@Url.Action("EditPettyCash", new { Id = @protector.Protect(petty.PettyCashId.ToString()) })" class="dropdown-item-custom" data-bs-target="#EditPettyCash"><i style="width:15px; height:15px" class=" fa fa-edit mr-3"></i>Edit</button>
+                                        
+                                      
+                                            <a class="dropdown-item-custom" asp-action="PrintProfile" asp-controller="Client" asp-route-Id="@protector.Protect(petty.PettyCashId.ToString())"><i style="width:15px; height:15px" class="fa fa-print mr-3"></i>Print</a>
+                                        
+                                            <button type="button" data-bs-toggle="ajax-modal" data-bs-url="@Url.Action("CommentPettyCash", new { Id = @protector.Protect(petty.PettyCashId.ToString()) })" class="dropdown-item-custom" data-bs-target="#ClientProfile"><i style="width:15px; height:15px" class="fa fa-comments mr-3"></i>Comment</button>
+                                        
+                                            <form asp-action="DeleteClient" asp-route-Id="" onsubmit="return jQueryAjaxDelete(this);">
+                                                <button type="submit" class="dropdown-item-custom"><i style="width:15px; height:15px" class="fa fa-trash mr-3"></i>Delete</button>
+                                        </form>
+                                        }
+                                    </div>
+                                </div>
+
+
+                        </td>
+                    </tr>
+             }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer">
+    </div>
+</div>
+<dialog><div></div></dialog>
+@await Component.InvokeAsync(nameof(AddPettyCash))

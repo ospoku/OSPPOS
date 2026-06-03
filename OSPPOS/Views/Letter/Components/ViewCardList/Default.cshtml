@@ -1,0 +1,58 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model IEnumerable<DMX.ViewModels.ViewMemosVM>;
+
+
+<div id="PlaceHolderHere"></div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary d-inline">Clients</h6>
+
+        <button class="btn btn-sm btn-rounded  btn-outline-primary fa-pull-right" data-bs-toggle="ajax-modal" data-bs-target="#AddMemo" data-bs-url="@Url.Action("AddMemo")"><i class="fa fa-fw fa-plus-circle"></i>Add Memo</button>
+
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="dataTables_wrapper" id="dtMemo">
+       
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>DoB</th>
+                    <th>Gender</th>
+               
+                    <th>Phone</th>
+                 
+                    <th>Clinic Number</th>
+                    <th>Insurance</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var Memo in Model)
+                {
+                    <tr>
+                       
+
+                       
+                        <td>
+                            <div class="text-center">
+                                <a asp-action="Card" asp-controller="Document" asp-route-Id="@Memo.PublicId" class="btn btn-primary btn-circle"><i class="fa fa-sm fa-print text-white"></i></a>
+                           
+                            </div>
+                        </td>
+                    </tr>
+                }
+
+
+
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</div>

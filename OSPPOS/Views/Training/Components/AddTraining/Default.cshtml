@@ -1,0 +1,44 @@
+﻿
+@model DMX.ViewModels.AddTrainingVM;
+
+<div class="modal fade" id="AddInternalTraining" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h6>Add Workshop</h6>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn btn-sm btn-outline-danger">Close</button>
+            </div>
+             @using (Html.BeginForm("AddInternalTraining", "Training", FormMethod.Post))
+            {
+            <div class="modal-body">
+
+                    <div class="floating-group">
+                        <input type="text" asp-for="@Model.WorkshopTitle"  placeholder="" required/>
+                        <label >Workshop Title</label>
+                    </div>
+                     <div class="floating-group">
+                        <input type="date" asp-for="@Model.TrainingDate"  placeholder="" asp-format="{0:dd-MMM-yyyy}" required/>
+                        <label >Training Date</label>
+                        </div> <div class="floating-group">
+                            <input type="number" asp-for="@Model.NumberofDays"  placeholder="" required/>
+                            <label >Number of Days</label>
+                        </div>
+                        <div class="floating-group">
+                            <input type="text" asp-for="@Model.TrainingGroup"  placeholder="" required/>
+                            <label >Training Group</label>
+                        </div>
+                    <div class="floating-group">
+                        <input type="text" asp-for="@Model.Description"   placeholder="" required/>
+                        <label >Meeting Description</label>
+                    </div>
+                    
+                    </div>
+                    <div class="modal-footer"><button class="btn btn-block btn-primary">Save</button></div>
+                }
+            </div>
+    </div>
+</div>
+
+    

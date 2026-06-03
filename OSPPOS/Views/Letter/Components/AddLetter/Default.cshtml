@@ -1,0 +1,98 @@
+﻿@model DMX.ViewModels.AddLetterVM
+<dialog id="AddLetterDialog" class="border-0 rounded p-0 col-md-4">
+  
+            <div class="modal-header">
+                <h6 class="fw-bold">Add Letter</h6>
+        <button type="button" aria-label="Close" class="btn btn-sm btn-outline-danger" onclick="document.getElementById('AddLetterDialog').close()">Close</button>
+            </div>   @using (Html.BeginForm("AddLetter", "Letter", FormMethod.Post, new { id = "addLetterForm", enctype = "multipart/form-data" }))
+                {
+            <div class="modal-body">
+
+            <div class="input-group">
+                <div class="input-group-text">
+                    <i class="fas fa-heading"></i>
+                </div>
+                <div class="did-floating-label-content">
+                        <input class="did-floating-input" type="text" asp-for="@Model.Subject"  placeholder="" required />
+                        <labe class="did-floating-label" >Subject</labe>
+          
+                    </div>
+                    </div>
+            <div class="input-group">
+                <div class="input-group-text">
+                    <i class="fas fa-map-location"></i>
+                </div>
+                <div class="did-floating-label-content">
+                        <input class="did-floating-input" type="text" asp-for="Source"  placeholder="" required />
+                        <label  class="did-floating-label" >Document Source</label>
+                   
+                    </div>
+                    </div>
+            <div class="input-group">
+                <div class="input-group-text">
+                    <i class="fas fa-calendar-minus"></i>
+                </div>
+                <div class="did-floating-label-content">
+                        <input class="did-floating-input" type="date" asp-for="@Model.ReceiptDate"  asp-format="{0:dd/MMM/yyyy}" placeholder="" required />
+                        <label class="did-floating-label" >Receipt Date</label>
+                    
+                    </div>
+                    </div>
+            <div class="input-group">
+                <div class="input-group-text">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="did-floating-label-content">
+                        <input class="did-floating-input" type="date" asp-for="@Model.DocumentDate" asp-format="{0:dd/MMM/yyyy}"  placeholder="" required />
+                        <label class="did-floating-label" >Document Date</label>
+                    
+                    </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="file" id="formFile" name="formFile" asp-for="UploadFile" hidden />
+                        <label for="formFile" class="uploadLabel">
+                            <i class="fa fa-cloud-upload" style="color: #1e4c82; font-size: medium"></i>
+                            <label id="sFile">Select file</label>
+                    <span id="file-chosen" class="ellipsed-text">No file chosen</span>
+                        </label>
+                    </div>
+            <div class="input-group">
+                <div class="input-group-text">
+                    <i class="fas fa-comment"></i>
+                </div>
+                <div class="did-floating-label-content">
+                        <input class="did-floating-input" asp-for="@Model.AdditionalNotes" type="text" placeholder="" required />
+                        <label class="did-floating-label" >Additional Notes</label>
+                       
+                    </div>
+                    </div>
+        
+                
+                        <select id="usersAddMemo" class=" dmx-choices" asp-items="@Model.UsersList" asp-for="@Model.SelectedUsers"><option value="">Selected User(s)</option></select>
+               
+               
+            </div>
+                
+                   <div class="modal-footer">
+                    <button id="saveButton" class="btn btn-block btn-primary">Save</button></div>
+                }
+            
+      
+</dialog>
+
+<script>
+    document.addEventListener("DOMContentLoaded", ()=>{
+  
+
+        const actualBtn = document.getElementById('formFile');
+        const selectFile = document.getElementById('sFile');
+        const fileChosen = document.getElementById('file-chosen');
+
+        actualBtn.addEventListener('change', function () {
+            fileChosen.textContent = this.files[0].name;
+            selectFile.textContent = "Selected file";
+        });
+
+    
+    });
+</script>

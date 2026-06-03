@@ -1,0 +1,85 @@
+﻿
+@model DMX.ViewModels.EditUserVM
+
+<dialog class="modal fade" id="EditUserDialog" >
+
+            <div class="modal-header">
+
+                <h6>Edit User</h6>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn btn-sm btn-outline-danger">Close</button>
+            </div>
+            @using (Html.BeginForm("EditUser", "Account", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <div class="floating-group">
+                            <input  type="text" asp-for="@Model.Username"placeholder="" />
+                            <label >Username</label>
+                        </div>
+                   
+                    <div class="floating-group">
+                    
+                            <input  type="text" asp-for="@Model.Lastname" placeholder="" />
+                            <label >First Name</label>
+                        </div>
+                
+                    <div class="floating-group">
+                       
+                            <input  asp-for="@Model.Username" placeholder="" />
+                            <label > Other Name</label>
+                        </div>
+                   
+                    <div class="floating-group">
+                  
+                        
+                            <input  type="text" asp-for="@Model.Email" placeholder="" />
+                       <label >Email</label>
+                    </div>
+
+                <div class="floating-group">
+
+                    <input  type="text" asp-for="@Model.PhoneNumber" placeholder="" />
+                        <label >Telephone</label>
+                    </div>
+                    </div>
+                <div class="modal-footer">  <button class="btn btn-block btn-primary"><i class="fa fa-fw fa-lg"></i>Update</button></div>
+         
+            }
+
+</dialog>
+<script>
+      document.getElementById("btnAddMemo").addEventListener("click", function (event) {
+            event.preventDefault();
+
+            const form = document.querySelector(addMemoFormSelector);
+                 if (!form.checkValidity()) {
+                form.reportValidity(); // Display browser validation messages
+                return; // Stop further execution if validation fails
+            }
+
+            // Validate fields
+
+            // Show error if invalid
+
+
+            // Confirm save
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you really want to save this record?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, save it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+
+
+
+
+</script>
+
