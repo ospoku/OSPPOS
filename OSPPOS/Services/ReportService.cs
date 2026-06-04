@@ -1,34 +1,25 @@
-﻿using DrinksPOS.ViewModels;
+﻿
+using ClosedXML.Excel;
+using Microsoft.EntityFrameworkCore;
+using OSPPOS.Data;
+using OSPPOS.Interfaces;
 using OSPPOS.Models;
 using System;
 using System.Drawing;
 
 namespace OSPPOS.Services
 {
-    public class ReportService
-    {
+  
        
 
-    public interface IReportService
-    {
-        Task<SalesReportVm> GetSalesReportAsync(DateTime from, DateTime to);
-        Task<StockReportVm> GetStockReportAsync();
-        Task<DebtorReportVm> GetDebtorReportAsync();
-        Task<List<TopProductVm>> GetTopProductsAsync(DateTime from, DateTime to, int top = 10);
-        Task<DashboardVm> GetDashboardAsync();
-        Task<byte[]> ExportSalesToExcelAsync(DateTime from, DateTime to);
-        Task<byte[]> ExportStockToExcelAsync();
-        Task<byte[]> ExportDebtorsToExcelAsync();
-    }
 
-    public class ReportService : IReportService
+    public class ReportService(XContext db) : IReportService
     {
-        private readonly AppDbContext _db;
-        public ReportService(AppDbContext db) => _db = db;
+        private readonly XContext ctx = db;
 
         public async Task<SalesReportVm> GetSalesReportAsync(DateTime from, DateTime to)
         {
-            var orders = await _db.SaleOrders
+            var orders = await ctx.SaleOrders
                 .Include(o => o.Customer)
                 .Include(o => o.Items)
                 .Include(o => o.Payments)
@@ -41,7 +32,7 @@ namespace OSPPOS.Services
 
         public async Task<StockReportVm> GetStockReportAsync()
         {
-            var products = await _db.Products
+            var products = await ctx.Products
                 .Include(p => p.Category)
                 .Include(p => p.Supplier)
                 .Where(p => p.IsActive)
@@ -57,7 +48,7 @@ namespace OSPPOS.Services
 
         public async Task<DebtorReportVm> GetDebtorReportAsync()
         {
-            var customers = await _db.Customers
+            var customers = await ctx.Customers
                 .Include(c => c.SaleOrders).ThenInclude(o => o.Payments)
                 .Where(c => c.SaleOrders.Any(o => o.PaymentStatus != PaymentStatus.Paid))
                 .ToListAsync();
@@ -85,7 +76,7 @@ namespace OSPPOS.Services
 
         public async Task<List<TopProductVm>> GetTopProductsAsync(DateTime from, DateTime to, int top = 10)
         {
-            var items = await _db.SaleOrderItems
+            var items = await ctx.SaleOrderItems
                 .Include(i => i.Product).ThenInclude(p => p.Category)
                 .Include(i => i.SaleOrder)
                 .Where(i => i.SaleOrder.OrderDate >= from && i.SaleOrder.OrderDate <= to.AddDays(1))
@@ -277,7 +268,7 @@ namespace OSPPOS.Services
             wb.SaveAs(ms);
             return ms.ToArray();
         }
-    } }}
+    } }
 
 
 

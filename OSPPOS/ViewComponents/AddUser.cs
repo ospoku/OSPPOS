@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using DMX.ViewModels;
-using DMX.Data;
 using OSPPOS.Models;
+using OSPPOS.Data;
 
-namespace DMX.ViewComponents
+namespace OSPPOS.ViewComponents
 {
     public class AddUser:ViewComponent
     {

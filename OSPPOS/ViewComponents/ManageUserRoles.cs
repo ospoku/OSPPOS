@@ -1,13 +1,14 @@
-using DMX.Data;
+
 using DMX.ViewModels;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.DotNet.Scaffolding.Shared;
+
+using OSPPOS.Data;
 using OSPPOS.Models;
 using System.Web;
 
-namespace DMX.ViewComponents
+namespace OSPPOS.ViewComponents
 {
     public class ManageUserRoles(XContext dContext, UserManager<AppUser> userManager, RoleManager<AppRole> roleManager,IDataProtectionProvider provider) : ViewComponent
     {

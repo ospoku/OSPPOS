@@ -1,25 +1,17 @@
-﻿using DrinksPOS.ViewModels;
+﻿
+using Microsoft.EntityFrameworkCore;
+using OSPPOS.Data;
+using OSPPOS.Interfaces;
 using OSPPOS.Models;
 using System;
 
 namespace OSPPOS.Services
 {
-    public class StockService
-    {
+  
 
-       
-    public interface IStockService
+    public class StockService(XContext db) : IStockService
     {
-        Task<StockBatch> CreateGRNAsync(CreateStockBatchVm vm, string userId);
-        Task<List<StockBatch>> GetAllGRNsAsync(DateTime? from = null, DateTime? to = null);
-        Task<StockBatch?> GetGRNAsync(int id);
-        Task<string> GenerateGRNNumberAsync();
-    }
-
-    public class StockService : IStockService
-    {
-        private readonly AppDbContext _db;
-        public StockService(AppDbContext db) => _db = db;
+        private readonly XContext ctx = db;
 
         public async Task<StockBatch> CreateGRNAsync(CreateStockBatchVm vm, string userId)
         {
@@ -44,7 +36,7 @@ namespace OSPPOS.Services
                 });
 
                 // Update current stock
-                var product = await _db.Products.FindAsync(item.ProductId);
+                var product = await ctx.Products.FindAsync(item.ProductId);
                 if (product is not null)
                 {
                     product.CurrentStock += item.Quantity;
@@ -52,14 +44,14 @@ namespace OSPPOS.Services
                 }
             }
 
-            _db.StockBatches.Add(grn);
-            await _db.SaveChangesAsync();
+            ctx.StockBatches.Add(grn);
+            await ctx.SaveChangesAsync();
             return grn;
         }
 
         public async Task<List<StockBatch>> GetAllGRNsAsync(DateTime? from = null, DateTime? to = null)
         {
-            var query = _db.StockBatches
+            var query = ctx.StockBatches
                 .Include(b => b.Supplier)
                 .Include(b => b.Items).ThenInclude(i => i.Product)
                 .Include(b => b.ReceivedBy)
@@ -72,7 +64,7 @@ namespace OSPPOS.Services
         }
 
         public async Task<StockBatch?> GetGRNAsync(int id) =>
-            await _db.StockBatches
+            await ctx.StockBatches
                 .Include(b => b.Supplier)
                 .Include(b => b.Items).ThenInclude(i => i.Product)
                 .Include(b => b.ReceivedBy)
@@ -81,11 +73,11 @@ namespace OSPPOS.Services
         public async Task<string> GenerateGRNNumberAsync()
         {
             var year = DateTime.Today.Year;
-            var count = await _db.StockBatches.CountAsync(b => b.ReceivedDate.Year == year);
+            var count = await ctx.StockBatches.CountAsync(b => b.ReceivedDate.Year == year);
             return $"GRN-{year}-{(count + 1):D4}";
         }
     }
 
 
 }
-}
+

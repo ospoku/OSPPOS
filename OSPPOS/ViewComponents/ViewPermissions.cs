@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using DMX.Data;
+
 using DMX.Models;
 using DMX.ViewModels;
+using OSPPOS.Data;
 
-namespace DMX.ViewComponents
+namespace OSPPOS.ViewComponents
 {
     public class ViewPermissions(XContext dContext) : ViewComponent
     {

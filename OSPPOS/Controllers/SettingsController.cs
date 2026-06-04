@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using DMX.Data;
+
 using DMX.ViewModels;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using AspNetCoreHero.ToastNotification.Notyf;
@@ -10,13 +10,14 @@ using DMX.ViewComponents;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
-using DMX.Helpers;
+
 using DMX.Services;
 using Microsoft.AspNetCore.Components.Web;
 using OSPPOS.Models;
+using OSPPOS.Data;
 
 
-namespace DMX.Controllers
+namespace OSPPOS.Controllers
 {
     [Authorize(Roles = "SuperAdmin")]
     public class SettingsController(XContext context, INotyfService notyfService, UserManager<AppUser> userManager, EntityService entityService) : Controller
@@ -183,7 +184,7 @@ namespace DMX.Controllers
 
             try
             {
-                var unprotectedId = (id);
+                var unprotectedId = id;
                 var limitToUpdate = await dcx.CashLimits.FirstOrDefaultAsync(m => m.CashLimitId == unprotectedId);
                 if (limitToUpdate == null)
                 {
@@ -252,7 +253,7 @@ else
         {
             try
             {
-                var unprotectedId = (Id);
+                var unprotectedId = Id;
                 var perdiemToUpdate = await dcx.PerDiems.FirstOrDefaultAsync(m => m.UserId == unprotectedId);
 
                 if (perdiemToUpdate == null)

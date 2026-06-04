@@ -3,6 +3,7 @@ using System.Security.Claims;
 using DMX.Models;
 using DMX.ViewModels;
 using Microsoft.AspNetCore.Identity;
+using OSPPOS.Models;
 
 namespace OSPPOS.Helpers
 {

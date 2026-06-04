@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using DMX.Data;
 using DMX.Models;
 using DMX.ViewModels;
+using OSPPOS.Models;
 
-namespace DMX.ViewComponents
+namespace OSPPOS.ViewComponents
 {
     public class ViewRoles( RoleManager<AppRole> roleManager) : ViewComponent
     {

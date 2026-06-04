@@ -2,11 +2,12 @@
 using DMX.Data;
 using DMX.ViewModels;
 using Microsoft.AspNetCore.Identity;
+using OSPPOS.Data;
 using OSPPOS.Models;
 using System.Security.Claims;
 using static DMX.Constants.Permissions;
 
-namespace DMX.Services
+namespace OSPPOS.Services
 {
     public class AssignmentService
     {

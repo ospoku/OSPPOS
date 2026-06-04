@@ -16,4 +16,4 @@
             public ICollection<StockBatch> StockBatches { get; set; } = new List<StockBatch>();
         }
     }
-}
+

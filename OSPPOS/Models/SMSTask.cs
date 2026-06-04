@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using DMX.Data;
+using OSPPOS.Data;
 
-namespace DMX.Models
+namespace OSPPOS.Models
 {
     public class SMSTask : TableAudit
     {

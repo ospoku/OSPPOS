@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using DMX.Data;
+
 using DMX.ViewModels;
 using OSPPOS.Models;
+using OSPPOS.Data;
 
-namespace DMX.ViewComponents
+namespace OSPPOS.ViewComponents
 {
     public class ViewUsers(XContext xContext, UserManager<AppUser> userManager, RoleManager<AppRole> roleManager) : ViewComponent
     {

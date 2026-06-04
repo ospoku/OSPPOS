@@ -2,9 +2,9 @@
 using DMX.Models;
 using DMX.ViewComponents;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace DMX.Controllers
+
+namespace OSPPOS.Controllers
 {
     public class HomeController(ILogger<HomeController> logger) : Controller
     {

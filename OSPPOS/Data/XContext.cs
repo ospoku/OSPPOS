@@ -15,8 +15,7 @@ namespace OSPPOS.Data
      
         public DbSet<Message> Messages { get; set; }
       
-        public DbSet<LetterComment> LetterComments { get; set; }
-        public DbSet<ServiceComment> ServiceComments { get; set; }    
+   
      public DbSet<RequestType> RequestTypes { get; set; }
       
       

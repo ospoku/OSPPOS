@@ -1,21 +1,20 @@
-using DrinksPOS.Data;
-using DrinksPOS.Models;
-using DrinksPOS.Services;
-using DrinksPOS.ViewModels;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using OSPPOS.Data;
+using OSPPOS.Interfaces;
 
-namespace DrinksPOS.Controllers;
+namespace OSPPOS.Controllers;
 
 [Authorize]
 public class SalesController : Controller
 {
     private readonly ISalesService _sales;
-    private readonly AppDbContext _db;
+    private readonly XContext _db;
 
-    public SalesController(ISalesService sales, AppDbContext db)
+    public SalesController(ISalesService sales, XContext db)
     {
         _sales = sales;
         _db = db;

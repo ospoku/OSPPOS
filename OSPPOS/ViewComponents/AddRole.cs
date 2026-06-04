@@ -2,10 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using DMX.ViewModels;
-using DMX.Data;
-using OSPPOS.Models;
 
-namespace DMX.ViewComponents
+using OSPPOS.Models;
+using OSPPOS.Data;
+
+namespace OSPPOS.ViewComponents
 {
     public class AddRole:ViewComponent
     {

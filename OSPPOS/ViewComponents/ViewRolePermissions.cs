@@ -1,5 +1,5 @@
 ﻿using DMX.Constants;
-using DMX.Data;
+
 using OSPPOS.Helpers;
 using DMX.Models;
 using DMX.ViewModels;
@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using OSPPOS.Data;
+using OSPPOS.Models;
 
 namespace OSPPOS.ViewComponents
 {

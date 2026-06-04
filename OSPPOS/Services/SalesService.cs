@@ -1,28 +1,21 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using OSPPOS.Data;
+using OSPPOS.Interfaces;
 using OSPPOS.Models;
 using System;
 
 namespace OSPPOS.Services
 {
-   
 
-        public interface ISalesService
+
+  
+
+    public class SalesService(XContext ctx) : ISalesService
         {
-            Task<(bool Success, string Error, SaleOrder? Order)> CreateSaleAsync(CreateSaleVm vm, string userId);
-            Task<(bool Success, string Error)> RecordPaymentAsync(RecordPaymentVm vm, string userId);
-            Task<SaleOrder?> GetOrderAsync(int id);
-            Task<List<SaleOrder>> GetOrdersAsync(DateTime? from, DateTime? to, PaymentStatus? status, SaleType? type);
-            Task<string> GenerateOrderNumberAsync();
-        }
+            private readonly XContext context = ctx;
 
-        public class SalesService : ISalesService
-        {
-            private readonly XContext ctx;
-        public SalesService(XContext ctx) => this.ctx = ctx;
-
-            public async Task<(bool, string, SaleOrder?)> CreateSaleAsync(CreateSaleVm vm, string userId)
+        public async Task<(bool, string, SaleOrder?)> CreateSaleAsync(CreateSaleVm vm, string userId)
             {
                 // Validate stock availability
                 foreach (var item in vm.Items)
@@ -127,7 +120,7 @@ namespace OSPPOS.Services
             public async Task<List<SaleOrder>> GetOrdersAsync(
                 DateTime? from, DateTime? to, PaymentStatus? status, SaleType? type)
             {
-                var q = _db.SaleOrders
+                var q = ctx.SaleOrders
                     .Include(o => o.Customer)
                     .Include(o => o.Items)
                     .Include(o => o.Payments)
@@ -151,4 +144,4 @@ namespace OSPPOS.Services
 
 
     }
-}
+

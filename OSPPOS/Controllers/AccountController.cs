@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OSPPOS.Data;
 using OSPPOS.Models;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -16,7 +17,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Security.Claims;
 
-namespace DMX.Controllers
+namespace OSPPOS.Controllers
 {
     public class AccountController(XContext dContext, UserManager<AppUser> userManager, RoleManager<AppRole> roleManager, SignInManager<AppUser> signinmanager, IWebHostEnvironment environment, INotyfService  notification, IDataProtectionProvider protectionProvider) : Controller
     {

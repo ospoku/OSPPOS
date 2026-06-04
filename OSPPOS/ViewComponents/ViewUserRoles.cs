@@ -4,8 +4,9 @@ using DMX.Data;
 using DMX.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using OSPPOS.Models;
+using OSPPOS.Data;
 
-namespace DMX.ViewComponents
+namespace OSPPOS.ViewComponents
 {
     public class ViewUserRoles(XContext context, UserManager<AppUser> userManager) : ViewComponent
     {

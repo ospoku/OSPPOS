@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using OSPPOS.Models;
 using System.Security.Claims;
 
-namespace DMX.Data
+namespace OSPPOS.Data
 {
     public class DBInitializer(XContext dContext, RoleManager<AppRole> roleManager, UserManager<AppUser> userManager)
     {
@@ -22,50 +22,7 @@ namespace DMX.Data
                 await rol.CreateAsync(new AppRole() { Name = "Admin", Rolename = "Admin", Description = "Role for admin users" });
             }
 
-            if (!dcx.DeceasedTypes.Any())
-            {
-                dcx.DeceasedTypes.Add(new DeceasedType()
-                {
-                    Name = "Brought In Dead",
-                    Code = "BID",
-                    Description = "Name for a Patient who was broguth in Dead"
-                });
-                dcx.DeceasedTypes.Add(new DeceasedType()
-                {
-                    Name = "Dead In Ward",
-                    Code = "DIW",
-                    Description = "Name for a Patient who Died in Ward"
-                });
-            }
-            if (!dcx.Statuses.Any())
-            {
-                dcx.Statuses.AddRange(new Status
-                {
-                    Name = "Open",
-                    Code = "OPN",
-                    Description = "Name for a Patient who was broguth in Dead"
-                },
-                new Status
-                {
-
-                    Name = "Close",
-                    Code = "CLS",
-                    Description = "Name for a Patient who Died in Ward"
-                }, new Status
-                {
-                    Name = "Pending",
-                    Code = "PND",
-                    Description = "Name for a Patient who Died in Ward"
-                }
-                , new Status {
-                    Name = "Archvied", Code = "ARC",
-                    Description = "Name for a Patient who Died in Ward"
-                }, new Status { Name = "In Progress",
-                    Code = "INP",
-                    Description = "Name for a Patient who Died in Ward"
-                }
-                );
-            }
+ 
             if (!dcx.Categories.Any())
             {
                 dcx.Categories.AddRange(new Category
@@ -88,33 +45,7 @@ namespace DMX.Data
                 });
             }
                 
-            if (!dcx.Priorities.Any())
-            {
-                dcx.Priorities.Add(new Priority()
-                {
-                    Name = "High",
-                    Code = "H",
-                    Description = "Name for a Patient who was broguth in Dead"
-                });
-                dcx.Priorities.Add(new Priority()
-                {
-                    Name = "Low",
-                    Code = "L",
-                    Description = "Name for a Patient who Died in Ward"
-                });
-                dcx.Priorities.Add(new Priority()
-                {
-                    Name = "Medium",
-                    Code = "M",
-                    Description = "Name for a Patient who Died in Ward"
-                });
-                dcx.Priorities.Add(new Priority()
-                {
-                    Name = "Emergency",
-                    Code = "E",
-                    Description = "Name for a Patient who Died in Ward"
-                });
-            }
+      
             if (!dcx.RequestTypes.Any())
             {
                 dcx.RequestTypes.Add(new RequestType()
@@ -131,38 +62,7 @@ namespace DMX.Data
                 });
            
             }
-            if (!dcx.TravelTypes.Any())
-            {
-                dcx.TravelTypes.Add(new TravelType()
-                {
-                    Name = "Conference",
-                    Code = "CNF",
-                    Description = "Name for a Patient who was broguth in Dead"
-                });
-                dcx.TravelTypes.Add(new TravelType()
-                {
-                    Name = "Seminar",
-                    Code = "SMR",
-                    Description = "Name for a Patient who Died in Ward"
-                });
-
-            }
-            if (!dcx.MorgueServices.Any())
-            {
-                dcx.MorgueServices.Add(new MorgueService ()
-                {
-                    ServiceName = "Formalin",
-                    Code="FML",
-                   Description="xxxxxxxxxx",
-                });
-                dcx.MorgueServices.Add(new MorgueService()
-                {
-                    ServiceName = "Embalming",
-                   Code="EBM",
-                   Description="xxxxxxxxxxx",
-                });
-
-            }
+    
 
             List<Claim> claimlist =
             [

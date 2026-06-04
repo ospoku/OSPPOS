@@ -4,10 +4,11 @@ using DMX.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OSPPOS.Data;
 using OSPPOS.Models;
 using System.Threading.Tasks;
 
-namespace DMX.Controllers
+namespace OSPPOS.Controllers
 {
     public class MessageController(IMessageService messageService, UserManager<AppUser> userManager, XContext context) : Controller
     {

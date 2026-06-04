@@ -1,6 +1,6 @@
 ﻿
 using DMX.Constants;
-using DMX.Data;
+
 
 using OSPPOS.Helpers;
 using DMX.Models;
@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Web;
+using OSPPOS.Models;
+using OSPPOS.Data;
 namespace OSPPOS.ViewComponents
 {
     //public class ManageRolePermissions(RoleManager<AppRole>roleManager, XContext xContext) : ViewComponent
@@ -65,12 +67,12 @@ namespace OSPPOS.ViewComponents
     public class ManageRolePermissions : ViewComponent
     {
         private readonly RoleManager<AppRole> _roleManager;
-        private readonly XContext _ctx;
+        private readonly XContext ctx;
         public readonly IDataProtector protector;
-        public ManageRolePermissions(RoleManager<AppRole> roleManager, XContext ctx,IDataProtectionProvider provider)
+        public ManageRolePermissions(RoleManager<AppRole> roleManager, XContext db,IDataProtectionProvider provider)
         {
             _roleManager = roleManager;
-            _ctx = ctx;
+            ctx = db;
             protector = provider.CreateProtector("IdProtector");
         }
 

@@ -5,16 +5,18 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using OSPPOS.Data;
+using OSPPOS.Interfaces;
 
-namespace DrinksPOS.Controllers;
+namespace OSPPOS.Controllers;
 
 [Authorize]
 public class StockController : Controller
 {
     private readonly IStockService _stock;
-    private readonly AppDbContext _db;
+    private readonly XContext _db;
 
-    public StockController(IStockService stock, AppDbContext db)
+    public StockController(IStockService stock, XContext db)
     {
         _stock = stock;
         _db = db;
