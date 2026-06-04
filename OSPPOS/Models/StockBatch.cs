@@ -1,9 +1,12 @@
-﻿namespace OSPPOS.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace OSPPOS.Models
 {
    
 
     public class StockBatch
     {
+        [Key]
         public int Id { get; set; }
         public string GRNNumber { get; set; } = string.Empty;   // e.g. GRN-2024-001
         public int SupplierId { get; set; }

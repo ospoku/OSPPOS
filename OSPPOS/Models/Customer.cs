@@ -1,9 +1,12 @@
-﻿namespace OSPPOS.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace OSPPOS.Models
 {
  
 
     public class Customer
     {
+        [Key]
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string? Phone { get; set; }

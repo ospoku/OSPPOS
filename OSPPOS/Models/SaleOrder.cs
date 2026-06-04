@@ -1,4 +1,7 @@
-﻿namespace OSPPOS.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace OSPPOS.Models
 {
    
 
@@ -7,6 +10,7 @@
 
     public class SaleOrder
     {
+        [Key]
         public int Id { get; set; }
         public string OrderNumber { get; set; } = string.Empty;   // e.g. INV-2024-0001
 
@@ -42,10 +46,12 @@
 
     public class SaleOrderItem
     {
+        [Key]
         public int Id { get; set; }
+        [ForeignKey(nameof(SaleOrderItem.SaleOrderId))]
         public int SaleOrderId { get; set; }
         public SaleOrder SaleOrder { get; set; } = null!;
-
+        [ForeignKey(nameof(SaleOrderItem.ProductId))]
         public int ProductId { get; set; }
         public Product Product { get; set; } = null!;
 

@@ -1,4 +1,7 @@
-﻿namespace OSPPOS.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace OSPPOS.Models
 {
   
 
@@ -6,7 +9,9 @@
 
     public class Payment
     {
+        [Key]
         public int Id { get; set; }
+        [ForeignKey(nameof(Payment.SaleOrderId))]
         public int SaleOrderId { get; set; }
         public SaleOrder SaleOrder { get; set; } = null!;
 
