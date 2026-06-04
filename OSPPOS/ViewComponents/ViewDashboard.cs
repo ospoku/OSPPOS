@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-
-using DMX.ViewModels;
 using OSPPOS.Data;
+using OSPPOS.ViewModels;
 
 namespace OSPPOS.ViewComponents
 {

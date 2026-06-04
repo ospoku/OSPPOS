@@ -2,9 +2,10 @@
 @using DMX.ViewComponents
 @using Microsoft.AspNetCore.Authorization
 @using OSPPOS.ViewComponents
+@using OSPPOS.ViewModels
 @inject IAuthorizationService auth
 
-@model IEnumerable<DMX.ViewModels.ViewUsersVM>
+@model IEnumerable<ViewUsersVM>
 
 @inject Microsoft.AspNetCore.DataProtection.IDataProtectionProvider DataProtectionProvider
 @using Microsoft.AspNetCore.DataProtection

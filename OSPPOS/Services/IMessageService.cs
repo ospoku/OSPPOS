@@ -1,4 +1,4 @@
-﻿using DMX.Models;
+﻿using OSPPOS.Models;
 
 namespace DMX.Services
 {

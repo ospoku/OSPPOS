@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace DMX.ViewComponents
+
+namespace OSPPOS.ViewComponents
 {
     public class UserAlert:ViewComponent
     {

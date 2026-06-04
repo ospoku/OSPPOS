@@ -1,10 +1,11 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
-using DMX.Data;
-using DMX.ViewModels;
+
 using Microsoft.AspNetCore.Identity;
 using OSPPOS.Models;
 using OSPPOS.Data;
+
+using OSPPOS.ViewModels;
 
 namespace OSPPOS.ViewComponents
 {

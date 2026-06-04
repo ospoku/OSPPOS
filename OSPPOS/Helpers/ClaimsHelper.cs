@@ -1,9 +1,9 @@
 using System.Reflection;
 using System.Security.Claims;
 using DMX.Models;
-using DMX.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using OSPPOS.Models;
+using OSPPOS.ViewModels;
 
 namespace OSPPOS.Helpers
 {

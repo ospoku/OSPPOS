@@ -1,6 +1,6 @@
 ﻿using DMX.Models;
 
-namespace DMX.ViewModels
+namespace OSPPOS.ViewModels
 {
     public class UserMessagesVM
     {

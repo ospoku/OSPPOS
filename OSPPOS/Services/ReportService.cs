@@ -101,7 +101,7 @@ namespace OSPPOS.Services
             var today = DateTime.Today;
             var monthStart = new DateTime(today.Year, today.Month, 1);
 
-            var allOrders = await _db.SaleOrders
+            var allOrders = await ctx.SaleOrders
                 .Include(o => o.Customer)
                 .Include(o => o.Items)
                 .Include(o => o.Payments)
@@ -110,7 +110,7 @@ namespace OSPPOS.Services
             var todayOrders = allOrders.Where(o => o.OrderDate.Date == today).ToList();
             var monthOrders = allOrders.Where(o => o.OrderDate >= monthStart).ToList();
             var recentOrders = allOrders.OrderByDescending(o => o.OrderDate).Take(10).ToList();
-            var lowStockItems = await _db.Products
+            var lowStockItems = await ctx.Products
                 .Include(p => p.Category)
                 .Where(p => p.IsActive && p.CurrentStock <= p.ReorderLevel)
                 .Take(10).ToListAsync();

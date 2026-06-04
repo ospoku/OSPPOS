@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DMX.ViewModels
+namespace OSPPOS.ViewModels
 {
     public class UserPermissionVM
     {

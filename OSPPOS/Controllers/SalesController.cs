@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OSPPOS.Data;
 using OSPPOS.Interfaces;
+using OSPPOS.Models;
 
 namespace OSPPOS.Controllers;
 

@@ -1,7 +1,8 @@
-﻿using DMX.ViewModels;
+﻿
 using Microsoft.AspNetCore.Mvc;
+using OSPPOS.ViewModels;
 
-namespace DMX.ViewComponents
+namespace OSPPOS.ViewComponents
 {
     public class AddPermission:ViewComponent
     {

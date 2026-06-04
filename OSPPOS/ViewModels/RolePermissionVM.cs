@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
-namespace DMX.ViewModels
+namespace OSPPOS.ViewModels
 {
     public class RolePermissionVM
     {

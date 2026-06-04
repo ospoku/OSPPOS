@@ -1,7 +1,7 @@
-﻿using DMX.ViewModels;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OSPPOS.Models;
+using OSPPOS.ViewModels;
 
 
 

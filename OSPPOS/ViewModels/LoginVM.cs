@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DMX.ViewModels
+namespace OSPPOS.ViewModels
 {
     public class LoginVM
     {

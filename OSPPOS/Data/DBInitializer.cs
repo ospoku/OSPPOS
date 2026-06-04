@@ -46,22 +46,7 @@ namespace OSPPOS.Data
             }
                 
       
-            if (!dcx.RequestTypes.Any())
-            {
-                dcx.RequestTypes.Add(new RequestType()
-                {
-                    Name = "Estate",
-                    Code = "EST",
-                    Description = "Name for a Patient who was broguth in Dead"
-                });
-                dcx.RequestTypes.Add(new RequestType()
-                {
-                    Name = "ICT",
-                    Code = "IT",
-                    Description = "Name for a Patient who Died in Ward"
-                });
-           
-            }
+
     
 
             List<Claim> claimlist =

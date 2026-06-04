@@ -1,8 +1,9 @@
-﻿using DMX.Data;
+﻿
+using OSPPOS.Data;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DMX.Models
+namespace OSPPOS.Models
 {
     public class Message : TableAudit
     {

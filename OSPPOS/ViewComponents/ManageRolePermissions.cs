@@ -3,8 +3,7 @@ using DMX.Constants;
 
 
 using OSPPOS.Helpers;
-using DMX.Models;
-using DMX.ViewModels;
+
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
@@ -15,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Web;
 using OSPPOS.Models;
 using OSPPOS.Data;
+using OSPPOS.ViewModels;
 namespace OSPPOS.ViewComponents
 {
     //public class ManageRolePermissions(RoleManager<AppRole>roleManager, XContext xContext) : ViewComponent
@@ -88,7 +88,7 @@ namespace OSPPOS.ViewComponents
             model.RoleName = role?.Name ?? "";
 
             // Load all permissions from DB
-            var allPermissions = await _ctx.Permissions
+            var allPermissions = await ctx.Permissions
                 .OrderBy(p => p.Module).ThenBy(p => p.Action)
                 .Select(p => new RoleClaimsVM
                 {

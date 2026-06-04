@@ -1,10 +1,12 @@
-﻿using DMX.Data;
-using DMX.ViewModels;
+﻿
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using OSPPOS.Data;
 using OSPPOS.Models;
+using OSPPOS.ViewModels;
 
-namespace DMX.ViewComponents
+namespace OSPPOS.ViewComponents
 {
     public class UserMessages(UserManager<AppUser> userManager, XContext context):ViewComponent
     {
@@ -21,7 +23,7 @@ namespace DMX.ViewComponents
                 IsRead = m.IsRead,
                 Subject = m.Subject,
                 Reciever = m.Reciever,
-                CreatedDate = m.CreatedDate.Value,
+                //CreatedDate = m.CreatedDate.Value,
             }).
             
                 Take(5).ToList();

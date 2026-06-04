@@ -1,7 +1,8 @@
-﻿using DMX.Data;
-using DMX.Models;
+﻿using DMX.Services;
+using OSPPOS.Data;
+using OSPPOS.Models;
 
-namespace DMX.Services
+namespace OSPPOS.Services
 {
     public class MessageService(XContext context) : IMessageService
     {
@@ -20,7 +21,7 @@ namespace DMX.Services
 
         public List<Message> GetMessages(string Receiver, bool bIsGetOnlyUnread)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

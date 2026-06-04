@@ -1,8 +1,9 @@
-﻿using DMX.Data;
+﻿
+using OSPPOS.Data;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DMX.Models
+namespace OSPPOS.Models
 {
     public class Permission:TableAudit
     {
@@ -19,5 +20,6 @@ namespace DMX.Models
         //    Code = $"{Module}.{Action}";
         //}
         public string Description { get; set; }
+        public bool isIsDeleted { get; set; }
     }
 }

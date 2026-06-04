@@ -1,6 +1,5 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
-using DMX.Data;
-using DMX.ViewModels;
+
 using Microsoft.AspNetCore.Identity;
 using OSPPOS.Data;
 using OSPPOS.Models;

@@ -1,14 +1,15 @@
 ﻿
-using DMX.Data;
+
 
 using OSPPOS.Helpers;
 using DMX.Models;
-using DMX.ViewModels;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using OSPPOS.Models;
+using OSPPOS.Data;
 
 namespace OSPPOS.Services
 {
@@ -168,48 +169,48 @@ namespace OSPPOS.Services
             }
         }
 
-        public async Task<bool> EditMemoAsync(string Id, EditMemoVM editMemoVM, ClaimsPrincipal userClaim)
-        {
-            var unprotectedId = (Id);
-            if(!Guid.TryParse(unprotectedId, out Guid memoGuid))
-            {
-                return false; // Invalid ID format
-            }
-            var updateThisMemo = await dcx.Memos.FirstOrDefaultAsync(a => a.PublicId == memoGuid);
+        //public async Task<bool> EditMemoAsync(string Id, EditMemoVM editMemoVM, ClaimsPrincipal userClaim)
+        //{
+        //    var unprotectedId = (Id);
+        //    if(!Guid.TryParse(unprotectedId, out Guid memoGuid))
+        //    {
+        //        return false; // Invalid ID format
+        //    }
+        //    var updateThisMemo = await dcx.Memos.FirstOrDefaultAsync(a => a.PublicId == memoGuid);
 
-            if (updateThisMemo == null)
-            {
-                return false;
-            }
+        //    if (updateThisMemo == null)
+        //    {
+        //        return false;
+        //    }
 
-            updateThisMemo.Content = editMemoVM.Content;
-            updateThisMemo.Title = editMemoVM.Title;
+        //    updateThisMemo.Content = editMemoVM.Content;
+        //    updateThisMemo.Title = editMemoVM.Title;
 
-            if (!await EditEntityAsync(updateThisMemo, userClaim))
-            {
-                return false; // If entity update fails, stop here
-            }
+        //    if (!await EditEntityAsync(updateThisMemo, userClaim))
+        //    {
+        //        return false; // If entity update fails, stop here
+        //    }
 
-            // Remove existing memo assignments
-            var existingAssignments = dcx.MemoAssignments.Where(x => x.PublicId  == memoGuid);
-            dcx.MemoAssignments.RemoveRange(existingAssignments);
+        //    // Remove existing memo assignments
+        //    var existingAssignments = dcx.MemoAssignments.Where(x => x.PublicId  == memoGuid);
+        //    dcx.MemoAssignments.RemoveRange(existingAssignments);
 
-            // Add new memo assignments
-            var user = await usm.GetUserAsync(userClaim);
-            foreach (var userId in editMemoVM.SelectedUsers)
-            {
-                dcx.MemoAssignments.Add(new MemoAssignment
-                {
-                    MemoId = updateThisMemo.Id,
-                    UserId = userId,
-                    CreatedBy = user?.Id,
-                    CreatedDate = DateTime.UtcNow,
-                });
-            }
+        //    // Add new memo assignments
+        //    var user = await usm.GetUserAsync(userClaim);
+        //    foreach (var userId in editMemoVM.SelectedUsers)
+        //    {
+        //        dcx.MemoAssignments.Add(new MemoAssignment
+        //        {
+        //            MemoId = updateThisMemo.Id,
+        //            UserId = userId,
+        //            CreatedBy = user?.Id,
+        //            CreatedDate = DateTime.UtcNow,
+        //        });
+        //    }
 
-            // Save changes after updating assignments
-            return await dcx.SaveChangesAsync(user?.Id) > 0;
-        }
+        //    // Save changes after updating assignments
+        //    return await dcx.SaveChangesAsync(user?.Id) > 0;
+        //}
     }
 }
 

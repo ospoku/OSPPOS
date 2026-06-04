@@ -1,8 +1,9 @@
-using DrinksPOS.Services;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OSPPOS.Interfaces;
 
-namespace DrinksPOS.Controllers;
+namespace OSPPOS.Controllers;
 
 [Authorize(Roles = "Admin,Manager")]
 public class ReportsController : Controller

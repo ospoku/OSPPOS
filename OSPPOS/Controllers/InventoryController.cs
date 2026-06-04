@@ -3,15 +3,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OSPPOS.Data;
-using static OSPPOS.Services.ReportService;
+using OSPPOS.Interfaces;
+
 
 namespace OSPPOS.Controllers;
 
 [Authorize]
-public class InventoryController(XContext db, Services.ReportService.IReportService reports) : Controller
+public class InventoryController(XContext db, IReportService report) : Controller
 {
     private readonly XContext ctx = db;
-    private readonly IReportService _reports = reports;
+    private readonly IReportService reports = report;
 
     // Stock levels overview
     public async Task<IActionResult> Index(int? categoryId, string? search)

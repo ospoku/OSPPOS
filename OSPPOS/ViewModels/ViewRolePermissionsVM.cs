@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 
-namespace DMX.ViewModels
+namespace OSPPOS.ViewModels
 {
     public class ViewRolePermissionsVM   
     {

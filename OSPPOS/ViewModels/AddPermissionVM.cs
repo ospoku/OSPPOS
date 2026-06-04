@@ -1,4 +1,4 @@
-﻿namespace DMX.ViewModels
+﻿namespace OSPPOS.ViewModels
 {
     public class AddPermissionVM
     {

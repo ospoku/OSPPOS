@@ -1,6 +1,4 @@
-using DrinksPOS.Data;
-using DrinksPOS.Services;
-using DrinksPOS.ViewModels;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;

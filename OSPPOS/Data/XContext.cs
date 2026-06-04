@@ -11,12 +11,11 @@ namespace OSPPOS.Data
     public class XContext(DbContextOptions<XContext> options) : AuditableIdentityContext(options)
     {
         
-        public DbSet<FeeStructure> FeeStructures { get; set; }
+ 
      
         public DbSet<Message> Messages { get; set; }
       
-   
-     public DbSet<RequestType> RequestTypes { get; set; }
+ 
       
       
         

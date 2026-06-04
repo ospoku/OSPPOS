@@ -1,9 +1,10 @@
 ﻿
 
-@model IEnumerable<DMX.ViewModels.ViewUserRolesVM>
+@model IEnumerable<ViewUserRolesVM>
 
 @inject Microsoft.AspNetCore.DataProtection.IDataProtectionProvider DataProtectionProvider
 @using Microsoft.AspNetCore.DataProtection
+@using OSPPOS.ViewModels
 @{
     // Optional: create protector in view (same purpose string)
     var protector = DataProtectionProvider.CreateProtector("IdProtector");

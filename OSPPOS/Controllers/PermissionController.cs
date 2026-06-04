@@ -1,5 +1,4 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
-using DMX.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -8,8 +7,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 using OSPPOS.Data;
+using OSPPOS.Helpers;
 using OSPPOS.Models;
 using OSPPOS.Services;
+using OSPPOS.ViewModels;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;

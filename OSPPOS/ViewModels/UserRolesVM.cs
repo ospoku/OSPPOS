@@ -1,4 +1,4 @@
-﻿namespace DMX.ViewModels
+﻿namespace OSPPOS.ViewModels
 {
     public class ManageUsRolesVM    {
         public string UserId { get; set; }

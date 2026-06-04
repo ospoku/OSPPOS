@@ -1,6 +1,6 @@
 using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
-using DMX.Authorization;
+
 using OSPPOS.Helpers;
 using DMX.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -20,11 +20,10 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddMvc();
 
 builder.Services.AddScoped<IMessageService, MessageService>();
-builder.Services.AddScoped<SMSService>();
-builder.Services.AddScoped<FeeService>();
+
 builder.Services.AddScoped<EntityService>();
 builder.Services.AddScoped<AssignmentService>();
-builder.Services.AddScoped<AllowanceService>();
+
 
 builder.Services.AddScoped<EmailService>();
 
@@ -43,27 +42,14 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddSingleton<HttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("TravelRequestOwnerPolicy", policy =>
-        policy.Requirements.Add(new TravelRequestOwnerRequirement()));
 
-    options.AddPolicy("MemoOwnerPolicy", policy =>
-        policy.Requirements.Add(new MemoOwnerRequirement()));
-
-    options.AddPolicy("ExcuseDutyOwnerPolicy", policy =>
-        policy.Requirements.Add(new ExcuseDutyOwnerRequirement()));
-    options.AddPolicy("DeceasedOwnerPolicy", policy =>
-        policy.Requirements.Add(new DeceasedOwnerRequirement()));
-    
 });
 
-// Register handlers
-builder.Services.AddSingleton<IAuthorizationHandler, TravelRequestOwnerHandler>();
-builder.Services.AddScoped<IAuthorizationHandler, MemoOwnerHandler>();
-builder.Services.AddSingleton<IAuthorizationHandler, ExcuseDutyOwnerHandler>();
 
 
-builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
-builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
+
+//builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+//builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
 // Add services to the container.
 builder.Services.AddSession(options => options.IdleTimeout = TimeSpan.FromMinutes(10));
