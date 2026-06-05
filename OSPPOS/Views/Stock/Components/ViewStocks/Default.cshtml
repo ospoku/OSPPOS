@@ -1,11 +1,11 @@
 ﻿
-@using DMX.Models;  
-@using DMX.ViewComponents
+
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
 @using System.Web
 @using Microsoft.AspNetCore.DataProtection
 @using OSPPOS.Models
+@using OSPPOS.ViewComponents
 @inject UserManager<AppUser> usm;
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -108,6 +108,6 @@
 
 </script>
 
-@await Component.InvokeAsync(nameof(AddMemo))
+@await Component.InvokeAsync(nameof(AddStock))
 <dialog id="EditMemoDialog"><div id="EditMemoDialogContent"></div></dialog>
 <dialog id="CommentMemoDialog" class="col-md-6 border-0 rounded p-0"><div id="CommentMemoDialogContent"></div></dialog>

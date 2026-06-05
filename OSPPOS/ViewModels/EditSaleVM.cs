@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using OSPPOS.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using OSPPOS.Models;
 
 
 
