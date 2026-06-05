@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OSPPOS.Data;
 using OSPPOS.Interfaces;
+using OSPPOS.ViewModels;
 
 namespace OSPPOS.Controllers;
 
@@ -35,12 +36,12 @@ public class StockController : Controller
     public async Task<IActionResult> Create()
     {
         await PopulateDropDownsAsync();
-        return View(new CreateStockBatchVm { ReceivedDate = DateTime.Today });
+        return View(new AddStockBatchVM { ReceivedDate = DateTime.Today });
     }
 
     // POST /Stock/Create
     [HttpPost, ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(CreateStockBatchVm vm)
+    public async Task<IActionResult> Create(AddStockBatchVM vm)
     {
         vm.Items.RemoveAll(i => i.ProductId == 0 || i.Quantity == 0);
         if (!vm.Items.Any())

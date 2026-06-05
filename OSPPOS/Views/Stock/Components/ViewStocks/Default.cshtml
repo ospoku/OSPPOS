@@ -1,15 +1,16 @@
 ﻿
-@using DMX.Models;  
-@using DMX.ViewComponents
+
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
 @using System.Web
 @using Microsoft.AspNetCore.DataProtection
+@using OSPPOS.Models
+@using OSPPOS.ViewComponents
 @inject UserManager<AppUser> usm;
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@model IEnumerable<DMX.ViewModels.ViewMemosVM>;
+@model IEnumerable<OSPPOS.ViewModels.ViewStocksVM>;
 @inject Microsoft.AspNetCore.DataProtection.IDataProtectionProvider DataProtectionProvider
 
 @{
@@ -42,16 +43,16 @@
                 {
                     <tr>
                         <td></td>
-<td>@Memo.ReferenceNumber</td>
-                        <td class="ellipsed-text"> @Memo.Title</td>
+<td>@Memo.Notes</td>
+                        <td class="ellipsed-text"> @Memo.Notes</td>
                         
-                            <td class="ellipsed-text">@Memo.Sender</td>
-                            <td>
+                            <td class="ellipsed-text">@Memo.Notes</td>
+@*                             <td>
 @foreach(var assignee in @Memo.Assignees)
 {
                         <span class="badge badge-pill badge-dark">@assignee</span>
 }
-</td>
+</td> *@
                            <td>
 
                                 <div class="btn-group" role="group">
@@ -107,6 +108,6 @@
 
 </script>
 
-@await Component.InvokeAsync(nameof(AddMemo))
+@await Component.InvokeAsync(nameof(AddStock))
 <dialog id="EditMemoDialog"><div id="EditMemoDialogContent"></div></dialog>
 <dialog id="CommentMemoDialog" class="col-md-6 border-0 rounded p-0"><div id="CommentMemoDialogContent"></div></dialog>

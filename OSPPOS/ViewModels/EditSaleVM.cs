@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using OSPPOS.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using OSPPOS.Models;
+
+
 
 namespace OSPPOS.ViewModels
 {
-    public class AddCustomerVM
+    public class EditSaleVM
     {
         public int? CustomerId { get; set; }
         public string? WalkInCustomerName { get; set; }
@@ -21,7 +20,8 @@ namespace OSPPOS.ViewModels
         public PaymentMethod PaymentMethod { get; set; } = PaymentMethod.Cash;
         public string? PaymentReference { get; set; }
     }
-
 }
+
+
 
 

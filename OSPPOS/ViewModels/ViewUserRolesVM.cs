@@ -1,6 +1,4 @@
-﻿using DMX.Models;
-
-namespace OSPPOS.ViewModels
+﻿namespace OSPPOS.ViewModels
 {
     public class ViewUserRolesVM
     {

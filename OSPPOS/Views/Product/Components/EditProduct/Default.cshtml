@@ -1,5 +1,5 @@
 ﻿
-@model DMX.ViewModels.EditMemoVM;
+@model OSPPOS.ViewModels.EditProductVM;
 
   
 
@@ -15,15 +15,15 @@
                         @using(Html.BeginForm("EditMemo", "Memo", FormMethod.Post,new{id="editMemoForm"}))
                         {
                             <div class="floating-group">
-                                <input  asp-for="@Model.Title" placeholder="" />
+                                <input  asp-for="@Model.WalkInCustomerName" placeholder="" />
                                 <label >Title</label>
                             </div>
                      <div class="form-group">     
-                    <textarea id="MemoContent"  type="text"  asp-for="@Model.Content" required="required" style="min-height:300px"></textarea>
+                    <textarea id="MemoContent"  type="text"  asp-for="@Model.Notes" required="required" style="min-height:300px"></textarea>
                     </div>
                             
-                                    <select id="selectUser" class="dmx-choices did-floating-select" asp-items="@Model.UsersList" asp-for="@Model.SelectedUsers" multiple ></select>
-                        
+                                   @*  <select id="selectUser" class="dmx-choices did-floating-select" asp-items="@Model.UsersList" asp-for="@Model.SelectedUsers" multiple ></select>
+                         *@
                            
                        
                                 <button id="btnEditMemo" class="btn btn-block btn-primary">Update</button>         

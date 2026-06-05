@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 
 
-// ─── Sales ─────────────────────────────────────────────────────
+namespace OSPPOS.ViewModels { 
 public class AddStockVM
 {
     public int? CustomerId { get; set; }
@@ -27,3 +27,4 @@ public class AddStockVM
 
 
 
+}

@@ -4,15 +4,7 @@ using OSPPOS.Models;
 using System.ComponentModel.DataAnnotations;
 
 
-// ─── Stock Intake ──────────────────────────────────────────────
-public class CreateStockBatchVm
-{
-    [Required] public int SupplierId { get; set; }
-    [Required] public DateTime ReceivedDate { get; set; } = DateTime.Today;
-    public string? SupplierInvoiceRef { get; set; }
-    public string? Notes { get; set; }
-    public List<StockBatchItemVm> Items { get; set; } = [new()];
-}
+
 
 public class StockBatchItemVm
 {

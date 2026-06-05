@@ -1,4 +1,4 @@
-﻿@model OSPPOS.ViewModels.AddMemoVM;
+﻿@model OSPPOS.ViewModels.AddStockVM;
 
 <dialog id="AddMemoDialog" class="col-md-6 border-0 rounded p-0">
     <div class="modal-header">
@@ -31,7 +31,7 @@
 
   <!-- Floating label + input -->
   <div class="did-floating-label-content">
-                    <input type="text" asp-for="@Model.Title"
+                    <input type="text" asp-for="@Model.Notes"
       class="did-floating-input" 
       id="title" 
       placeholder=" "           
@@ -43,15 +43,15 @@
             <!-- Memo Content -->
             <div class="form-group">
                
-                <textarea id="MemoContent" class="dmx-textarea" asp-for="@Model.Content" placeholder="Memo Content"></textarea>
+                <textarea id="MemoContent" class="dmx-textarea" asp-for="@Model.Notes" placeholder="Memo Content"></textarea>
                     
             </div>
 
             <!-- Select Approvers -->
- 
+ @* 
       
                 <select id="selectMemoUser" class="dmx-choices" asp-items="@Model.UsersList" asp-for="@Model.SelectedUsers"><option value="">Select Approver(s)</option></select>
-            
+             *@
          </div>
          <div class="modal-footer">
           

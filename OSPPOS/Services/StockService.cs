@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using OSPPOS.Data;
 using OSPPOS.Interfaces;
 using OSPPOS.Models;
+using OSPPOS.ViewModels;
 using System;
 
 namespace OSPPOS.Services
@@ -13,7 +14,7 @@ namespace OSPPOS.Services
     {
         private readonly XContext ctx = db;
 
-        public async Task<StockBatch> CreateGRNAsync(CreateStockBatchVm vm, string userId)
+        public async Task<StockBatch> CreateGRNAsync(AddStockBatchVM vm, string userId)
         {
             var grn = new StockBatch
             {

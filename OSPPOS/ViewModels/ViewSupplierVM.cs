@@ -3,9 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using OSPPOS.Models;
 using System.ComponentModel.DataAnnotations;
 
+
+
+
 namespace OSPPOS.ViewModels
 {
-    public class AddCustomerVM
+    public class ViewSupplierVM
     {
         public int? CustomerId { get; set; }
         public string? WalkInCustomerName { get; set; }
@@ -20,8 +23,14 @@ namespace OSPPOS.ViewModels
         public decimal CashReceived { get; set; } = 0;
         public PaymentMethod PaymentMethod { get; set; } = PaymentMethod.Cash;
         public string? PaymentReference { get; set; }
+        public bool CanEdit { get; set; }
+        public bool CanDelete { get; set; }
+        public bool CanInsert { get; set; } public bool CanUpdate { get; set; } 
+        public bool CanPrint { get; set; }
+        public string PublicId { get; set; }
     }
-
 }
+
+
 
 
