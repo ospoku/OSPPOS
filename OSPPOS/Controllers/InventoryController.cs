@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OSPPOS.Data;
 using OSPPOS.Interfaces;
+using OSPPOS.ViewComponents;
 
 
 namespace OSPPOS.Controllers;
@@ -23,23 +24,10 @@ public class InventoryController(XContext db, IReportService report) : Controlle
     }
 
     // Stock levels overview
-    public async Task<IActionResult> Index(int? categoryId, string? search)
+    public async Task<IActionResult> ViewInventory()
     {
-        var q = ctx.Products
-            .Include(p => p.Category)
-            .Include(p => p.Supplier)
-            .Where(p => p.IsActive)
-            .AsQueryable();
 
-        if (categoryId.HasValue) q = q.Where(p => p.CategoryId == categoryId.Value);
-        if (!string.IsNullOrWhiteSpace(search))
-            q = q.Where(p => p.Name.Contains(search) || p.SKU.Contains(search));
-
-        ViewBag.Categories = new SelectList(
-            await ctx   .Categories.Where(c => c.IsActive).ToListAsync(), "Id", "Name", categoryId);
-        ViewBag.Search = search;
-        ViewBag.SelectedCategory = categoryId;
-        return View(await q.OrderBy(p => p.Category.Name).ThenBy(p => p.Name).ToListAsync());
+        return ViewComponent(nameof(ViewInventory));
     }
 
     // Stock movement for a single product

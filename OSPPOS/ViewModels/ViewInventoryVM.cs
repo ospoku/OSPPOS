@@ -10,22 +10,12 @@ namespace OSPPOS.ViewModels
 {
     public class ViewInventoryVM
     {
-        public int? CustomerId { get; set; }
-        public string? WalkInCustomerName { get; set; }
-        public SaleType SaleType { get; set; } = SaleType.Cash;
-        public DateTime? DueDate { get; set; }
-        public string? Notes { get; set; }
-        public decimal DiscountPercent { get; set; } = 0;
-        public decimal Discount { get; set; } = 0;
-        public List<SaleItemVm> Items { get; set; } = [];
-
-        // For initial cash payment
-        public decimal CashReceived { get; set; } = 0;
-        public PaymentMethod PaymentMethod { get; set; } = PaymentMethod.Cash;
-        public string? PaymentReference { get; set; }
-        public bool CanEdit { get; set; }
-        public bool CanPrint { get; set; }
-        public string PublicId { get;set; }
+        public List<Product> Products
+        {
+            get; set;
+        }
+        public int? CategoryId { get; set; }
+        public string? Search { get; set; }
     }
 }
 

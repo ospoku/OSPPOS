@@ -20,8 +20,14 @@ namespace OSPPOS.ViewComponents
             if (categoryId.HasValue)
                 q = q.Where(p => p.CategoryId == categoryId.Value);
 
+<<<<<<< HEAD
             q = q.Where(p => p.Name.ToLower().Contains(search.ToLower()) ||
                    p.SKU.Contains(search, StringComparison.CurrentCultureIgnoreCase));
+=======
+            if (!string.IsNullOrWhiteSpace(search))
+                q = q.Where(p => p.Name.ToLower().Contains(search.ToLower()) ||
+                    p.SKU.ToLower().Contains(search.ToLower()));
+>>>>>>> displaying view componet diamond
 
             var products = await q
                 .OrderBy(p => p.Category.Name)
@@ -30,7 +36,12 @@ namespace OSPPOS.ViewComponents
 
             var inventoryVM = new ViewInventoryVM
             {
+<<<<<<< HEAD
                 Products = products,    CategoryId = categoryId,
+=======
+                Products = products,
+                CategoryId = categoryId,
+>>>>>>> displaying view componet diamond
                 Search = search
             };
 
@@ -47,4 +58,8 @@ namespace OSPPOS.ViewComponents
             return View(inventoryVM);
         }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> displaying view componet diamond
