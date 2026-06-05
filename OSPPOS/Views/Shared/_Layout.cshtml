@@ -92,19 +92,19 @@
             <li class="nav-item">
                 <a class="nav-link collapsed"  data-bs-toggle="collapse" data-bs-target="#collapseOne"
                     aria-expanded="true" aria-controls="collapseOne">
-                    <i class="fas fa-fw fa-file fa-2x"></i>
-                    <span>Documents</span>
+                    <i class="fas fa-fw fa-store fa-2x"></i>
+                    <span>Trade Operations</span>
                 </a>
                 <div id="collapseOne" class="collapse"  aria-labelledby="headingTwo" data-bs-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">New Documents</h6>
-                        <a class="collapse-item" asp-action="ViewMemos" asp-controller="Memo"><i class="fas fa-fw  fa-file-alt mr-1"></i>Memos</a>
-                        <a class="collapse-item" asp-action="ViewExcuseDuties" asp-controller="ExcuseDuty"><i class="fas fa-fw  fa-hands-helping mr-1"></i>Excuse Duty</a>
-                        <a class="collapse-item" asp-action="ViewPettyCash" asp-controller="PettyCash"><i class="fas fa-fw  fa-cash-register mr-1"></i>Petty Cash</a>
+                        <h6 class="collapse-header">Activities</h6>
+                        <a class="collapse-item" asp-action="ViewProducts" asp-controller="Product"><i class="fas fa-fw  fa-tags mr-1"></i>Products</a>
+                        <a class="collapse-item" asp-action="ViewStocks" asp-controller="Stock"><i class="fas fa-fw  fa-boxes-packing mr-1"></i>Stocks</a>
+                        <a class="collapse-item" asp-action="ViewInventory" asp-controller="Inventory"><i class="fas fa-fw  fa-cash-register mr-1"></i>Inventory</a>
  
-                        @* <a class="collapse-item" asp-action="ViewSickReports" asp-controller="SickReport">Sick Report</a> *@
-                        <a class="collapse-item" asp-action="ViewDeceaseds" asp-controller="Deceased"><i class="fas fa-fw fa-bed-pulse mr-1 text-danger"></i>Deceased</a>
-                        <a class="collapse-item" asp-action="ViewLetters" asp-controller="Letter"><i class="fas fa-fw fa-envelopes-bulk mr-1"></i>Letters</a>
+                     
+                        <a class="collapse-item" asp-action="ViewSales" asp-controller="Sale"><i class="fas fa-fw fa-file-invoice mr-1"></i>Sales</a>
+                        
                     </div>
                 </div>
             </li>
@@ -112,17 +112,17 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapseTwo"
                    aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-fw fa-3x fa-file"></i>
-                  <span>Requests</span>
+                    <i class="fas fa-fw fa-3x fa-address-book"></i>
+                  <span>Contacts</span>
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">New Requests</h6>
+                        <h6 class="collapse-header">Activities</h6>
                      
-                        <a class="collapse-item" asp-action="ViewTravelRequests" asp-controller="TravelRequest"><i class="fas fa-fw fa-car mr-1"></i>
-                            Travel Request
+                        <a class="collapse-item" asp-action="ViewTravelRequests" asp-controller="TravelRequest"><i class="fas fa-fw fa-truck mr-1"></i>
+                            Suppliers
                         </a>
-                        <a class="collapse-item" asp-action="ViewServiceRequests" asp-controller="ServiceRequest"><i class="fas fa-fw fa-hospital-user mr-1"></i>Service Request</a>
+                        <a class="collapse-item" asp-action="ViewServiceRequests" asp-controller="ServiceRequest"><i class="fas fa-fw fa-users mr-1"></i>Customers</a>
                      
                     </div>
                 </div>

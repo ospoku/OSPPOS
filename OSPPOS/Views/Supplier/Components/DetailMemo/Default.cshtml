@@ -1,0 +1,49 @@
+﻿
+@model DMX.ViewModels.DetailMemoVM;
+
+<div class="modal fade" id="DetailMemo" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h6>Memo Detail</h6>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-sm btn-outline-danger">Close</button>
+            </div>
+            <div class="modal-body">
+
+                <div class="floating-group">
+                    <input type="text" asp-for="@Model.Title"  placeholder="" readonly>
+                    <label >Memo Title</label>
+                </div>
+
+                <div class="floating-group">
+                    <input type="text" asp-for="@Model.From"  placeholder="" readonly>
+                    <label >Sender</label>
+                </div>
+                <div class="floating-group">
+                    <input type="text" asp-for="@Model.Recipient"  placeholder="" readonly>
+
+                    <label >Recipient</label>
+                </div>
+
+                <div class="form-group">
+
+
+                    <textarea class="form-control" id="MemoContent" asp-for="@Html.Raw(@Model.Content)" type="text" placeholder="Memo Content" readonly></textarea>
+                </div>
+
+                <div class="floating-group">
+
+                    <select id="selectMemoUser" class="did-floating-select" asp-items="@Model.UsersList" asp-for="@Model.SelectedUsers" multiple></select>
+                    <label >Select Users</label>
+                </div>
+
+
+                <a class="btn btn-block btn-primary" asp-action="ViewMemos" asp-controller="Memo">Return</a>
+          
+        </div>
+
+    </div>
+</div>
+</div>

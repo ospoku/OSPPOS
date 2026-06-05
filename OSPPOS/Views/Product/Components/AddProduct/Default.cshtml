@@ -1,0 +1,74 @@
+﻿@model DMX.ViewModels.AddMemoVM;
+
+<dialog id="AddMemoDialog" class="col-md-6 border-0 rounded p-0">
+    <div class="modal-header">
+        <h6 class="m-0 font-weight-bold d-inline">   <i class="fas fa-fw fa-file-alt"></i>Add Memo</h6>
+        <button type="button" aria-label="Close"
+                class="btn btn-sm btn-outline-danger"
+                onclick="document.getElementById('AddMemoDialog').close()">
+            Close
+        </button>
+    </div>
+
+    @using (Html.BeginForm("AddMemo", "Memo", FormMethod.Post, new { id = "addMemoForm" }))
+    {
+        <div class="modal-body">
+            <!-- Memo Title -->
+    
+ 
+       
+       
+     
+           
+            <div class="input-group">
+  <!-- Left icon addon -->
+  <div class="input-group-text">
+    <!-- Use any icon here: Font Awesome, SVG, emoji, etc. -->
+    <i class="fas fa-heading"></i>          <!-- example: user icon -->
+    <!-- or SVG: <svg ...> ... </svg> -->
+    <!-- or just text/emoji: 👤 -->
+  </div>
+
+  <!-- Floating label + input -->
+  <div class="did-floating-label-content">
+                    <input type="text" asp-for="@Model.Title"
+      class="did-floating-input" 
+      id="title" 
+      placeholder=" "           
+    />
+    <label class="did-floating-label" for="title">Title</label>
+  </div>
+</div>
+
+            <!-- Memo Content -->
+            <div class="form-group">
+               
+                <textarea id="MemoContent" class="dmx-textarea" asp-for="@Model.Content" placeholder="Memo Content"></textarea>
+                    
+            </div>
+
+            <!-- Select Approvers -->
+ 
+      
+                <select id="selectMemoUser" class="dmx-choices" asp-items="@Model.UsersList" asp-for="@Model.SelectedUsers"><option value="">Select Approver(s)</option></select>
+            
+         </div>
+         <div class="modal-footer">
+          
+        <button id="saveButton"  class="btn btn-block btn-primary">Save</button>
+        </div>
+
+     
+            }
+   
+    
+   
+   
+      
+    
+    </dialog>
+    
+          
+
+
+  

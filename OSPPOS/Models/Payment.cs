@@ -12,7 +12,7 @@ namespace OSPPOS.Models
         [Key]
         public int Id { get; set; }
         [ForeignKey(nameof(Payment.SaleOrderId))]
-        public int SaleOrderId { get; set; }
+        public int? SaleOrderId { get; set; }
         public SaleOrder SaleOrder { get; set; } = null!;
 
         public int? CustomerId { get; set; }
