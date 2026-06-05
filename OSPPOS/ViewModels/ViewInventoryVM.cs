@@ -25,7 +25,6 @@ namespace OSPPOS.ViewModels
         public string? PaymentReference { get; set; }
         public bool CanEdit { get; set; }
         public bool CanPrint { get; set; }
-        public string PublicId { get;set; }
     }
 }
 

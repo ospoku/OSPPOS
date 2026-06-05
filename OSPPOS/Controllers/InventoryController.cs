@@ -14,6 +14,14 @@ public class InventoryController(XContext db, IReportService report) : Controlle
     private readonly XContext ctx = db;
     private readonly IReportService reports = report;
 
+
+
+
+    public  IActionResult ViewInventory()
+    {
+        return ViewComponent(nameof(ViewInventory));
+    }
+
     // Stock levels overview
     public async Task<IActionResult> Index(int? categoryId, string? search)
     {

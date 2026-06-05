@@ -6,7 +6,9 @@
 @using System.Web
 @using Microsoft.AspNetCore.DataProtection
 @using OSPPOS.Models
+
 @using OSPPOS.ViewComponents
+
 @inject UserManager<AppUser> usm;
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -44,12 +46,12 @@
                 {
                     <tr>
                         <td></td>
-<td>@Memo.Notes</td>
-                        <td class="ellipsed-text"> @Memo.Notes</td>
+<td>@Memo</td>
+                        <td class="ellipsed-text"> @Memo</td>
                         
-                            <td class="ellipsed-text">@Memo.Notes</td>
-                            <td>
-@foreach(var assignee in @Memo.Notes)
+                            <td class="ellipsed-text">@Memo</td>
+                        @*     <td>
+@foreach(var assignee in @Memo.)
 {
                         <span class="badge badge-pill badge-dark">@assignee</span>
 }
@@ -82,8 +84,8 @@
                                           
                                   </div>
                         </div>
-
-                        </td>
+ *@
+                       @*  </td> *@
                     </tr>
              }
                 </tbody>
@@ -109,6 +111,10 @@
 
 </script>
 
+
 @await Component.InvokeAsync(nameof(AddProduct))
+
+
+
 <dialog id="EditMemoDialog"><div id="EditMemoDialogContent"></div></dialog>
 <dialog id="CommentMemoDialog" class="col-md-6 border-0 rounded p-0"><div id="CommentMemoDialogContent"></div></dialog>

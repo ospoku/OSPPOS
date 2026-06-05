@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using OSPPOS.Models;
 using OSPPOS.Data;
 using OSPPOS.Services;
+using OSPPOS.Interfaces;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,7 +25,7 @@ builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<EntityService>();
 builder.Services.AddScoped<AssignmentService>();
 
-
+builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<EmailService>();
 
 builder.Services.AddAuthentication(options =>
