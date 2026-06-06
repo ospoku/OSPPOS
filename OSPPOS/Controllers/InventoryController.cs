@@ -24,11 +24,7 @@ public class InventoryController(XContext db, IReportService report) : Controlle
     }
 
     // Stock levels overview
-    public async Task<IActionResult> ViewInventory()
-    {
-
-        return ViewComponent(nameof(ViewInventory));
-    }
+ 
 
     // Stock movement for a single product
     public async Task<IActionResult> Movement(int id)

@@ -1,6 +1,16 @@
-﻿namespace OSPPOS.ViewComponents
+﻿using Microsoft.AspNetCore.Mvc;
+using OSPPOS.ViewModels;
+
+namespace OSPPOS.ViewComponents
 {
-    public class AddProduct
+    public class AddProduct:ViewComponent
     {
+
+        public IViewComponentResult Invoke()
+        {
+            AddProductVM addProductVM = new() { };
+
+            return View(addProductVM);
+        }
     }
 }
