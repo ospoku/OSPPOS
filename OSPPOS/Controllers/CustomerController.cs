@@ -9,7 +9,7 @@ namespace OSPPOS.Controllers
 {
     
         [Authorize(Roles = "Admin,Manager")]
-        public class CustomersController(XContext db) : Controller
+        public class CustomerController(XContext db) : Controller
         {
             private readonly XContext ctx = db;
 

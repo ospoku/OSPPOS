@@ -11,7 +11,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@model IEnumerable<OSPPOS.ViewModels.ViewProductsVM>;
+@model OSPPOS.ViewModels.ViewProductsVM;
 @inject Microsoft.AspNetCore.DataProtection.IDataProtectionProvider DataProtectionProvider
 
 @{
@@ -40,14 +40,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                      @foreach (var Memo in Model)
+                      @foreach (var Memo in Model.Products)
                 {
                     <tr>
                         <td></td>
-<td>@Memo.WalkInCustomerName</td>
-                        <td class="ellipsed-text"> @Memo.Notes</td>
+<td></td>
+                        <td class="ellipsed-text"></td>
                         
-                            <td class="ellipsed-text">@Memo.Notes</td>
+                            <td class="ellipsed-text"></td>
 @*                             <td>
 @foreach(var assignee in @Memo.Assignees)
 {
@@ -60,7 +60,7 @@
                                     <button id="btnGroupDrop1" type="button" class="btn btn-sm btn-rounded btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         Select Action
                                     </button>
-                                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                              @*       <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                                     @if(Memo.CanEdit)
                                     {
 
@@ -80,7 +80,7 @@
                                              
                                                 <button type="button" onclick="de" class="dropdown-item-custom"><i style="width:15px; height:15px" class="fa fa-trash mr-3 text-danger"></i>Delete</button>
                                           
-                                  </div>
+                                  </div> *@
                         </div>
 
                         </td>

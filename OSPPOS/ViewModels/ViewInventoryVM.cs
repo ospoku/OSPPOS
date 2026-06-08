@@ -16,6 +16,7 @@ namespace OSPPOS.ViewModels
         }
         public int? CategoryId { get; set; }
         public string? Search { get; set; }
+      
     }
 }
 

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using OSPPOS.ViewComponents;
 using OSPPOS.Data;
 using OSPPOS.Models;
 using System;
@@ -10,20 +11,17 @@ namespace OSPPOS.Controllers
 {
    
 
-    [Authorize(Roles = "Admin,Manager")]
-    public class ProductsController : Controller
+    [Authorize]
+    public class ProductController(XContext db) : Controller
     {
-        private readonly XContext ctx;
+        private readonly XContext ctx = db;
 
-        public ProductsController(XContext db) => ctx = db;
+        public IActionResult ViewProducts()
+        {
 
-        public async Task<IActionResult> Index() =>
-            View(await ctx.Products
-                .Include(p => p.Category)
-                .Include(p => p.Supplier)
-                .OrderBy(p => p.Category.Name)
-                .ThenBy(p => p.Name)
-                .ToListAsync());
+            return ViewComponent(nameof(ViewProducts));
+
+        }
 
         public async Task<IActionResult> Create()
         {

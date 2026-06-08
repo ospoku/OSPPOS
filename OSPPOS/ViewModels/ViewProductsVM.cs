@@ -10,24 +10,20 @@ namespace OSPPOS.ViewModels
 {
     public class ViewProductsVM
     {
-        public int? CustomerId { get; set; }
-        public string? WalkInCustomerName { get; set; }
-        public SaleType SaleType { get; set; } = SaleType.Cash;
-        public DateTime? DueDate { get; set; }
-        public string? Notes { get; set; }
-        public decimal DiscountPercent { get; set; } = 0;
-        public decimal Discount { get; set; } = 0;
-        public List<SaleItemVm> Items { get; set; } = [];
-
-        // For initial cash payment
-        public decimal CashReceived { get; set; } = 0;
-        public PaymentMethod PaymentMethod { get; set; } = PaymentMethod.Cash;
-        public string? PaymentReference { get; set; }
-        public bool CanEdit { get; set; } public bool CanDelete { get; set; }
-        public bool CanInsert { get; set; }
-        public bool CanUpdate { get; set; }
-        public bool CanPrint {  get; set; }
+        public List<Product> Products { get; set; }
+        public string Supplier { get; set; }
+        public string Name { get; set; }
+        public Category Category { get; set; }
+        public string CategoryName { get; set; } = string.Empty;
+        public bool CanEdit {  get; set; }
+        public bool CanDelete { get; set; } public bool CanInsert { get; set; }public bool CanUpdate { get; set; }
+        public bool CanPrint { get; set; }  
+        public bool CanSave { get; set; }
+        public bool CanView { get; set; }
         public string PublicId { get; set; }
+       
+    
+    
     }
 }
 

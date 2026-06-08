@@ -10,12 +10,12 @@ using OSPPOS.Models;
 namespace OSPPOS.Controllers;
 
 [Authorize]
-public class SalesController : Controller
+public class SaleController : Controller
 {
     private readonly ISalesService _sales;
     private readonly XContext _db;
 
-    public SalesController(ISalesService sales, XContext db)
+    public SaleController(ISalesService sales, XContext db)
     {
         _sales = sales;
         _db = db;
