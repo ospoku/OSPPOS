@@ -1,6 +1,13 @@
-﻿namespace OSPPOS.ViewComponents
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace OSPPOS.ViewComponents
 {
-    public class AddStock
+    public class AddStock:ViewComponent
     {
+
+        public IViewComponentResult Invoke()
+        {
+            return View();
+        }
     }
 }

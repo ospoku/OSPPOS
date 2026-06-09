@@ -24,7 +24,7 @@ namespace OSPPOS.ViewComponents
             ViewProductsVM viewProductsVM = new()
             {
                 Products=products,
-                
+                TotalProducts=products.Count(),
             };
 
             return View(viewProductsVM);

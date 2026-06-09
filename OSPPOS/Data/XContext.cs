@@ -21,7 +21,7 @@ namespace OSPPOS.Data
         
     
        
-       
+       public DbSet<Unit> Units { get; set; }
         
     
        public DbSet<Category> Categories { get; set; }

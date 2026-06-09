@@ -23,14 +23,14 @@ namespace OSPPOS.Controllers
 
         }
 
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> AddProduct()
         {
             await PopulateDropDownsAsync();
             return View(new Product());
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Product model)
+        public async Task<IActionResult> AddProduct(Product model)
         {
             if (!ModelState.IsValid)
             {

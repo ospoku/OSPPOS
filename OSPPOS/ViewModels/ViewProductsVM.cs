@@ -21,6 +21,7 @@ namespace OSPPOS.ViewModels
         public bool CanSave { get; set; }
         public bool CanView { get; set; }
         public string PublicId { get; set; }
+        public int TotalProducts { get; set; }
        
     
     

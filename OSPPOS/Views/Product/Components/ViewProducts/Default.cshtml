@@ -19,60 +19,94 @@
     var protector = DataProtectionProvider.CreateProtector("IdProtector");
   
 }
-<div class="card shadow mb-4">
-    <div class="card-header py-3"><i class="fas fa-fw fa-file-alt"></i>
-        <h6 class="m-0 font-weight-bold text-primary d-inline">Memos</h6>
+<div class="card shadow mb-4 rounded-5 rounded-start-5">
+    <div class="card-header rounded-5 border-0"><i class="fas fa-fw fa-tags"></i>
+        <h6 class="m-0 font-weight-bold text-primary d-inline">Products</h6>
         
           
-        <button id="btnAddMemo" class="btn btn-sm btn-rounded  btn-outline-primary fa-pull-right" onclick="document.getElementById('AddMemoDialog').showModal()"><i class="fa fa-fw fa-plus-circle"></i>Add Memo</button>
+        <button id="btnAddMemo" class="btn btn-sm btn-rounded rounded-5 btn-outline-primary fa-pull-right" onclick="document.getElementById('AddProductDialog').showModal()"><i class="fa fa-fw fa-plus-circle"></i>Add Product</button>
         </div>
+
         <div class="card-body">
          
-            <table class="table dataTables_wrapper">
+            <table class="table dataTables_wrapper" id="tblProducts">
                 <thead>
                     <tr><th>SN</th>
-                        <th>RefN</th>
-                        <th>Title</th>
-                        <th>Sender</th>
-                        <th>Assignee(s)</th>  
+                    <th>SKU</th>
+                    <th>Product</th>
+                    <th>Category</th>
+                    <th>Unit</th>
+                    <th class="text-end">Cost</th>
+                    <th class="text-end">Sell Price</th>
+                    <th class="text-end">Wholesale</th>
+                    <th class="text-end">Margin</th>
+                    <th class="text-center">Reorder</th>
+                    <th class="text-center">Stock</th>
+               
                      
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                      @foreach (var Memo in Model.Products)
+                  
+  @foreach (var p in Model.Products)
                 {
-                    <tr>
-                        <td></td>
-<td></td>
-                        <td class="ellipsed-text"></td>
-                        
-                            <td class="ellipsed-text"></td>
-@*                             <td>
-@foreach(var assignee in @Memo.Assignees)
-{
-                        <span class="badge badge-pill badge-dark">@assignee</span>
-}
-</td> *@
+                    <tr class="@(p.IsLowStock ? "table-warning" : "")">
+                        <td class="text-muted small">@(p.SKU ?? "—")</td>
+                        <td class="ellipsed-text">
+                            <span class="fw-semibold">@p.Name</span>
+                            @if (!p.IsActive)
+                            {
+                                <span class="badge bg-secondary ms-1">Inactive</span>
+                            }
+                        </td>
+                        <td>
+                
+                        </td>
+                        <td class="small">@p.Unit</td>
+                        <td class="text-end">@p.CostPrice.ToString("N2")</td>
+                        <td class="text-end fw-semibold">@p.SellingPrice.ToString("N2")</td>
+                        <td class="text-end">@p.WholesalePrice.ToString("N2")</td>
+                        <td class="text-end">
+                            <span class="@(p.ProfitMargin > 20 ? "text-success" : p.ProfitMargin > 10 ? "text-warning" : "text-danger")">
+                                @p.ProfitMargin.ToString("N1")%
+                            </span>
+                        </td>
+                        <td class="text-center small">@p.ReorderLevel</td>
+                        <td class="text-center">
+                            @if (p.CurrentStock == 0)
+                            {
+                                <span class="badge bg-danger">Out</span>
+                            }
+                            else if (p.IsLowStock)
+                            {
+                                <span class="badge bg-warning text-dark">@p.CurrentStock</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">@p.CurrentStock</span>
+                            }
+                        </td>
                            <td>
 
                                 <div class="btn-group" role="group">
                                     <button id="btnGroupDrop1" type="button" class="btn btn-sm btn-rounded btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         Select Action
                                     </button>
-                              @*       <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                    @if(Memo.CanEdit)
+
+                                   <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                    @if(Model.CanEdit)
                                     {
 
-                                        <button  onclick="openDialogFromData(this)" data-url="EditMemo" data-user-id="@protector.Protect(Memo.PublicId.ToString())" data-dialog-id="EditMemoDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-edit mr-3 text-warning"></i>Edit</button>
+                                        <button  onclick="openDialogFromData(this)" data-url="EditMemo" data-user-id="@protector.Protect(Model.PublicId.ToString())" data-dialog-id="EditMemoDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-edit mr-3 text-warning"></i>Edit</button>
                                         }
 
-                                       <button  onclick="openDialogFromData(this)" data-url="CommentMemo" data-user-id="@protector.Protect(Memo.PublicId.ToString())" data-dialog-id="CommentMemoDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-comment mr-3 text-dark"></i>Comment</button>
+                                       <button  onclick="openDialogFromData(this)" data-url="CommentMemo" data-user-id="@protector.Protect(Model.PublicId.ToString())" data-dialog-id="CommentMemoDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-comment mr-3 text-dark"></i>Comment</button>
 
-                                       @if(Memo.CanPrint)
+                                       @if(Model.CanPrint)
                                        {
 
-                                        <button type="button" class="dropdown-item-custom" onclick="printMemoIframe('@protector.Protect(Memo.PublicId.ToString())')">
+                                        <button type="button" class="dropdown-item-custom" onclick="printMemoIframe('@protector.Protect(Model.PublicId.ToString())')">
                                             <i style="width:15px; height:15px" class="fa fa-print mr-3 text-primary"></i>Print
                                         </button>
                                        }
@@ -80,7 +114,7 @@
                                              
                                                 <button type="button" onclick="de" class="dropdown-item-custom"><i style="width:15px; height:15px" class="fa fa-trash mr-3 text-danger"></i>Delete</button>
                                           
-                                  </div> *@
+                                  </div> 
                         </div>
 
                         </td>
@@ -89,12 +123,16 @@
                 </tbody>
             </table>
        </div>
-       </div>
+     
 
-    <div class="card-footer">
-    </div>
+    
+    <div class="card-footer rounded-5 border-0 bg-white text-muted small">
+        @Model.TotalProducts product(s) &nbsp;|&nbsp;
+        Stock cost value: <strong>GHS @Model.Products.Sum(p => p.CurrentStock * p.CostPrice).ToString("N2")</strong> &nbsp;|&nbsp;
+        Retail value: <strong>GHS @Model.Products.Sum(p => p.CurrentStock * p.SellingPrice).ToString("N2")</strong>
 
-
+</div>
+</div>
 <iframe id="printFrame" style="display:none;"></iframe>
 
 <script type="text/javascript">
@@ -112,3 +150,7 @@
 @await Component.InvokeAsync(nameof(AddProduct))
 <dialog id="EditMemoDialog"><div id="EditMemoDialogContent"></div></dialog>
 <dialog id="CommentMemoDialog" class="col-md-6 border-0 rounded p-0"><div id="CommentMemoDialogContent"></div></dialog>
+
+
+
+

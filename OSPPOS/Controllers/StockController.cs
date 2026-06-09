@@ -33,7 +33,7 @@ public class StockController : Controller
     }
 
     // GET /Stock/Create
-    public async Task<IActionResult> Create()
+    public async Task<IActionResult> AddStock()
     {
         await PopulateDropDownsAsync();
         return View(new AddStockBatchVM { ReceivedDate = DateTime.Today });
@@ -78,5 +78,10 @@ public class StockController : Controller
             .OrderBy(p => p.Category.Name).ThenBy(p => p.Name)
             .Select(p => new { p.Id, Name = $"{p.Name} ({p.SKU}) – Stock: {p.CurrentStock}", p.CostPrice })
             .ToListAsync();
+    }
+
+    public async Task<IActionResult>ViewStocks()
+    {
+        return ViewComponent(nameof(ViewStocks));
     }
 }

@@ -11,6 +11,8 @@ namespace OSPPOS.ViewModels
     {
 
         public List<Product> Products { get; set; }
+        public bool CanEdit { get; set; }
+        public bool CanPrint { get; set; }
     }
 }
 
