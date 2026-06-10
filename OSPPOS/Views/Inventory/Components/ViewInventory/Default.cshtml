@@ -42,8 +42,8 @@
 @* 
         @model List<Product> *@
 @{ ViewData["Title"] = "Stock Levels"; }
-
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="card shadow rounded-5 mb-4">
+<div class="d-flex justify-content-between align-items-center">
     <h4 class="mb-0"><i class="fas fa-boxes me-2 text-primary"></i>Stock levels</h4>
     <div class="d-flex gap-2">
         <button onclick="window.print()" class="btn btn-sm btn-outline-secondary no-print">
@@ -67,7 +67,7 @@
 }
 
 <!-- Summary cards -->
-<div class="row g-2 mb-3">
+<div class="row g-2">
     <div class="col-6 col-md-3">
         <div class="card border-0 shadow-sm text-center py-3">
             <div class="fs-4 fw-bold">@Model.Products.Count</div>
@@ -100,7 +100,7 @@
         </div>
     </div>
 </div>
-
+</div>
 <!-- Filters -->
 @* <div class="card border-0 shadow-sm mb-3 no-print">
     <div class="card-body py-2">
@@ -170,11 +170,11 @@
             </thead>
             <tbody>
                 @{
-                    var grouped = @Model.Products.GroupBy(p => p.Category?.Name ?? "Uncategorised")
+                    var groupeddddddddddddddd = @Model.Products.GroupBy(p => p.Category?.Name ?? "Uncategorised")
                         .OrderBy(g => g.Key);
                 }
 
-                @foreach (var group in grouped)
+                @foreach (var group in groupeddddddddddddddd)
                 {
                     <!-- Category group header -->
                     <tr style="background:var(--bs-secondary-bg)">
@@ -205,16 +205,7 @@
                             </td>
 
                             <td>
-                        @*         @if (p.Category?.Type == "Hard")
-                                {
-                                    <span class="badge rounded-pill"
-                                          style="background:#FAECE7;color:#712B13;font-size:.7rem">Hard</span>
-                                } *@
-                         @*        else
-                                {
-                                    <span class="badge rounded-pill"
-                                          style="background:#E6F1FB;color:#0C447C;font-size:.7rem">Soft</span>
-                                } *@
+
                             </td>
 
                             <td class="text-center text-muted">@p.ReorderLevel</td>
@@ -312,7 +303,7 @@
     </div>
    
     <!-- Legend -->
-    <div class="card-footer  d-flex justify-content-between align-items-center"
+@*     <div class="card-footer  d-flex justify-content-between align-items-center"
          style="font-size:.78rem">
         <div class="d-flex gap-3 text-muted">
             <span>
@@ -334,7 +325,7 @@
         <div class="text-muted">
             <i class="fas fa-exchange-alt me-1"></i>= movement history
         </div>
-    </div>
+    </div> *@
 </div>
 
 <div class="card table-responsive rounded-5 shadow mb-4">
@@ -364,7 +355,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var Memo in Model.Products)
+                @foreach (var p in Model.Products)
                 {
                     <tr>
                         <td></td>
@@ -374,6 +365,21 @@
                         <td class="ellipsed-text"></td>
                         <td>
                         </td>
+                        @if (p.CurrentStock == 0)
+                        {
+                            <span class="badge rounded-pill"
+                                  style="background:#FCEBEB;color:#791F1F;font-size:.7rem">Out</span>
+                        }
+                        else if (p.IsLowStock)
+                        {
+                            <span class="badge rounded-pill"
+                                  style="background:#FAEEDA;color:#633806;font-size:.7rem">Low</span>
+                        }
+                        else
+                        {
+                            <span class="badge rounded-pill"
+                                  style="background:#EAF3DE;color:#27500A;font-size:.7rem">OK</span>
+                        }
                         <td>
 
                             <div class="btn-group" role="group">
@@ -407,10 +413,157 @@
                     </tr>
                 }
             </tbody>
+            @{
+                var grouped = @Model.Products.GroupBy(p => p.Category?.Name ?? "Uncategorised")
+                .OrderBy(g => g.Key);
+            }
+
+            @foreach (var group in grouped)
+            {
+                <!-- Category group header -->
+                <tr style="background:var(--bs-secondary-bg)">
+                    <td colspan="10"
+                        class="text-uppercase fw-semibold"
+                        style="font-size:.72rem; letter-spacing:.05em; color:#6c757d; padding:6px 14px">
+                        <i class="fas fa-folder me-1"></i>@group.Key
+                        <span class="fw-normal ms-1">(@group.Count() products)</span>
+                    </td>
+                </tr>
+
+                @foreach (var p in group.OrderBy(p => p.Name))
+                {
+                    var pct = maxStock > 0 ? (int)((p.CurrentStock / maxStock) * 100) : 0;
+                    var barCls = p.CurrentStock == 0 ? "bg-danger"
+                    : p.IsLowStock ? "bg-warning"
+                    : "bg-success";
+                    var rowCls = p.CurrentStock == 0 ? "table-danger"
+                    : p.IsLowStock ? "table-warning"
+                    : "";
+
+                    <tr class="@rowCls">
+                        <td class="text-muted" style="font-size:.78rem">@(p.SKU ?? "—")</td>
+
+                        <td>
+                            <span class="fw-semibold">@p.Name</span>
+                            <span class="text-muted ms-1" style="font-size:.75rem">@p.Unit</span>
+                        </td>
+
+                        <td>
+                        </td>
+
+                        <td class="text-center text-muted">@p.ReorderLevel</td>
+
+                        <td class="text-center fw-semibold
+                                        @(p.CurrentStock == 0 ? "text-danger"
+                                                            : p.IsLowStock ? "text-warning"
+                                                            : "")">
+                    @p.CurrentStock
+                </td>
+
+                        <!-- Progress bar + % -->
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="flex-grow-1 rounded"
+                                     style="background:#e9ecef;height:6px;min-width:60px">
+                                    <div class="rounded @barCls"
+                                         style="height:6px;width:@(Math.Min(pct, 100))%"></div>
+                                </div>
+                                <span class="text-muted" style="font-size:.72rem;min-width:28px">
+                                    @(p.CurrentStock == 0 ? "Out" : pct + "%")
+                                </span>
+                            </div>
+                        </td>
+
+                        <td class="text-end text-muted" style="font-size:.8rem">
+                            GHS @((p.CurrentStock * p.CostPrice).ToString("N2"))
+                        </td>
+                        <td class="text-end fw-semibold">
+                            GHS @((p.CurrentStock * p.SellingPrice).ToString("N2"))
+                        </td>
+
+                        <!-- Status badge -->
+                        <td>
+                    @if (p.CurrentStock == 0)
+                            {
+                                <span class="badge rounded-pill"
+                                      style="background:#FCEBEB;color:#791F1F;font-size:.7rem">Out</span>
+                            }
+                            else if (p.IsLowStock)
+                            {
+                                <span class="badge rounded-pill"
+                                      style="background:#FAEEDA;color:#633806;font-size:.7rem">Low</span>
+                            }
+                            else
+                            {
+                                <span class="badge rounded-pill"
+                                      style="background:#EAF3DE;color:#27500A;font-size:.7rem">OK</span>
+                            }
+                        </td>
+
+                        <!-- Actions -->
+                        <td>
+                            <div class="d-flex gap-1">
+                                @if (p.CurrentStock == 0)
+                                {
+                                    <a asp-controller="Stock" asp-action="Create"
+                                       class="btn btn-sm btn-primary px-2" title="Restock now">
+                                        <i class="fas fa-truck-loading"></i>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a asp-action="Movement" asp-route-id="@p.Id"
+                                       class="btn btn-sm btn-outline-secondary px-2"
+                                       title="Stock movement">
+                                        <i class="fas fa-exchange-alt"></i>
+                                    </a>
+                                }
+                                <a asp-controller="Products" asp-action="Edit"
+                                   asp-route-id="@p.Id"
+                                   class="btn btn-sm btn-outline-secondary px-2" title="Edit">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+
+
+            <tfoot class="d-flex" style="font-size:.8rem">
+                <tr>
+                    
+                    <td class="text-end fw-semibold">GHS @totalCost.ToString("N2")</td>
+                    <td class="text-end fw-semibold">GHS @totalRetail.ToString("N2")</td>
+                    <td colspan="2"></td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 
 
-    <div class="card-footer">
+    <div class="card-footer
+        d-flex justify-content-between align-items-center"
+        style="font-size:.78rem">
+        <div class="d-flex gap-3 text-muted">
+            <span>
+                <span class="d-inline-block rounded me-1"
+                      style="width:10px;height:10px;background:#FCEBEB;border:0.5px solid #F09595"></span>
+                Out of stock
+            </span>
+            <span>
+                <span class="d-inline-block rounded me-1"
+                      style="width:10px;height:10px;background:#FFF3CD;border:0.5px solid #EF9F27"></span>
+                Low stock
+            </span>
+            <span>
+                <span class="d-inline-block rounded me-1"
+                      style="width:10px;height:10px;background:#fff;border:0.5px solid #ccc"></span>
+                OK
+            </span>
+        </div>
+        <div class="text-muted">
+            <i class="fas fa-exchange-alt me-1"></i>= movement history
+        </div>
     </div>
-</div>
+    </div>
