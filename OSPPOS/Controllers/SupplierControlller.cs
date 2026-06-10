@@ -7,11 +7,15 @@ using System;
 
 namespace OSPPOS.Controllers
 {
-    [Authorize(Roles = "Admin,Manager")]
-    public class SuppliersController(XContext db) : Controller
+    [Authorize]
+    public class SupplierController(XContext ctx) : Controller
     {
-        private readonly XContext ctx = db;
+      
 
+        public IActionResult ViewSuppliers()
+        {
+            return ViewComponent(nameof(ViewSuppliers));
+        }
         public async Task<IActionResult> Index() =>
             View(await ctx.Suppliers.OrderBy(s => s.Name).ToListAsync());
 
@@ -42,6 +46,11 @@ namespace OSPPOS.Controllers
             await ctx.SaveChangesAsync();
             TempData["Success"] = "Supplier updated.";
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult AddSupplier()
+        {
+            return ViewComponent(nameof(AddSupplier));
         }
     }
 }

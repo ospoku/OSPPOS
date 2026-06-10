@@ -14,6 +14,9 @@ namespace OSPPOS.ViewModels
         public string? WalkInCustomerName { get; set; }
         public SaleType SaleType { get; set; } = SaleType.Cash;
         public DateTime? DueDate { get; set; }
+        public int TotalAmount { get; set; }
+        public int AmountPaid { get; set; }
+        public int AmountDue { get; set; }
         public string? Notes { get; set; }
         public decimal DiscountPercent { get; set; } = 0;
         public decimal Discount { get; set; } = 0;

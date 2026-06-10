@@ -8,7 +8,7 @@ using System;
 namespace OSPPOS.Controllers
 {
     
-        [Authorize(Roles = "Admin,Manager")]
+        [Authorize]
         public class CustomerController(XContext db) : Controller
         {
             private readonly XContext ctx = db;
@@ -18,7 +18,8 @@ namespace OSPPOS.Controllers
                     .Include(c => c.SaleOrders).ThenInclude(o => o.Payments)
                     .OrderBy(c => c.Name).ToListAsync());
 
-            public IActionResult Create() => View(new Customer());
+            public IActionResult AddCustomer() => View(new Customer());
+        public IActionResult ViewCustomers() { return ViewComponent(nameof(ViewCustomers)); }
 
             [HttpPost, ValidateAntiForgeryToken]
             public async Task<IActionResult> Create(Customer model)

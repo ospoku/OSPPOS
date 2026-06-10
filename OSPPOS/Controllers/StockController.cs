@@ -80,7 +80,7 @@ public class StockController : Controller
             .ToListAsync();
     }
 
-    public async Task<IActionResult>ViewStocks()
+    public IActionResult ViewStocks()
     {
         return ViewComponent(nameof(ViewStocks));
     }

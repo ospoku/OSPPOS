@@ -102,7 +102,7 @@
 </div>
 
 <!-- Filters -->
-<div class="card border-0 shadow-sm mb-3 no-print">
+@* <div class="card border-0 shadow-sm mb-3 no-print">
     <div class="card-body py-2">
         <form method="get" class="row g-2 align-items-end">
             <div class="col-sm-4">
@@ -139,11 +139,11 @@
             </div>
         </form>
     </div>
-</div>
+</div>*@
 
 <!-- Main table -->
-<div class="card border-0 shadow-sm">
-    <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+<div class="card rounded-5 shadow mb-4">
+    <div class="card-header py-3  d-flex justify-content-between align-items-center">
         <span class="fw-semibold" style="font-size:.85rem">
             All products — stock position
         </span>
@@ -151,9 +151,9 @@
             As at @DateTime.Today.ToString("dd MMM yyyy") &middot; @Model.Products.Count items
         </span>
     </div>
-
-    <div class="table-responsive">
-        <table class="table align-middle mb-0" style="font-size:.85rem">
+    <div class="card-body">
+    
+        <table class="table dataTables_wrapper align-middle mb-0" style="font-size:.85rem">
             <thead class="table-light">
                 <tr>
                     <th style="width:80px">SKU</th>
@@ -295,15 +295,7 @@
                     }
                 }
 
-                @if (!Model.Products.Any())
-                {
-                    <tr>
-                        <td colspan="10" class="text-center text-muted py-5">
-                            <i class="fas fa-boxes fa-2x d-block mb-2"></i>
-                            No products found.
-                        </td>
-                    </tr>
-                }
+           
             </tbody>
 
             <tfoot class="table-light" style="font-size:.8rem">
@@ -318,9 +310,9 @@
             </tfoot>
         </table>
     </div>
-
+   
     <!-- Legend -->
-    <div class="card-footer bg-white d-flex justify-content-between align-items-center"
+    <div class="card-footer  d-flex justify-content-between align-items-center"
          style="font-size:.78rem">
         <div class="d-flex gap-3 text-muted">
             <span>
@@ -342,5 +334,83 @@
         <div class="text-muted">
             <i class="fas fa-exchange-alt me-1"></i>= movement history
         </div>
+    </div>
+</div>
+
+<div class="card table-responsive rounded-5 shadow mb-4">
+    <div class="card-header py-3 d-flex  justify-content-between align-items-center">
+        
+        <span class="fw-semibold" style="font-size:.85rem">
+            All products — stock position
+        </span>
+        <span class="text-muted" style="font-size:.78rem">
+            As at @DateTime.Today.ToString("dd MMM yyyy") &middot; @Model.Products.Count items
+        </span>
+
+        
+    </div>
+    <div class="card-body">
+
+        <table class="table dataTables_wrapper">
+            <thead>
+                <tr>
+                    <th>SN</th>
+                    <th>RefN</th>
+                    <th>Title</th>
+                    <th>Sender</th>
+                    <th>Assignee(s)</th>
+
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var Memo in Model.Products)
+                {
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td class="ellipsed-text"> </td>
+
+                        <td class="ellipsed-text"></td>
+                        <td>
+                        </td>
+                        <td>
+
+                            <div class="btn-group" role="group">
+                                <button id="btnGroupDrop1" type="button" class="btn btn-sm btn-rounded btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Select Action
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                @*     @if (Memo.CanEdit)
+                                    {
+
+                                        <button onclick="openDialogFromData(this)" data-url="EditMemo" data-user-id="@protector.Protect(Memo.PublicId.ToString())" data-dialog-id="EditMemoDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-edit mr-3 text-warning"></i>Edit</button>
+                                    }
+
+                                    <button onclick="openDialogFromData(this)" data-url="CommentMemo" data-user-id="@protector.Protect(Memo.PublicId.ToString())" data-dialog-id="CommentMemoDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-comment mr-3 text-dark"></i>Comment</button>
+
+                                    @if (Memo.CanPrint)
+                                    {
+
+                                        <button type="button" class="dropdown-item-custom" onclick="printMemoIframe('@protector.Protect(Memo.PublicId.ToString())')">
+                                            <i style="width:15px; height:15px" class="fa fa-print mr-3 text-primary"></i>Print
+                                        </button>
+                                    } *@
+
+
+                                    <button type="button" onclick="de" class="dropdown-item-custom"><i style="width:15px; height:15px" class="fa fa-trash mr-3 text-danger"></i>Delete</button>
+
+                                </div>
+                            </div>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="card-footer">
     </div>
 </div>

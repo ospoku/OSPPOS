@@ -3,17 +3,13 @@ using OSPPOS.ViewModels;
 
 namespace OSPPOS.ViewComponents
 {
-    public class AddSupplier : ViewComponent
+    public class AddCustomer:ViewComponent
     {
-      
         public IViewComponentResult Invoke()
-
         {
-            AddSupplierVM addSupplierVM = new() { };
+            AddCustomerVM vm = new();
 
-
-            return View(addSupplierVM);
+            return View(vm);
         }
-
     }
 }

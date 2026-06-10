@@ -119,10 +119,10 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Activities</h6>
                      
-                        <a class="collapse-item" asp-action="ViewTravelRequests" asp-controller="TravelRequest"><i class="fas fa-fw fa-truck mr-1"></i>
+                        <a class="collapse-item" asp-action="ViewSuppliers" asp-controller="Supplier"><i class="fas fa-fw fa-truck mr-1"></i>
                             Suppliers
                         </a>
-                        <a class="collapse-item" asp-action="ViewServiceRequests" asp-controller="ServiceRequest"><i class="fas fa-fw fa-users mr-1"></i>Customers</a>
+                        <a class="collapse-item" asp-action="ViewCustomers" asp-controller="Customer"><i class="fas fa-fw fa-users mr-1"></i>Customers</a>
                      
                     </div>
                 </div>
@@ -400,10 +400,10 @@
     <script src="~/lib/sweetalert2/sweetalert2.all.min.js"></script>
     <script src="~/lib/lottie-web/lottie.min.js" asp-append-version="true"></script>
     @await Component.InvokeAsync("Notyf")
+</body>
+
 
 
   
  
-</body>
-
 </html>

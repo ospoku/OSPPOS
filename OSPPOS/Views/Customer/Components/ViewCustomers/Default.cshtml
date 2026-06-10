@@ -1,6 +1,6 @@
 ﻿
-@using DMX.Models;  
-@using DMX.ViewComponents
+
+@using OSPPOS.ViewComponents
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
 @using System.Web
@@ -19,12 +19,12 @@
     var protector = DataProtectionProvider.CreateProtector("IdProtector");
   
 }
-<div class="card shadow mb-4">
-    <div class="card-header py-3"><i class="fas fa-fw fa-file-alt"></i>
-        <h6 class="m-0 font-weight-bold text-primary d-inline">Memos</h6>
+<div class="card table-responsive rounded-5 shadow mb-4">
+    <div class="card-header py-3"><i class="fas fa-fw fa-users"></i>
+        <h6 class="m-0 font-weight-bold d-inline">Customers</h6>
         
           
-        <button id="btnAddMemo" class="btn btn-sm btn-rounded  btn-outline-primary fa-pull-right" onclick="document.getElementById('AddMemoDialog').showModal()"><i class="fa fa-fw fa-plus-circle"></i>Add Memo</button>
+        <button id="btnAddCustomer" class="btn btn-sm rounded-5  btn-outline-primary fa-pull-right" onclick="document.getElementById('AddCustomerDialog').showModal()"><i class="fa fa-fw fa-plus-circle"></i>Add Customer</button>
         </div>
         <div class="card-body">
          
@@ -85,11 +85,11 @@
                 </tbody>
             </table>
        </div>
-       </div>
+      
 
     <div class="card-footer">
     </div>
-
+</div>
 
 <iframe id="printFrame" style="display:none;"></iframe>
 
@@ -106,6 +106,6 @@
 </script>
 
 
-await Component.InvokeAsync(nameof(AddCustomerVM))
+@await Component.InvokeAsync(nameof(AddCustomer))
 <dialog id="EditMemoDialog"><div id="EditMemoDialogContent"></div></dialog>
 <dialog id="CommentMemoDialog" class="col-md-6 border-0 rounded p-0"><div id="CommentMemoDialogContent"></div></dialog>

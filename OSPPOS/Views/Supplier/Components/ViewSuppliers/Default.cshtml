@@ -40,20 +40,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                      @foreach (var Memo in Model)
+                @foreach (var Memo in Model.ToList())
                 {
                     <tr>
                         <td></td>
-<td>@Memo.Notes</td>
-                        <td class="ellipsed-text"> @Memo.Notes</td>
+                        <td></td>
+                        <td class="ellipsed-text"></td>
                         
-                            <td class="ellipsed-text">@Memo.Notes</td>
+                            <td class="ellipsed-text"></td>
                             <td>
-@* @foreach(var assignee in @Memo.Assignees)
-{
-                        <span class="badge badge-pill badge-dark">@assignee</span>
-}
-</td> *@
+
                            <td>
 
                                 <div class="btn-group" role="group">
@@ -76,8 +72,7 @@
                                             <i style="width:15px; height:15px" class="fa fa-print mr-3 text-primary"></i>Print
                                         </button>
                                        }
- 
-                                             
+        
                                                 <button type="button" onclick="de" class="dropdown-item-custom"><i style="width:15px; height:15px" class="fa fa-trash mr-3 text-danger"></i>Delete</button>
                                           
                                   </div>
@@ -89,11 +84,11 @@
                 </tbody>
             </table>
        </div>
-       </div>
+ 
 
     <div class="card-footer">
     </div>
-
+    </div>
 
 <iframe id="printFrame" style="display:none;"></iframe>
 
