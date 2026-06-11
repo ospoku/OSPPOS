@@ -43,16 +43,16 @@
         @model List<Product> *@
 @{ ViewData["Title"] = "Stock Levels"; }
 <div class="card shadow rounded-5 mb-4">
-<div class="d-flex justify-content-between align-items-center">
+<div class="d-flex m-3 justify-content-between align-items-center">
     <h4 class="mb-0"><i class="fas fa-boxes me-2 text-primary"></i>Stock levels</h4>
     <div class="d-flex gap-2">
-        <button onclick="window.print()" class="btn btn-sm btn-outline-secondary no-print">
+        <button onclick="window.print()" class="btn btn-sm rounded-5 btn-outline-secondary no-print">
             <i class="fas fa-print me-1"></i>Print
         </button>
-        <a asp-action="DownloadStock" class="btn btn-sm btn-outline-success no-print">
+        <a asp-action="DownloadStock" class="btn btn-sm rounded-5 btn-outline-success no-print">
             <i class="fas fa-file-excel me-1"></i>Export
         </a>
-        <a asp-controller="Stock" asp-action="Create" class="btn btn-sm btn-primary no-print">
+        <a asp-controller="Stock" asp-action="Create" class="btn btn-sm rounded-5 btn-primary no-print">
             <i class="fas fa-truck-loading me-1"></i>New GRN
         </a>
     </div>
@@ -67,9 +67,9 @@
 }
 
 <!-- Summary cards -->
-<div class="row g-2">
+<div class="row g-2 m-3">
     <div class="col-6 col-md-3">
-        <div class="card border-0 shadow-sm text-center py-3">
+        <div class="card border-1 shadow-sm text-center py-3">
             <div class="fs-4 fw-bold">@Model.Products.Count</div>
             <div class="small text-muted">Total products</div>
             <div class="x-small text-muted">
@@ -79,21 +79,21 @@
         </div>
     </div>
     <div class="col-6 col-md-3">
-        <div class="card border-0 shadow-sm text-center py-3">
+        <div class="card border-1 shadow-sm text-center py-3">
             <div class="fs-4 fw-bold text-danger">@outOfStock</div>
             <div class="small text-muted">Out of stock</div>
             <div class="x-small text-muted">needs immediate restock</div>
         </div>
     </div>
     <div class="col-6 col-md-3">
-        <div class="card border-0 shadow-sm text-center py-3">
+        <div class="card border-1 shadow-sm text-center py-3">
             <div class="fs-4 fw-bold text-warning">@lowStock</div>
             <div class="small text-muted">Low stock</div>
             <div class="x-small text-muted">below reorder level</div>
         </div>
     </div>
     <div class="col-6 col-md-3">
-        <div class="card border-0 shadow-sm text-center py-3">
+        <div class="card border-1 shadow-sm text-center py-3">
             <div class="fs-5 fw-bold text-success">GHS @totalRetail.ToString("N2")</div>
             <div class="small text-muted">Stock value (retail)</div>
             <div class="x-small text-muted">cost: GHS @totalCost.ToString("N2")</div>
@@ -101,48 +101,10 @@
     </div>
 </div>
 </div>
-<!-- Filters -->
-@* <div class="card border-0 shadow-sm mb-3 no-print">
-    <div class="card-body py-2">
-        <form method="get" class="row g-2 align-items-end">
-            <div class="col-sm-4">
-                <label class="form-label">Search</label>
-                <input type="text" name="search" class="form-control form-control-sm"
-                       placeholder="Name or SKU…" value="@ViewBag.Search" />
-            </div>
-            <div class="col-sm-3">
-                <label class="form-label">Category</label>
-                <select name="categoryId" asp-items="ViewBag.Categories"
-                        class="form-select form-select-sm">
-                    <option value="">All categories</option>
-                </select>
-            </div>
-            <div class="col-sm-2">
-                <label class="form-label">Type</label>
-                <select name="type" class="form-select form-select-sm">
-                    <option value="">Soft &amp; hard</option>
-                    <option value="Soft">Soft</option>
-                    <option value="Hard">Hard</option>
-                </select>
-            </div>
-            <div class="col-sm-2">
-                <label class="form-label">Status</label>
-                <select name="status" class="form-select form-select-sm">
-                    <option value="">All</option>
-                    <option value="out">Out of stock</option>
-                    <option value="low">Low stock</option>
-                    <option value="ok">OK</option>
-                </select>
-            </div>
-            <div class="col-sm-1">
-                <button type="submit" class="btn btn-sm btn-primary w-100">Go</button>
-            </div>
-        </form>
-    </div>
-</div>*@
+
 
 <!-- Main table -->
-<div class="card rounded-5 shadow mb-4">
+<div class="card table-responsive rounded-5 shadow mb-4">
     <div class="card-header py-3  d-flex justify-content-between align-items-center">
         <span class="fw-semibold" style="font-size:.85rem">
             All products — stock position
@@ -346,10 +308,17 @@
             <thead>
                 <tr>
                     <th>SN</th>
-                    <th>RefN</th>
-                    <th>Title</th>
-                    <th>Sender</th>
-                    <th>Assignee(s)</th>
+
+                    <th>SKU</th>
+                    <th>Product</th>
+                    <th>Type</th>
+                    <th class="text-center">Reorder</th>
+                    <th class="text-center">In stock</th>
+                    <th style="min-width:140px">Level</th>
+                    <th class="text-end">Cost value</th>
+                    <th class="text-end">Retail value</th>
+                    <th>Status</th>
+                   
 
                     <th>Action</th>
                 </tr>
@@ -365,10 +334,10 @@
                         <td class="ellipsed-text"></td>
                         <td>
                         </td>
+                        <td>
                         @if (p.CurrentStock == 0)
                         {
-                            <span class="badge rounded-pill"
-                                  style="background:#FCEBEB;color:#791F1F;font-size:.7rem">Out</span>
+                            <span class="badge rounded-pill" style="background:#FCEBEB;color:#791F1F;font-size:.7rem">Out</span>
                         }
                         else if (p.IsLowStock)
                         {
@@ -380,6 +349,8 @@
                             <span class="badge rounded-pill"
                                   style="background:#EAF3DE;color:#27500A;font-size:.7rem">OK</span>
                         }
+
+                        </td>
                         <td>
 
                             <div class="btn-group" role="group">

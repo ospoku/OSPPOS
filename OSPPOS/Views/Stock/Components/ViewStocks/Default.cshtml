@@ -10,7 +10,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@model OSPPOS.ViewModels.ViewStocksVM;
+@model IEnumerable<OSPPOS.ViewModels.ViewStocksVM>;
 @inject Microsoft.AspNetCore.DataProtection.IDataProtectionProvider DataProtectionProvider
 
 @{
@@ -18,7 +18,7 @@
     var protector = DataProtectionProvider.CreateProtector("IdProtector");
   
 }
-<div class="card shadow mb-4">
+<div class="card rounded-5 table-responsive shadow mb-4">
     <div class="card-header py-3"><i class="fas fa-fw fa-file-alt"></i>
         <h6 class="m-0 font-weight-bold text-primary d-inline">Stocks</h6>
         
@@ -39,10 +39,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                      @foreach (var stock in @Model.StockBatchItems)
+                      @foreach (var stock in Model.ToList())
                 {
                     <tr>
-                        <td></td>
+                        <td>@stock.Notes</td>
 <td></td>
                         <td class="ellipsed-text"></td>
                         
@@ -55,18 +55,18 @@
                                         Select Action
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                    @if(Model.CanEdit)
+                                    @if(stock.CanEdit)
                                     {
 
-                                        <button  onclick="openDialogFromData(this)" data-url="EditMemo" data-user-id="@protector.Protect(Model.PublicId.ToString())" data-dialog-id="EditMemoDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-edit mr-3 text-warning"></i>Edit</button>
+                                        <button  onclick="openDialogFromData(this)" data-url="EditMemo" data-user-id="@protector.Protect(stock.PublicId.ToString())" data-dialog-id="EditMemoDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-edit mr-3 text-warning"></i>Edit</button>
                                         }
 
-                                       <button  onclick="openDialogFromData(this)" data-url="CommentMemo" data-user-id="@protector.Protect(Model.PublicId.ToString())" data-dialog-id="CommentMemoDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-comment mr-3 text-dark"></i>Comment</button>
+                                       <button  onclick="openDialogFromData(this)" data-url="CommentMemo" data-user-id="@protector.Protect(stock.PublicId.ToString())" data-dialog-id="CommentMemoDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-comment mr-3 text-dark"></i>Comment</button>
 
-                                       @if(Model.CanPrint)
+                                       @if(stock.CanPrint)
                                        {
 
-                                        <button type="button" class="dropdown-item-custom" onclick="printMemoIframe('@protector.Protect(Model.PublicId.ToString())')">
+                                        <button type="button" class="dropdown-item-custom" onclick="printMemoIframe('@protector.Protect(stock.PublicId.ToString())')">
                                             <i style="width:15px; height:15px" class="fa fa-print mr-3 text-primary"></i>Print
                                         </button>
                                        }

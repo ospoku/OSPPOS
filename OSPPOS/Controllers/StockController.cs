@@ -10,16 +10,10 @@ using OSPPOS.ViewModels;
 namespace OSPPOS.Controllers;
 
 [Authorize]
-public class StockController : Controller
+public class StockController(IStockService stock, XContext db) : Controller
 {
-    private readonly IStockService _stock;
-    private readonly XContext _db;
-
-    public StockController(IStockService stock, XContext db)
-    {
-        _stock = stock;
-        _db = db;
-    }
+    private readonly IStockService _stock = stock;
+    private readonly XContext _db = db;
 
     // GET /Stock
     public async Task<IActionResult> Index(DateTime? from, DateTime? to)

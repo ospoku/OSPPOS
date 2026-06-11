@@ -5,19 +5,16 @@ using OSPPOS.ViewModels;
 
 namespace OSPPOS.ViewComponents
 {
-    public class ViewStocks(XContext ctx):ViewComponent
+    public class ViewStocks(XContext ctx) : ViewComponent
     {
+       
 
         public IViewComponentResult Invoke()
         {
-            ViewStocksVM viewStocksVM = new()
-            {
-                StockBatchItems= ctx.StockBatchItems.ToList(),
-                
-            };
+            List<ViewStocksVM> stocks = ctx.StockBatchItems.Select(s => new ViewStocksVM { }).ToList();
     
 
-            return View(viewStocksVM);
+            return View(stocks);
         }
     }
 }

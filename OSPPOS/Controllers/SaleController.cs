@@ -10,16 +10,10 @@ using OSPPOS.Models;
 namespace OSPPOS.Controllers;
 
 [Authorize]
-public class SaleController : Controller
+public class SaleController(ISalesService sales, XContext db) : Controller
 {
-    private readonly ISalesService _sales;
-    private readonly XContext _db;
-
-    public SaleController(ISalesService sales, XContext db)
-    {
-        _sales = sales;
-        _db = db;
-    }
+    private readonly ISalesService _sales = sales;
+    private readonly XContext _db = db;
 
     // GET /Sales
     public async Task<IActionResult> Index(DateTime? from, DateTime? to,
@@ -138,5 +132,9 @@ public class SaleController : Controller
             .OrderBy(p => p.Category.Name).ThenBy(p => p.Name)
             .Select(p => new { p.Id, Name = $"{p.Name} ({p.SKU})", p.SellingPrice, p.CurrentStock })
             .ToListAsync();
+    }
+    public IActionResult ViewSales()
+    {
+        return ViewComponent(nameof(ViewSales));
     }
 }

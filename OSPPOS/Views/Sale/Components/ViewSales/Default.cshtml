@@ -24,7 +24,7 @@
         <h6 class="m-0 font-weight-bold text-primary d-inline">Sales</h6>
         
           
-        <button id="btnAddMemo" class="btn btn-sm btn-rounded  btn-outline-primary fa-pull-right" onclick="document.getElementById('AddMemoDialog').showModal()"><i class="fa fa-fw fa-plus-circle"></i>Add Memo</button>
+        <button id="btnAddSale" class="btn btn-sm btn-rounded rounded-5  btn-outline-primary fa-pull-right" onclick="document.getElementById('AddSaleDialog').showModal()"><i class="fa fa-fw fa-plus-circle"></i>Add Sale</button>
         </div>
         <div class="card-body">
         <div class="row g-2 mb-3">
@@ -143,6 +143,5 @@
 
 </script>
 
-@await Component.InvokeAsync(nameof(AddRole))
+@await Component.InvokeAsync(nameof(AddSale))
 <dialog id="EditMemoDialog"><div id="EditMemoDialogContent"></div></dialog>
-<dialog id="CommentMemoDialog" class="col-md-6 border-0 rounded p-0"><div id="CommentMemoDialogContent"></div></dialog>
