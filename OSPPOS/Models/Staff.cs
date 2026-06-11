@@ -1,6 +1,8 @@
-﻿namespace DMX.Models
+﻿using OSPPOS.Data;
+
+namespace DMX.Models
 {
-    public class Staff
+    public class Staff:TableAudit
     {
         public string StaffId { get; internal set; }
         public object DateOfBirth { get; internal set; }

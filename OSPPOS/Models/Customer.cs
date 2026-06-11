@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using OSPPOS.Data;
+using System.ComponentModel.DataAnnotations;
 
 namespace OSPPOS.Models
 {
  
 
-    public class Customer
+    public class Customer:TableAudit
     {
         [Key]
         public int Id { get; set; }
@@ -17,7 +18,7 @@ namespace OSPPOS.Models
         public decimal CreditLimit { get; set; } = 0;
         public bool AllowCredit { get; set; } = false;
         public bool IsActive { get; set; } = true;
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        
 
         public ICollection<SaleOrder> SaleOrders { get; set; } = new List<SaleOrder>();
         public ICollection<Payment> Payments { get; set; } = new List<Payment>();

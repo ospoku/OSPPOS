@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using OSPPOS.Data;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OSPPOS.Models
@@ -8,7 +9,7 @@ namespace OSPPOS.Models
     public enum PaymentStatus { Unpaid, Partial, Paid }
     public enum SaleType { Cash, Credit }
 
-    public class SaleOrder
+    public class SaleOrder:TableAudit
     {
         [Key]
         public int Id { get; set; }

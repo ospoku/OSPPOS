@@ -1,8 +1,8 @@
 ﻿@model OSPPOS.ViewModels.AddSaleVM;
 
 <dialog id="AddSaleDialog" class="col-md-6 border-0 rounded p-0">
-    <div class="modal-header">
-        <h6 class="m-0 font-weight-bold d-inline">   <i class="fas fa-fw fa-file-alt"></i>Add Memo</h6>
+    @* <div class="modal-header">
+        <h6 class="m-0 font-weight-bold d-inline">   <i class="fas fa-fw fa-file-alt"></i>Add Sale</h6>
         <button type="button" aria-label="Close"
                 class="btn btn-sm btn-outline-danger"
                 onclick="document.getElementById('AddMemoDialog').close()">
@@ -10,58 +10,1011 @@
         </button>
     </div>
 
-    @using (Html.BeginForm("AddMemo", "Memo", FormMethod.Post, new { id = "addMemoForm" }))
+    @using (Html.BeginForm("AddSale", "Sale", FormMethod.Post, new { id = "addSaleForm" }))
     {
         <div class="modal-body">
-            <!-- Memo Title -->
-    
- 
-       
-       
-     
-           
-            <div class="input-group">
+         
+
+        
+
+
+<style>
+    .pos-left  { position: sticky; top: 70px; }
+    .cart-row:hover { background: #f0f7ff; }
+    #productSearch:focus { border-color: #0d6efd; box-shadow: 0 0 0 3px rgba(13,110,253,.15); }
+    .product-result { cursor: pointer; padding: 8px 12px; border-bottom: 1px solid #f0f0f0; transition: background .1s; }
+    .product-result:hover { background: #f0f7ff; }
+    .product-result:last-child { border-bottom: none; }
+    #searchResults { position: absolute; z-index: 999; width: 100%; background: #fff;
+                     border: 1px solid #dee2e6; border-top: none; border-radius: 0 0 8px 8px;
+                     max-height: 320px; overflow-y: auto; box-shadow: 0 4px 12px rgba(0,0,0,.1); display:none; }
+    .out-of-stock { opacity: .5; pointer-events: none; }
+    #cartEmpty { display: flex; flex-direction: column; align-items: center;
+                 justify-content: center; padding: 2.5rem; color: #adb5bd; }
+    .sale-type-btn { cursor: pointer; border: 2px solid transparent; border-radius: 8px;
+                     padding: 10px 16px; transition: all .15s; }
+    .sale-type-btn.active { border-color: currentColor; }
+    #cashPanel, #creditPanel { display: none; }
+    #cashPanel.show, #creditPanel.show { display: block; }
+    .qty-btn { width: 28px; height: 28px; padding: 0; border-radius: 6px; }
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0"><i class="fas fa-cash-register me-2 text-success"></i>New sale</h4>
+    <a asp-action="Index" class="btn btn-sm btn-outline-secondary">
+        <i class="fas fa-arrow-left me-1"></i>Back to sales
+    </a>
+</div>
+
+<form id="saleForm" asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
+    <!-- Hidden cart items submitted as JSON -->
+    <input type="hidden" id="cartJson" name="CartJson" />
+    <input type="hidden" name="IsCreditSale" id="isCreditInput" value="false" />
+    <input type="hidden" name="PaymentMethod" id="paymentMethodInput" value="Cash" />
+    <input type="hidden" name="CustomerId" id="customerIdInput" value="" />
+    <input type="hidden" name="Discount" id="discountInput" value="0" />
+    <input type="hidden" name="AmountTendered" id="tenderedInput" value="0" />
+    <input type="hidden" name="DueDate" id="dueDateInput" value="" />
+    <input type="hidden" name="WalkInName" id="walkInInput" value="" />
+
+    <div class="row g-3">
+
+        <!-- LEFT: Product search + cart -->
+        <div class="col-lg-8">
+
+            <!-- Product search -->
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-body">
+                    <label class="form-label fw-semibold">
+                        <i class="fas fa-search me-1 text-primary"></i>Search product
+                    </label>
+                    <div class="position-relative">
+                        <input type="text" id="productSearch" class="form-control form-control-lg"
+                               placeholder="Type product name or SKU…" autocomplete="off" />
+                        <div id="searchResults"></div>
+                    </div>
+                    <div class="mt-2 d-flex gap-2 flex-wrap" id="categoryFilters">
+                        <button type="button" class="btn btn-sm btn-outline-secondary cat-btn active"
+                                data-cat="">All</button>
+                        @foreach (var cat in Model.Products
+                            .Select(p => p.Category?.Name).Distinct().Where(c => c != null).OrderBy(c => c))
+                        {
+                            <button type="button" class="btn btn-sm btn-outline-secondary cat-btn"
+                                    data-cat="@cat">@cat</button>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cart -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+                    <span class="fw-semibold">
+                        <i class="fas fa-shopping-cart me-1 text-success"></i>
+                        Cart &nbsp;<span id="cartCount" class="badge bg-success rounded-pill">0</span>
+                    </span>
+                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="clearCart()">
+                        <i class="fas fa-trash me-1"></i>Clear
+                    </button>
+                </div>
+
+                <div id="cartEmpty">
+                    <i class="fas fa-shopping-cart fa-3x mb-2" style="opacity:.2"></i>
+                    <span>No items added yet. Search above to add products.</span>
+                </div>
+
+                <div class="table-responsive" id="cartTableWrap" style="display:none">
+                    <table class="table align-middle mb-0" style="font-size:.85rem" id="cartTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Product</th>
+                                <th class="text-end" style="width:80px">Price</th>
+                                <th class="text-center" style="width:120px">Qty</th>
+                                <th class="text-end" style="width:100px">Discount</th>
+                                <th class="text-end" style="width:110px">Line total</th>
+                                <th style="width:40px"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="cartBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="card-footer bg-white" id="cartFooter" style="display:none">
+                    <div class="row justify-content-end">
+                        <div class="col-md-5">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted">Subtotal</span>
+                                <span id="subtotalDisplay">GHS 0.00</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="text-muted">Discount</span>
+                                <div class="input-group input-group-sm" style="width:120px">
+                                    <span class="input-group-text">GHS</span>
+                                    <input type="number" id="discountField" class="form-control text-end"
+                                           min="0" step="0.01" value="0" oninput="recalcTotals()" />
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between fw-bold fs-6 border-top pt-2">
+                                <span>Total</span>
+                                <span id="totalDisplay" class="text-success">GHS 0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: Payment panel -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm pos-left">
+                <div class="card-header bg-white border-0">
+                    <h6 class="mb-0 fw-semibold">Payment details</h6>
+                </div>
+                <div class="card-body">
+
+                    <!-- Sale type toggle -->
+                    <div class="mb-3">
+                        <label class="form-label">Sale type</label>
+                        <div class="d-flex gap-2">
+                            <div class="sale-type-btn flex-fill text-center text-success active"
+                                 id="btnCash" onclick="setSaleType('cash')">
+                                <i class="fas fa-money-bill-wave d-block fs-4 mb-1"></i>
+                                <span class="small fw-semibold">Cash sale</span>
+                            </div>
+                            <div class="sale-type-btn flex-fill text-center text-warning"
+                                 id="btnCredit" onclick="setSaleType('credit')">
+                                <i class="fas fa-clock d-block fs-4 mb-1"></i>
+                                <span class="small fw-semibold">Credit sale</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Walk-in name (cash default) -->
+                    <div class="mb-3" id="walkInGroup">
+                        <label class="form-label">Customer name <span class="text-muted small">(optional)</span></label>
+                        <input type="text" id="walkInName" class="form-control form-control-sm"
+                               placeholder="Walk-in customer…"
+                               oninput="document.getElementById('walkInInput').value=this.value" />
+                    </div>
+
+                    <!-- Cash panel -->
+                    <div id="cashPanel" class="show">
+                        <div class="mb-3">
+                            <label class="form-label">Payment method</label>
+                            <select id="payMethodSelect" class="form-select form-select-sm"
+                                    onchange="document.getElementById('paymentMethodInput').value=this.value">
+                                <option value="Cash">Cash</option>
+                                <option value="MoMo">Mobile Money (MoMo)</option>
+                                <option value="Bank">Bank transfer</option>
+                            </select>
+                        </div>
+                                   <div class="input-group mb-3" id="tenderedGroup">
   <!-- Left icon addon -->
   <div class="input-group-text">
     <!-- Use any icon here: Font Awesome, SVG, emoji, etc. -->
-    <i class="fas fa-heading"></i>          <!-- example: user icon -->
+    <i class="fas fa-cedi-sign"></i>          <!-- example: user icon -->
     <!-- or SVG: <svg ...> ... </svg> -->
-    <!-- or just text/emoji: 👤 -->
+    <!-- or just text/emoji: 👤 --> 
   </div>
 
   <!-- Floating label + input -->
   <div class="did-floating-label-content">
-                    <input type="text" asp-for="@Model.Notes"
-      class="did-floating-input" 
+                    <input type="number" asp-for="@Model.Notes"
+      class="did-floating-input text-end" 
       id="title" 
-      placeholder=" "           
+      placeholder=" "           min="0" step="0.01" value="0" oninput="calcChange()"
     />
-    <label class="did-floating-label" for="title">Title</label>
+    <label class="did-floating-label" for="title">Amount Tendered</label>
   </div>
 </div>
+                        <div class="p-3 rounded mb-3"
+                             style="background:#f0fdf4;border:1px solid #bbf7d0">
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted small">Total due</span>
+                                <span id="changeTotalDue" class="fw-semibold">GHS 0.00</span>
+                            </div>
+                            <div class="d-flex justify-content-between mt-1">
+                                <span class="text-muted small">Tendered</span>
+                                <span id="changeTendered">GHS 0.00</span>
+                            </div>
+                            <div class="d-flex justify-content-between mt-1 border-top pt-1">
+                                <span class="fw-bold">Change</span>
+                                <span id="changeDisplay" class="fw-bold text-success fs-5">GHS 0.00</span>
+                            </div>
+                        </div>
+                    </div>
 
-            <!-- Memo Content -->
-            <div class="form-group">
-               
-                <textarea id="MemoContent" class="dmx-textarea" asp-for="@Model.Notes" placeholder="Memo Content"></textarea>
-                    
+                    <!-- Credit panel -->
+                    <div id="creditPanel">
+                        <div class="mb-3">
+                            <label class="form-label">Customer <span class="text-danger">*</span></label>
+                            <select id="customerSelect" class="form-select form-select-sm"
+                                    onchange="selectCustomer(this)">
+                                <option value="">-- select customer --</option>
+                                @foreach (var c in Model.Customers)
+                                {
+                                    <option value="@c.Id"
+                                            data-limit="@c.CreditLimit"
+                                            data-balance="@c.TotalDebt"
+                                            data-name="@c.Name">
+                                        @c.Name @(c.TotalDebt > 0 ? $"(owes GHS {c.TotalDebt:N2})" : "")
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                        <!-- Customer credit info -->
+                        <div id="creditInfo" class="p-2 rounded mb-3"
+                             style="background:#fff8e1;border:1px solid #ffe082;display:none">
+                            <div class="d-flex justify-content-between small">
+                                <span class="text-muted">Credit limit</span>
+                                <span id="ciLimit">—</span>
+                            </div>
+                            <div class="d-flex justify-content-between small">
+                                <span class="text-muted">Current balance</span>
+                                <span id="ciBalance" class="text-danger">—</span>
+                            </div>
+                            <div class="d-flex justify-content-between small border-top pt-1 mt-1">
+                                <span class="text-muted">Available credit</span>
+                                <span id="ciAvailable" class="fw-semibold">—</span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Due date</label>
+                            <input type="date" id="dueDateField" class="form-control form-control-sm"
+                                   oninput="document.getElementById('dueDateInput').value=this.value" />
+                        </div>
+                    </div>
+
+                    <!-- Notes -->
+                    <div class="mb-3">
+                        <label class="form-label">Notes <span class="text-muted small">(optional)</span></label>
+                        <textarea name="Notes" class="form-control form-control-sm" rows="2"
+                                  placeholder="Any notes about this sale…"></textarea>
+                    </div>
+
+                    <!-- Confirm button -->
+                    <button type="submit" id="confirmBtn"
+                            class="btn btn-success w-100 py-2 fw-semibold" disabled>
+                        <i class="fas fa-check-circle me-2"></i>
+                        Confirm sale &nbsp;—&nbsp; <span id="btnTotal">GHS 0.00</span>
+                    </button>
+                    <div class="text-center text-muted mt-2" style="font-size:.75rem">
+                        Stock will be deducted on confirmation
+                    </div>
+
+                </div>
             </div>
-
-            <!-- Select Approvers -->
- 
-      
-               @*  <select id="selectMemoUser" class="dmx-choices" asp-items="@Model.UsersList" asp-for="@Model.SelectedUsers"><option value="">Select Approver(s)</option></select>
-             *@
-         </div>
-         <div class="modal-footer">
-          
-        <button id="saveButton"  class="btn btn-block btn-primary">Save</button>
         </div>
 
+    </div><!-- /row -->
+</form>
+
+<!-- Product data (JSON island) -->
+<script id="productData" type="application/json">
+@Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+    Model.Products.Select(p => new {
+        id           = p.Id,
+        name         = p.Name,
+        sku          = p.SKU ?? "",
+        category     = p.Category?.Name ?? "",
+        unit         = p.Unit,
+        sellingPrice = p.SellingPrice,
+        wholesale    = p.WholesalePrice,
+        costPrice    = p.CostPrice,
+        stock        = p.CurrentStock
+    })
+))
+</script>
+
+@section Scripts {
+<script>
+// ── Data ─────────────────────────────────────────────────────────────────────
+const PRODUCTS = JSON.parse(document.getElementById('productData').textContent);
+let cart = [];
+let saleType = 'cash';
+
+// ── Sale type toggle ──────────────────────────────────────────────────────────
+function setSaleType(type) {
+    saleType = type;
+    const isCreditSale = type === 'credit';
+    document.getElementById('isCreditInput').value = isCreditSale;
+    document.getElementById('btnCash').classList.toggle('active', type === 'cash');
+    document.getElementById('btnCredit').classList.toggle('active', type === 'credit');
+    document.getElementById('cashPanel').classList.toggle('show', type === 'cash');
+    document.getElementById('creditPanel').classList.toggle('show', type === 'credit');
+    document.getElementById('walkInGroup').style.display = type === 'cash' ? '' : 'none';
+    document.getElementById('tenderedGroup').style.display = type === 'cash' ? '' : 'none';
+    if (type === 'credit') document.getElementById('paymentMethodInput').value = 'Credit';
+    recalcTotals();
+}
+
+// ── Customer select ───────────────────────────────────────────────────────────
+function selectCustomer(sel) {
+    const opt = sel.options[sel.selectedIndex];
+    document.getElementById('customerIdInput').value = sel.value;
+    const info = document.getElementById('creditInfo');
+    if (sel.value) {
+        const limit   = parseFloat(opt.dataset.limit)   || 0;
+        const balance = parseFloat(opt.dataset.balance) || 0;
+        const avail   = limit - balance;
+        document.getElementById('ciLimit').textContent    = 'GHS ' + limit.toFixed(2);
+        document.getElementById('ciBalance').textContent  = 'GHS ' + balance.toFixed(2);
+        document.getElementById('ciAvailable').textContent= 'GHS ' + avail.toFixed(2);
+        document.getElementById('ciAvailable').style.color = avail < 0 ? '#dc3545' : '#198754';
+        info.style.display = '';
+    } else {
+        info.style.display = 'none';
+    }
+    checkConfirmBtn();
+}
+
+// ── Product search ────────────────────────────────────────────────────────────
+let activeCat = '';
+document.querySelectorAll('.cat-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeCat = btn.dataset.cat;
+        doSearch(document.getElementById('productSearch').value);
+    });
+});
+
+document.getElementById('productSearch').addEventListener('input', function () {
+    doSearch(this.value);
+});
+
+document.addEventListener('click', function (e) {
+    if (!e.target.closest('#productSearch') && !e.target.closest('#searchResults')) {
+        document.getElementById('searchResults').style.display = 'none';
+    }
+});
+
+function doSearch(q) {
+    const box = document.getElementById('searchResults');
+    const term = q.toLowerCase().trim();
+    let results = PRODUCTS;
+    if (activeCat) results = results.filter(p => p.category === activeCat);
+    if (term) results = results.filter(p =>
+        p.name.toLowerCase().includes(term) || p.sku.toLowerCase().includes(term));
+    results = results.slice(0, 12);
+
+    if (!results.length && !term && !activeCat) { box.style.display = 'none'; return; }
+
+    box.innerHTML = results.length === 0
+        ? '<div class="product-result text-muted">No products found</div>'
+        : results.map(p => `
+            <div class="product-result ${p.stock === 0 ? 'out-of-stock' : ''}"
+                 onclick="addToCart(${p.id})">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="fw-semibold">${p.name}</span>
+                        ${p.sku ? `<span class="text-muted ms-2" style="font-size:.75rem">${p.sku}</span>` : ''}
+                        <span class="badge rounded-pill ms-1"
+                              style="background:#E6F1FB;color:#0C447C;font-size:.68rem">${p.category}</span>
+                    </div>
+                    <div class="text-end">
+                        <div class="fw-semibold text-success">GHS ${p.sellingPrice.toFixed(2)}</div>
+                        <div style="font-size:.72rem" class="${p.stock === 0 ? 'text-danger' : 'text-muted'}">
+                            ${p.stock === 0 ? 'Out of stock' : p.stock + ' ' + p.unit + '(s)'}
+                        </div>
+                    </div>
+                </div>
+            </div>`).join('');
+
+    box.style.display = 'block';
+}
+
+// ── Cart logic ────────────────────────────────────────────────────────────────
+function addToCart(productId) {
+    const p = PRODUCTS.find(x => x.id === productId);
+    if (!p || p.stock === 0) return;
+
+    const existing = cart.find(c => c.productId === productId);
+    if (existing) {
+        if (existing.qty < p.stock) existing.qty++;
+    } else {
+        cart.push({ productId: p.id, name: p.name, unit: p.unit,
+                    price: p.sellingPrice, qty: 1, discount: 0, stock: p.stock });
+    }
+
+    document.getElementById('productSearch').value = '';
+    document.getElementById('searchResults').style.display = 'none';
+    renderCart();
+}
+
+function removeFromCart(idx) {
+    cart.splice(idx, 1);
+    renderCart();
+}
+
+function clearCart() {
+    cart = [];
+    renderCart();
+}
+
+function changeQty(idx, delta) {
+    cart[idx].qty = Math.max(1, Math.min(cart[idx].stock, cart[idx].qty + delta));
+    renderCart();
+}
+
+function changeLineDiscount(idx, val) {
+    cart[idx].discount = Math.max(0, parseFloat(val) || 0);
+    renderCart();
+}
+
+function renderCart() {
+    const body  = document.getElementById('cartBody');
+    const empty = document.getElementById('cartEmpty');
+    const wrap  = document.getElementById('cartTableWrap');
+    const foot  = document.getElementById('cartFooter');
+    const count = document.getElementById('cartCount');
+
+    count.textContent = cart.length;
+
+    if (cart.length === 0) {
+        empty.style.display = 'flex'; wrap.style.display = 'none';
+        foot.style.display = 'none';
+        recalcTotals(); return;
+    }
+
+    empty.style.display = 'none'; wrap.style.display = '';
+    foot.style.display = '';
+
+    body.innerHTML = cart.map((c, i) => {
+        const lineTotal = (c.qty * c.price) - c.discount;
+        return `
+        <tr class="cart-row">
+            <td>
+                <div class="fw-semibold" style="font-size:.85rem">${c.name}</div>
+                <div class="text-muted" style="font-size:.72rem">${c.unit} &middot; GHS ${c.price.toFixed(2)} each</div>
+            </td>
+            <td class="text-end">GHS ${c.price.toFixed(2)}</td>
+            <td class="text-center">
+                <div class="d-flex align-items-center justify-content-center gap-1">
+                    <button type="button" class="btn btn-sm btn-outline-secondary qty-btn"
+                            onclick="changeQty(${i}, -1)">
+                        <i class="fas fa-minus" style="font-size:.65rem"></i>
+                    </button>
+                    <span class="fw-semibold px-1" style="min-width:26px;text-align:center">${c.qty}</span>
+                    <button type="button" class="btn btn-sm btn-outline-secondary qty-btn"
+                            onclick="changeQty(${i}, 1)"
+                            ${c.qty >= c.stock ? 'disabled title="Max stock reached"' : ''}>
+                        <i class="fas fa-plus" style="font-size:.65rem"></i>
+                    </button>
+                </div>
+            </td>
+            <td class="text-end">
+                <input type="number" class="form-control form-control-sm text-end"
+                       style="width:80px;display:inline-block"
+                       min="0" step="0.01" value="${c.discount.toFixed(2)}"
+                       oninput="changeLineDiscount(${i}, this.value)" />
+            </td>
+            <td class="text-end fw-semibold">GHS ${lineTotal.toFixed(2)}</td>
+            <td>
+                <button type="button" class="btn btn-sm btn-link text-danger p-0"
+                        onclick="removeFromCart(${i})" title="Remove">
+                    <i class="fas fa-times"></i>
+                </button>
+            </td>
+        </tr>`;
+    }).join('');
+
+    recalcTotals();
+}
+
+// ── Totals & change ───────────────────────────────────────────────────────────
+function recalcTotals() {
+    const subtotal = cart.reduce((s, c) => s + (c.qty * c.price), 0);
+    const discount = parseFloat(document.getElementById('discountField').value) || 0;
+    const total    = Math.max(0, subtotal - discount);
+
+    document.getElementById('subtotalDisplay').textContent = 'GHS ' + subtotal.toFixed(2);
+    document.getElementById('totalDisplay').textContent    = 'GHS ' + total.toFixed(2);
+    document.getElementById('discountInput').value = discount;
+    document.getElementById('changeTotalDue').textContent  = 'GHS ' + total.toFixed(2);
+    document.getElementById('btnTotal').textContent = 'GHS ' + total.toFixed(2);
+
+    calcChange();
+    checkConfirmBtn();
+    buildCartJson();
+}
+
+function calcChange() {
+    const total    = parseFloat(document.getElementById('totalDisplay').textContent.replace('GHS ', '')) || 0;
+    const tendered = parseFloat(document.getElementById('tenderedField').value) || 0;
+    const change   = Math.max(0, tendered - total);
+
+    document.getElementById('changeTendered').textContent = 'GHS ' + tendered.toFixed(2);
+    document.getElementById('changeDisplay').textContent  = 'GHS ' + change.toFixed(2);
+    document.getElementById('changeDisplay').style.color  = change >= 0 ? '#198754' : '#dc3545';
+    document.getElementById('tenderedInput').value = tendered;
+}
+
+// ── Confirm button state ──────────────────────────────────────────────────────
+function checkConfirmBtn() {
+    const btn = document.getElementById('confirmBtn');
+    const hasItems = cart.length > 0;
+    const customerOk = saleType === 'cash' ||
+        document.getElementById('customerSelect').value !== '';
+    btn.disabled = !(hasItems && customerOk);
+}
+
+// ── Build hidden JSON for form submission ─────────────────────────────────────
+function buildCartJson() {
+    const items = cart.map(c => ({
+        productId: c.productId,
+        productName: c.name,
+        quantity: c.qty,
+        unitPrice: c.price,
+        discount: c.discount
+    }));
+    document.getElementById('cartJson').value = JSON.stringify(items);
+}
+
+
+
      
-            }
+            } *@
    
     
+
+
+@* 
+            <dialog id="AddSaleDialog" class="col-md-10 col-lg-8 border-0 rounded-3 p-0 shadow-lg"> *@
+
+    <div class="modal-header border-bottom px-3 py-2">
+        <h6 class="m-0 fw-semibold">
+            <i class="fas fa-cash-register me-2 text-success"></i>New Sale
+        </h6>
+        <button type="button"
+                class="btn btn-sm btn-outline-danger"
+                onclick="document.getElementById('AddSaleDialog').close()">
+            <i class="fas fa-times me-1"></i>Close
+        </button>
+    </div>
+
+    @using (Html.BeginForm("AddSale", "Sales", FormMethod.Post,
+        new { id = "addSaleForm" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <!-- Hidden fields posted to controller -->
+        <input type="hidden" name="IsCreditSale" id="isCreditSaleInput" value="false" />
+        <input type="hidden" name="CustomerId"   id="customerIdInput"   value="" />
+        <input type="hidden" name="Discount"      id="discountInput"     value="0" />
+        <input type="hidden" name="CashReceived"  id="cashReceivedInput" value="0" />
+
+        <div class="modal-body px-3 py-3">
+            <div class="row g-3">
+
+                <!-- ── LEFT: Customer + Products ── -->
+                <div class="col-lg-8">
+
+                    <!-- Customer row -->
+                    <div class="card border-0 bg-light rounded-3 mb-3">
+                        <div class="card-body py-2">
+                            <div class="row g-2 align-items-end">
+
+                                <!-- Sale type toggle -->
+                                <div class="col-sm-4">
+                                    <label class="form-label mb-1 small fw-semibold">Sale type</label>
+                                    <div class="d-flex gap-2">
+                                        <div class="sale-type-btn flex-fill text-center text-success active"
+                                             id="btnCash" onclick="setSaleType('cash')"
+                                             style="cursor:pointer;border:2px solid currentColor;
+                                                    border-radius:8px;padding:6px 10px">
+                                            <i class="fas fa-money-bill-wave d-block mb-1"></i>
+                                            <span style="font-size:.75rem" class="fw-semibold">Cash</span>
+                                        </div>
+                                        <div class="sale-type-btn flex-fill text-center text-muted"
+                                             id="btnCredit" onclick="setSaleType('credit')"
+                                             style="cursor:pointer;border:2px solid transparent;
+                                                    border-radius:8px;padding:6px 10px">
+                                            <i class="fas fa-clock d-block mb-1"></i>
+                                            <span style="font-size:.75rem" class="fw-semibold">Credit</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Walk-in name (cash) -->
+                                <div class="col-sm-8" id="walkInGroup">
+                                    <label class="form-label mb-1 small fw-semibold">
+                                        Customer name
+                                        <span class="text-muted fw-normal">(optional)</span>
+                                    </label>
+                                    <input type="text" name="WalkInCustomerName"
+                                           class="did-floating-input form-control-sm"
+                                           placeholder="Walk-in customer…" />
+                                </div>
+
+                                <!-- Credit customer select -->
+                                <div class="col-sm-8" id="creditCustomerGroup" style="display:none">
+                                    <label class="form-label mb-1 small fw-semibold">
+                                        Customer <span class="text-danger">*</span>
+                                    </label>
+                                    <select id="customerSelect"
+                                            class="did-floating-select form-select-sm"
+                                            onchange="onCustomerChange(this)">
+                                        <option value="">-- select customer --</option>
+                                        @foreach (var c in Model.Customers
+                                            .Where(c => c.IsActive && c.AllowCredit)
+                                            .OrderBy(c => c.Name))
+                                        {
+                                            <option value="@c.Id"
+                                                    data-limit="@c.CreditLimit"
+                                                    data-debt="@c.TotalDebt"
+                                                    data-allow="@c.AllowCredit.ToString().ToLower()">
+                                                @c.Name
+                                                @(c.TotalDebt > 0
+                                                    ? $" — owes GHS {c.TotalDebt:N2}"
+                                                    : "")
+                                            </option>
+                                        }
+                                    </select>
+
+                                    <!-- Credit info strip -->
+                                    <div id="creditInfo" class="mt-1 px-2 py-1 rounded small"
+                                         style="background:#fff8e1;display:none">
+                                        <span class="text-muted">Limit:</span>
+                                        <strong id="ciLimit">—</strong>
+                                        &nbsp;|&nbsp;
+                                        <span class="text-muted">Owes:</span>
+                                        <strong id="ciDebt" class="text-danger">—</strong>
+                                        &nbsp;|&nbsp;
+                                        <span class="text-muted">Available:</span>
+                                        <strong id="ciAvail">—</strong>
+                                    </div>
+                                </div>
+
+                                <!-- Due date (credit only) -->
+                                <div class="col-sm-4" id="dueDateGroup" style="display:none">
+                                    <label class="form-label mb-1 small fw-semibold">Due date</label>
+                                    <input type="date" name="DueDate"
+                                           class="did-floating-input form-control-sm" />
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product grid grouped by category -->
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0 py-2 d-flex
+                                    justify-content-between align-items-center">
+                            <span class="fw-semibold small">
+                                <i class="fas fa-boxes me-1 text-primary"></i>Products
+                            </span>
+                            <span class="text-muted" style="font-size:.75rem">
+                                Click qty to add · 0 = not ordered
+                            </span>
+                        </div>
+
+                        <div class="card-body p-0" style="max-height:380px;overflow-y:auto">
+                            @{
+                                var grouped = Model.Products
+                                    .Where(p => p.IsActive && p.CurrentStock > 0)
+                                    .GroupBy(p => p.Category?.Name ?? "Other")
+                                    .OrderBy(g => g.Key);
+                                int itemIndex = 0;
+                            }
+
+                            @foreach (var group in grouped)
+                            {
+                                <!-- Category heading -->
+                                <div class="px-3 py-1 fw-semibold"
+                                     style="font-size:.72rem;text-transform:uppercase;
+                                            letter-spacing:.06em;background:#f8f9fa;
+                                            color:#6c757d;position:sticky;top:0;z-index:1">
+                                    <i class="fas fa-folder me-1"></i>@group.Key
+                                </div>
+
+                                @foreach (var p in group.OrderBy(p => p.Name))
+                                {
+                                    <div class="d-flex align-items-center px-3 py-2
+                                                border-bottom product-row"
+                                         style="font-size:.85rem"
+                                         data-product-id="@p.Id"
+                                         data-price="@p.SellingPrice"
+                                         data-stock="@p.CurrentStock"
+                                         data-name="@p.Name"
+                                         data-unit="@p.Unit">
+
+                                        <!-- Product name & price -->
+                                        <div class="flex-grow-1">
+                                            <div class="fw-semibold">@p.Name</div>
+                                            <div class="text-muted" style="font-size:.75rem">
+                                                @p.Unit &middot;
+                                                <span class="text-success fw-semibold">
+                                                    GHS @p.SellingPrice.ToString("N2")
+                                                </span>
+                                                &middot;
+                                                <span class="@(p.CurrentStock <= p.ReorderLevel
+                                                    ? "text-warning" : "text-muted")">
+                                                    @p.CurrentStock in stock
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Qty input -->
+                                        <div style="width:90px">
+                                            <input type="number"
+                                                   name="Items[@itemIndex].ProductId"
+                                                   value="@p.Id"
+                                                   style="display:none" />
+                                            <input type="number"
+                                                   name="Items[@itemIndex].Quantity"
+                                                   class="form-control form-control-sm text-center qty-input"
+                                                   min="0"
+                                                   max="@p.CurrentStock"
+                                                   value="0"
+                                                   placeholder="0"
+                                                   oninput="recalc()" />
+                                        </div>
+
+                                        <!-- Line total -->
+                                        <div class="text-end ms-2 fw-semibold"
+                                             style="width:90px;font-size:.82rem"
+                                             id="lt_@p.Id">
+                                            —
+                                        </div>
+
+                                    </div>
+                                    itemIndex++;
+                                }
+                            }
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ── RIGHT: Totals + Payment ── -->
+                <div class="col-lg-4">
+                    <div class="card border-1 table-responsive rounded-5 py-3 shadow-sm">
+                        <div class="card-header bg-white border-0 py-2">
+                            <h6 class="mb-0 fw-semibold small">Payment details</h6>
+                        </div>
+                        <div class="card-body">
+
+                            <!-- Running totals -->
+                            <div class="mb-3 p-2 rounded" style="background:#f8f9fa">
+                                <div class="d-flex justify-content-between small mb-1">
+                                    <span class="text-muted">Subtotal</span>
+                                    <span id="subtotalDisplay">GHS 0.00</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center small mb-1">
+                                    <span class="text-muted">Discount (GHS)</span>
+                                    <input type="number" name="Discount" id="discountField"
+                                           class="form-control form-control-sm text-end"
+                                           style="width:90px" min="0" step="0.01"
+                                           value="0" oninput="recalc()" />
+                                </div>
+                                <div class="d-flex justify-content-between fw-bold border-top pt-2 mt-1">
+                                    <span>Total</span>
+                                    <span id="totalDisplay" class="text-success fs-6">GHS 0.00</span>
+                                </div>
+                            </div>
+
+                            <!-- Payment method (cash only) -->
+                            <div id="payMethodGroup" class="mb-3">
+                                <label class="form-label small fw-semibold">Payment method</label>
+                                <select name="PaymentMethod" id="payMethodSelect"
+                                        class="form-select form-select-sm">
+                                    <option value="0">Cash</option>
+                                    <option value="1">Mobile Money (MoMo)</option>
+                                    <option value="2">Bank transfer</option>
+                                    <option value="3">Cheque</option>
+                                </select>
+                            </div>
+
+                            <!-- Payment reference -->
+                            <div class="mb-3" id="referenceGroup" style="display:none">
+                                <label class="form-label small fw-semibold">
+                                    Reference
+                                    <span class="text-muted fw-normal">(MoMo ID / cheque #)</span>
+                                </label>
+                                <input type="text" name="PaymentReference"
+                                       class="form-control form-control-sm"
+                                       placeholder="Transaction reference…" />
+                            </div>
+
+                            <!-- Cash tendered + change (cash only) -->
+                            
+                            
+
+                                <div class="input-group mb-3" id="tenderedGroup">
+                      
+                                    <div class="input-group-text">
+                                    
+                                        <i class="fas fa-cedi-sign"></i> 
+                                    </div>
+
+                                    <!-- Floating label + input -->
+                                    <div class="did-floating-label-content">
+                                        <input type="number" asp-for="@Model.Notes"
+                                               class="did-floating-input text-end" name="CashReceived"
+                                               id="tenderedField"
+                                               placeholder=" " min="0" step="0.01" value="0" oninput="calcChange()" />
+                                        <label class="did-floating-label" for="tenderedField">Amount Tendered</label>
+                                    </div>
+                                </div>
+                                <div class="mt-2 p-2 rounded"
+                                     style="background:#f0fdf4;border:1px solid #bbf7d0;
+                                            font-size:.82rem">
+                                    <div class="d-flex justify-content-between">
+                                        <span class="text-muted">Tendered</span>
+                                        <span id="tenderedDisplay">GHS 0.00</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between fw-bold border-top pt-1 mt-1">
+                                        <span>Change</span>
+                                        <span id="changeDisplay" class="text-success">GHS 0.00</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Notes -->
+                            <div class="mb-3 px-3">
+                                <label class="form-label small fw-semibold">
+                                    Notes
+                                    <span class="text-muted fw-normal">(optional)</span>
+                                </label>
+                                <textarea name="Notes" class="form-control form-control-sm"
+                                          rows="2" placeholder="Any notes…"></textarea>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+    
+
+        <!-- Footer -->
+        <div class="modal-footer border-top px-3 py-2 d-flex justify-content-between align-items-center">
+            <span class="text-muted small">
+                <i class="fas fa-info-circle me-1"></i>
+                Stock will be deducted on confirmation
+            </span>
+            <div class="d-flex gap-2">
+                <button type="button"
+                        class="btn btn-outline-secondary btn-sm"
+                        onclick="document.getElementById('AddSaleDialog').close()">
+                    Cancel
+                </button>
+                <button type="submit" id="confirmBtn"
+                        class="btn btn-success btn-sm px-4" disabled>
+                    <i class="fas fa-check-circle me-1"></i>
+                    Confirm sale &mdash;
+                    <span id="btnTotal">GHS 0.00</span>
+                </button>
+            </div>
+        </div>
+    }
+
+
+
+<style>
+    #AddSaleDialog { max-width: 900px; width: 95vw; }
+    #AddSaleDialog::backdrop { background: rgba(0,0,0,.45); }
+    .product-row:hover { background: #f0f7ff; }
+    .product-row:last-child { border-bottom: none !important; }
+    .sale-type-btn { transition: border-color .15s, color .15s; }
+</style>
+
+<script>
+// ── Sale type ─────────────────────────────────────────────────────────────────
+function setSaleType(type) {
+    const isCredit = type === 'credit';
+    document.getElementById('isCreditSaleInput').value = isCredit;
+
+    // Toggle buttons
+    document.getElementById('btnCash').style.borderColor   = isCredit ? 'transparent' : '';
+    document.getElementById('btnCredit').style.borderColor = isCredit ? 'currentColor' : 'transparent';
+    document.getElementById('btnCash').className   = 'sale-type-btn flex-fill text-center ' + (isCredit ? 'text-muted' : 'text-success');
+    document.getElementById('btnCredit').className = 'sale-type-btn flex-fill text-center ' + (isCredit ? 'text-warning' : 'text-muted');
+
+    // Show/hide panels
+    document.getElementById('walkInGroup').style.display        = isCredit ? 'none' : '';
+    document.getElementById('creditCustomerGroup').style.display = isCredit ? ''     : 'none';
+    document.getElementById('dueDateGroup').style.display        = isCredit ? ''     : 'none';
+    document.getElementById('tenderedGroup').style.display       = isCredit ? 'none' : '';
+    document.getElementById('payMethodGroup').style.display      = isCredit ? 'none' : '';
+
+    checkConfirmBtn();
+}
+
+// ── Customer change ───────────────────────────────────────────────────────────
+function onCustomerChange(sel) {
+    document.getElementById('customerIdInput').value = sel.value;
+    const opt  = sel.options[sel.selectedIndex];
+    const info = document.getElementById('creditInfo');
+
+    if (sel.value) {
+        const limit = parseFloat(opt.dataset.limit) || 0;
+        const debt  = parseFloat(opt.dataset.debt)  || 0;
+        const avail = limit - debt;
+        document.getElementById('ciLimit').textContent = 'GHS ' + limit.toFixed(2);
+        document.getElementById('ciDebt').textContent  = 'GHS ' + debt.toFixed(2);
+        document.getElementById('ciAvail').textContent = 'GHS ' + avail.toFixed(2);
+        document.getElementById('ciAvail').style.color = avail <= 0 ? '#dc3545' : '#198754';
+        info.style.display = '';
+    } else {
+        info.style.display = 'none';
+    }
+    checkConfirmBtn();
+}
+
+// ── Payment method → show reference field ────────────────────────────────────
+document.getElementById('payMethodSelect')?.addEventListener('change', function () {
+    const needsRef = this.value !== '0'; // not cash
+    document.getElementById('referenceGroup').style.display  = needsRef ? '' : 'none';
+    document.getElementById('tenderedGroup').style.display   = this.value === '0' ? '' : 'none';
+});
+
+// ── Recalculate totals ────────────────────────────────────────────────────────
+function recalc() {
+    let subtotal = 0;
+
+    // Sum all qty inputs × price
+    document.querySelectorAll('.product-row').forEach(row => {
+        const qty   = parseInt(row.querySelector('.qty-input').value) || 0;
+        const price = parseFloat(row.dataset.price) || 0;
+        const id    = row.dataset.productId;
+        const line  = qty * price;
+        subtotal   += line;
+
+        const ltEl = document.getElementById('lt_' + id);
+        if (ltEl) ltEl.textContent = qty > 0 ? 'GHS ' + line.toFixed(2) : '—';
+    });
+
+    const discount = parseFloat(document.getElementById('discountField').value) || 0;
+    const total    = Math.max(0, subtotal - discount);
+
+    document.getElementById('subtotalDisplay').textContent = 'GHS ' + subtotal.toFixed(2);
+    document.getElementById('totalDisplay').textContent    = 'GHS ' + total.toFixed(2);
+    document.getElementById('btnTotal').textContent        = 'GHS ' + total.toFixed(2);
+    document.getElementById('discountInput').value         = discount;
+
+    calcChange();
+    checkConfirmBtn();
+}
+
+// ── Change calculator ─────────────────────────────────────────────────────────
+function calcChange() {
+    const total    = parseFloat(document.getElementById('totalDisplay')
+                        .textContent.replace('GHS ', '')) || 0;
+    const tendered = parseFloat(document.getElementById('tenderedField').value) || 0;
+    const change   = Math.max(0, tendered - total);
+
+    document.getElementById('tenderedDisplay').textContent = 'GHS ' + tendered.toFixed(2);
+    document.getElementById('changeDisplay').textContent   = 'GHS ' + change.toFixed(2);
+    document.getElementById('changeDisplay').style.color   = change >= 0 ? '#198754' : '#dc3545';
+    document.getElementById('cashReceivedInput').value     = tendered;
+}
+
+// ── Confirm button ────────────────────────────────────────────────────────────
+function checkConfirmBtn() {
+    const hasItems = [...document.querySelectorAll('.qty-input')]
+                        .some(i => parseInt(i.value) > 0);
+    const isCredit    = document.getElementById('isCreditSaleInput').value === 'true';
+    const hasCustomer = document.getElementById('customerIdInput').value !== '';
+    const customerOk  = !isCredit || hasCustomer;
+
+    document.getElementById('confirmBtn').disabled = !(hasItems && customerOk);
+}
+
+// ── Form validation on submit ─────────────────────────────────────────────────
+document.getElementById('addSaleForm').addEventListener('submit', function (e) {
+    const hasItems = [...document.querySelectorAll('.qty-input')]
+                        .some(i => parseInt(i.value) > 0);
+    if (!hasItems) {
+        e.preventDefault();
+        alert('Please enter a quantity for at least one product.');
+    }
+});
+</script>
+
    
    
       

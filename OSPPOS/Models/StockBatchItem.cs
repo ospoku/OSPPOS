@@ -1,6 +1,8 @@
-﻿namespace OSPPOS.Models
+﻿using OSPPOS.Data;
+
+namespace OSPPOS.Models
 {
-    public class StockBatchItem
+    public class StockBatchItem:TableAudit
     {
       
             public int Id { get; set; }

@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using OSPPOS.Data;
+using System.ComponentModel.DataAnnotations;
 
 namespace OSPPOS.Models
 {
-    public class Product
+    public class Product:TableAudit
     {
         [Key]
         public int Id { get; set; }

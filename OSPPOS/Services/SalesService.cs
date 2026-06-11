@@ -90,11 +90,11 @@ namespace OSPPOS.Services
                     SaleOrderId = vm.SaleOrderId,
                     CustomerId = order.CustomerId,
                     Amount = vm.Amount,
-                    Method = vm.Method,
+                    
                     PaymentDate = DateTime.UtcNow,
                     Reference = vm.Reference,
                     Notes = vm.Notes,
-                    RecordedById = userId
+                   
                 };
 
                 ctx.Payments.Add(payment);

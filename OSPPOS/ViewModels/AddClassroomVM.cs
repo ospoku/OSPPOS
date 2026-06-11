@@ -28,7 +28,7 @@ public class CreateSaleVm
 
     // For initial cash payment
     public decimal CashReceived { get; set; } = 0;
-    public PaymentMethod PaymentMethod { get; set; } = PaymentMethod.Cash;
+    public PaymentMethod PaymentMethod { get; set; } 
     public string? PaymentReference { get; set; }
 }
 
@@ -45,7 +45,7 @@ public class RecordPaymentVm
 {
     [Required] public int SaleOrderId { get; set; }
     [Required, Range(0.01, 9999999)] public decimal Amount { get; set; }
-    public PaymentMethod Method { get; set; } = PaymentMethod.Cash;
+    public PaymentMethod Method { get; set; } 
     public string? Reference { get; set; }
     public string? Notes { get; set; }
 }

@@ -7,19 +7,15 @@ namespace OSPPOS.ViewModels
 {
     public class AddCustomerVM
     {
-        public int? CustomerId { get; set; }
-        public string? WalkInCustomerName { get; set; }
-        public SaleType SaleType { get; set; } = SaleType.Cash;
-        public DateTime? DueDate { get; set; }
-        public string? Notes { get; set; }
-        public decimal DiscountPercent { get; set; } = 0;
-        public decimal Discount { get; set; } = 0;
-        public List<SaleItemVm> Items { get; set; } = [];
-
-        // For initial cash payment
-        public decimal CashReceived { get; set; } = 0;
-        public PaymentMethod PaymentMethod { get; set; } = PaymentMethod.Cash;
-        public string? PaymentReference { get; set; }
+        public string PublicId { get; set; }
+        public string Name { get; set; } = string.Empty;
+        [DataType(DataType.EmailAddress)]
+        public string? Email { get; set; }
+        public string? Address { get; set; }
+        public string? TaxNumber { get; set; }
+        public decimal CreditLimit { get; set; } = 0;
+        public bool AllowCredit { get; set; } = false;
+        public bool IsActive { get; set; } = true;
     }
 
 }

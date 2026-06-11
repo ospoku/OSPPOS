@@ -18,7 +18,7 @@ namespace OSPPOS.ViewModels
 
         // For initial cash payment
         public decimal CashReceived { get; set; } = 0;
-        public PaymentMethod PaymentMethod { get; set; } = PaymentMethod.Cash;
+    
         public string? PaymentReference { get; set; }
     }
 }

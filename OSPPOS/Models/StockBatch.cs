@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using OSPPOS.Data;
+using System.ComponentModel.DataAnnotations;
 
 namespace OSPPOS.Models
 {
    
 
-    public class StockBatch
+    public class StockBatch:TableAudit
     {
         [Key]
         public int Id { get; set; }
