@@ -1,4 +1,4 @@
-﻿@model OSPPOS.ViewModels.AddProductVM;
+﻿@* @model OSPPOS.ViewModels.AddProductVM;
 
 <dialog id="AddProductDialog" class="col-md-8 border-0 rounded p-0">
     <div class="modal-header">
@@ -13,39 +13,14 @@
     @using (Html.BeginForm("AddProduct", "Product", FormMethod.Post, new { id = "addProductForm" }))
     {
         <div class="modal-body">
-            <!-- Memo Title -->
-    
- 
-       
-       
-     
-        @*    
-            <div class="input-group">
-  <!-- Left icon addon -->
-  <div class="input-group-text">
-    <!-- Use any icon here: Font Awesome, SVG, emoji, etc. -->
-    <i class="fas fa-heading"></i>          <!-- example: user icon -->
-    <!-- or SVG: <svg ...> ... </svg> -->
-    <!-- or just text/emoji: 👤 -->
-  </div>
-
-  <!-- Floating label + input -->
-  <div class="did-floating-label-content">
-                    <input type="text" asp-for="@Model.Notes"
-      class="did-floating-input" 
-      id="title" 
-      placeholder=" "           
-    />
-    <label class="did-floating-label" for="title">Title</label>
-  </div>
-</div> *@
+           
 
           
 
  
             <div class="row g-3">
                 <div class="col-lg-8">
-                    <div class="card border-0 shadow-sm mb-3">
+                    <div class="card shadow-sm mb-3">
                         <div class="card-header bg-white border-0">
                             <h6 class="mb-0 fw-semibold">Product Details</h6>
                         </div>
@@ -65,13 +40,13 @@
                                 <div class="col-md-4">
 
 
-                                    <select id="selectMemoUser" class="dmx-choices"><option value="">Select Category</option></select>
+                                    <select id="selectCategory" class="dmx-choices" asp-for="@Model.CategoryId" asp-items="Model.CategoryList"><option value="">Select Category</option></select>
                                 </div>
                                 <div class="col-md-4">
-                                    <select id="selectMemoUser" class="dmx-choices"><option value="">Select Supplier</option></select>
+                                    <select id="selectSupplier" class="dmx-choices" asp-for="@Model.SupplierId" asp-items="Model.SupplierList"><option value="">Select Supplier</option></select>
                                 </div>
                                 <div class="col-md-4">
-                                    <select id="selectMemoUser" class="dmx-choices"><option value="">Select Unit</option></select>
+                                    <select id="selectUnnit" class="dmx-choices" asp-for="@Model.UnitId" asp-items="Model.UnitList"><option value="">Select Unit</option></select>
                                 </div>
                                 <div class="col-12">
                                     <label class="form-label">Description</label>
@@ -84,7 +59,7 @@
                 </div>
 
                 <div class="col-lg-4">
-                    <div class="card border-0 shadow-sm mb-3">
+                    <div class="card shadow-sm mb-3">
                         <div class="card-header bg-white border-0">
                             <h6 class="mb-0 fw-semibold">Pricing</h6>
                         </div>
@@ -110,7 +85,7 @@
                         </div>
                     </div>
 
-                    <div class="card border-0 shadow-sm">
+                    <div class="card shadow-sm">
                         <div class="card-header bg-white border-0">
                             <h6 class="mb-0 fw-semibold">Stock Settings</h6>
                         </div>
@@ -134,7 +109,7 @@
                             </div>
 @*                             <button type="submit" class="btn btn-outline-success w-100">
                                 <i class="bi bi-check-circle me-2"></i>Save Product
-                            </button> *@
+                            </button> 
                         </div>
                     </div>
                 </div>
@@ -162,7 +137,7 @@
          </div>
          <div class="modal-footer">
           
-        <button id="saveButton"  class="btn btn-sm btn-outline-primary rounded-5">Save</button>
+        <button id="saveButton"  class="btn  btn-outline-primary rounded-5">Save</button>
         </div>
 
      
@@ -173,9 +148,155 @@
    
       
     
-    </dialog>
+    </dialog> *@
     
           
 
 
   
+@model OSPPOS.ViewModels.AddProductVM
+
+<dialog id="AddProductDialog" class="col-md-8 border-0 rounded p-0">
+    <div class="modal-header">
+        <h6 class="m-0 font-weight-bold d-inline">
+            <i class="fas fa-fw fa-file-alt"></i>Add Product
+        </h6>
+        <button type="button" class="btn btn-sm btn-outline-danger"
+                onclick="document.getElementById('AddProductDialog').close()">
+            Close
+        </button>
+    </div>
+
+    @using (Html.BeginForm("AddProduct", "Product", FormMethod.Post, new { id = "addProductForm" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="modal-body">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger small py-2"></div>
+
+            <div class="row g-3">
+                <div class="col-lg-8">
+                    <div class="card shadow-sm mb-3">
+                        <div class="card-header bg-white border-0">
+                            <h6 class="mb-0 fw-semibold">Product Details</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="did-floating-label-content col-md-8">
+                                    <input asp-for="Name" type="text" class="did-floating-input" placeholder="" required/>
+                                    <label class="did-floating-label">Product Name <span class="text-danger">*</span></label>
+                                    <span asp-validation-for="Name" class="text-danger small"></span>
+                                </div>
+                                <div class="did-floating-label-content col-md-4">
+                                    <input asp-for="SKU" type="text" class="did-floating-input" placeholder="" />
+                                    <label class="did-floating-label">SKU / Code</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <select asp-for="CategoryId" asp-items="Model.CategoryList" class="dmx-choices">
+                                        <option value="">Select Category</option>
+                                    </select>
+                                    <span asp-validation-for="CategoryId" class="text-danger small"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <select asp-for="SupplierId" asp-items="Model.SupplierList" class="dmx-choices">
+                                        <option value="">Select Supplier</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <select asp-for="UnitId" asp-items="Model.UnitList" class="dmx-choices">
+                                        <option value="">Select Unit</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Description</label>
+                                    <textarea asp-for="Description" class="form-control dmx-textarea" rows="2"
+                                              placeholder="Optional notes about this product"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card shadow-sm mb-3">
+                        <div class="card-header bg-white border-0">
+                            <h6 class="mb-0 fw-semibold">Pricing</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="did-floating-label-content mb-3">
+                                <input asp-for="CostPrice" type="number" step="0.01" min="0"
+                                       class="did-floating-input" id="costPrice" oninput="calcMargin()" />
+                                <label class="did-floating-label">Cost Price (GHS) <span class="text-danger">*</span></label>
+                                <span asp-validation-for="CostPrice" class="text-danger small"></span>
+                            </div>
+                            <div class="did-floating-label-content mb-3">
+                                <input asp-for="SellingPrice" type="number" step="0.01" min="0"
+                                       class="did-floating-input" id="sellPrice" oninput="calcMargin()" />
+                                <label class="did-floating-label">Selling Price (GHS) <span class="text-danger">*</span></label>
+                                <span asp-validation-for="SellingPrice" class="text-danger small"></span>
+                            </div>
+                            <div class="did-floating-label-content mb-3">
+                                <input asp-for="WholesalePrice" type="number" step="0.01" min="0"
+                                       class="did-floating-input" />
+                                <label class="did-floating-label">Wholesale Price (GHS)</label>
+                            </div>
+                            <div class="p-2 rounded bg-light text-center small">
+                                Margin: <strong id="marginDisplay">—</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white border-0">
+                            <h6 class="mb-0 fw-semibold">Stock Settings</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="did-floating-label-content mb-3">
+                                <input asp-for="CurrentStock" type="number" min="0" class="did-floating-input" />
+                                <label class="did-floating-label">Opening Stock</label>
+                            </div>
+                            <div class="did-floating-label-content mb-3">
+                                <input asp-for="ReorderLevel" type="number" min="0" class="did-floating-input" />
+                                <label class="did-floating-label">Reorder Level</label>
+                                <div class="form-text">Alert when stock drops to this level.</div>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input asp-for="IsActive" type="checkbox" class="form-check-input" id="isActive" />
+                                <label class="form-check-label" for="isActive">Active product</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-outline-primary rounded-5">Save</button>
+        </div>
+    }
+</dialog>
+
+<script>
+    function calcMargin() {
+        const cost = parseFloat(document.getElementById('costPrice').value) || 0;
+        const sell = parseFloat(document.getElementById('sellPrice').value) || 0;
+        const el = document.getElementById('marginDisplay');
+        if (sell > 0 && cost > 0) {
+            const m = ((sell - cost) / sell * 100).toFixed(1);
+            el.textContent = m + '%';
+            el.style.color = m > 20 ? '#198754' : m > 10 ? '#fd7e14' : '#dc3545';
+        } else {
+            el.textContent = '—';
+            el.style.color = '';
+        }
+    }
+
+    @if (!ViewContext.ModelState.IsValid)
+    {
+            <text>
+            document.addEventListener("DOMContentLoaded", function () {
+                document.getElementById("AddProductDialog").showModal();
+            });
+            </text>
+    }
+</script>

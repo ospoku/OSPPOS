@@ -619,23 +619,21 @@ function buildCartJson() {
                                 </div>
 
                                 <!-- Walk-in name (cash) -->
-                                <div class="col-sm-8" id="walkInGroup">
-                                    <label class="form-label mb-1 small fw-semibold">
-                                        Customer name
-                                        <span class="text-muted fw-normal">(optional)</span>
-                                    </label>
-                                    <input type="text" name="WalkInCustomerName"
-                                           class="did-floating-input form-control-sm"
-                                           placeholder="Walk-in customer…" />
+                                <div class="col-sm-8 did-floating-label-content" id="walkInGroup">
+                                   
+                                    <input type="text" id="walkincustomer" name="WalkInCustomerName"
+                                           class="did-floating-input"
+                                           placeholder="" />
+                                           <label class="did-floating-label" for="walkincustomer">Customer name</label>
                                 </div>
 
                                 <!-- Credit customer select -->
                                 <div class="col-sm-8" id="creditCustomerGroup" style="display:none">
-                                    <label class="form-label mb-1 small fw-semibold">
-                                        Customer <span class="text-danger">*</span>
-                                    </label>
-                                    <select id="customerSelect"
-                                            class="did-floating-select form-select-sm"
+                                  
+                                    
+                
+                                    <select id="customerSelect" 
+                                            class=" dmx-choices"
                                             onchange="onCustomerChange(this)">
                                         <option value="">-- select customer --</option>
                                         @foreach (var c in Model.Customers
@@ -669,12 +667,22 @@ function buildCartJson() {
                                 </div>
 
                                 <!-- Due date (credit only) -->
-                                <div class="col-sm-4" id="dueDateGroup" style="display:none">
-                                    <label class="form-label mb-1 small fw-semibold">Due date</label>
-                                    <input type="date" name="DueDate"
-                                           class="did-floating-input form-control-sm" />
+                                <div class="col-sm-6" id="dueDateGroup" style="display:none">
+                                    <div class="input-group">
+                                        <div class="input-group-text">
+                                            <i class="fas fa-calendar-check"></i>
+                                        </div>
+                                        <div class="did-floating-label-content">
+                                    <input type="date" name="DueDate" id="dueDate"
+                                           class="did-floating-input" asp-format="{0:dd/MMM/yyyy}" />  
+                                           <label class="did-floating-label" for="dueDate">Due Date</label>
                                 </div>
-
+                             </div>
+              
+                                      
+                                     
+                               
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OSPPOS.Data;
 using OSPPOS.Interfaces;
+using OSPPOS.ViewComponents;
 using OSPPOS.ViewModels;
+using System.Security.Claims;
 
 namespace OSPPOS.Controllers;
 
@@ -33,25 +35,44 @@ public class StockController(IStockService stock, XContext db) : Controller
         return View(new AddStockBatchVM { ReceivedDate = DateTime.Today });
     }
 
-    // POST /Stock/Create
-    [HttpPost, ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(AddStockBatchVM vm)
-    {
-        vm.Items.RemoveAll(i => i.ProductId == 0 || i.Quantity == 0);
-        if (!vm.Items.Any())
-            ModelState.AddModelError("", "Add at least one product.");
 
-        if (!ModelState.IsValid)
+    
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddStock(AddStockVM addStockVM)
         {
-            await PopulateDropDownsAsync();
-            return View(vm);
-        }
+            if (!ModelState.IsValid)
+            {
+                return ViewComponent(nameof(AddStock), new { addStockVM });
+            }
 
-        var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)!.Value;
-        var grn = await _stock.CreateGRNAsync(vm, userId);
-        TempData["Success"] = $"GRN {grn.GRNNumber} recorded successfully.";
-        return RedirectToAction(nameof(Details), new { id = grn.Id });
-    }
+            // Find the product and update its stock
+            var product = await ctx.Products.FindAsync(addStockVM.ProductId);
+            if (product == null)
+            {
+                ModelState.AddModelError("ProductId", "Product not found");
+                return ViewComponent(nameof(AddStock), new { addStockVM });
+            }
+
+            // Record the stock entry
+            var stockEntry = new Stock
+            {
+                ProductId = addStockVM.ProductId,
+                SupplierId = addStockVM.SupplierId,
+                Quantity = addStockVM.Quantity,
+                CostPrice = addStockVM.CostPrice,
+                Notes = addStockVM.Notes,
+                DateAdded = DateTime.UtcNow,
+                AddedByUserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+            };
+
+            product.CurrentStock += addStockVM.Quantity;
+
+            ctx.StockEntries.Add(stockEntry);
+            await ctx.SaveChangesAsync();
+
+            return RedirectToAction(nameof(ViewProducts));
+        }
+    
 
     // GET /Stock/Details/5
     public async Task<IActionResult> Details(int id)

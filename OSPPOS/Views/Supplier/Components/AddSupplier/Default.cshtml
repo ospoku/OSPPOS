@@ -1,16 +1,16 @@
 ﻿@model OSPPOS.ViewModels.AddSupplierVM;
 
-<dialog id="AddMemoDialog" class="col-md-6 border-0 rounded p-0">
+<dialog id="AddSupplierDialog" class="col-md-6 border-0 rounded p-0">
     <div class="modal-header">
         <h6 class="m-0 font-weight-bold d-inline">   <i class="fas fa-fw fa-file-alt"></i>Add Memo</h6>
         <button type="button" aria-label="Close"
                 class="btn btn-sm btn-outline-danger"
-                onclick="document.getElementById('AddMemoDialog').close()">
+                onclick="document.getElementById('AddSupplierDialog').close()">
             Close
         </button>
     </div>
 
-    @using (Html.BeginForm("AddMemo", "Memo", FormMethod.Post, new { id = "addMemoForm" }))
+    @using (Html.BeginForm("AddSupplier", "Supplier", FormMethod.Post, new { id = "addSupplierForm" }))
     {
         <div class="modal-body">
             <!-- Memo Title -->

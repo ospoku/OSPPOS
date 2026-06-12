@@ -6,6 +6,7 @@ using OSPPOS.ViewComponents;
 using OSPPOS.Data;
 using OSPPOS.Models;
 using System;
+using OSPPOS.ViewModels;
 
 namespace OSPPOS.Controllers
 {
@@ -30,22 +31,26 @@ namespace OSPPOS.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddProduct(Product model)
+        public async Task<IActionResult> AddProduct(AddProductVM addProductVM)
         {
-            if (!ModelState.IsValid)
+            //if (!ModelState.IsValid)
+            //{
+            //    return ViewComponent(nameof(AddProduct), new { addProductVM });
+            //}
+
+            Product addThisProduct = new()
             {
-                await PopulateDropDownsAsync();
-                return View(model);
-            }
+                Name = addProductVM.Name,
+                Description = addProductVM.Description,
+            };
 
-            if (string.IsNullOrWhiteSpace(model.SKU))
-                model.SKU = await GenerateSKUAsync(model.CategoryId);
+            if (string.IsNullOrWhiteSpace(addProductVM.SKU))
+                addProductVM.SKU = await GenerateSKUAsync(addThisProduct.CategoryId);
 
-            ctx.Products.Add(model);
+            ctx.Products.Add(addThisProduct);
             await ctx.SaveChangesAsync();
 
-            TempData["Success"] = "Product created.";
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(ViewProducts));
         }
 
         public async Task<IActionResult> Edit(int id)

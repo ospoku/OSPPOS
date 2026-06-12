@@ -6,17 +6,17 @@ using OSPPOS.ViewModels;
 
 namespace OSPPOS.ViewComponents
 {
-    public class AddProduct(XContext ctx):ViewComponent
+    public class AddProduct(XContext ctx) : ViewComponent
     {
-
-        public IViewComponentResult Invoke()
+        public IViewComponentResult Invoke(AddProductVM addProductVM = null)
         {
-            AddProductVM addProductVM = new()
-            {
-                CategoryList = new SelectList(ctx.Categories.ToList(), (nameof(Category.Id)), nameof(Category.Name)),
-                SupplierList = new SelectList(ctx.Suppliers.ToList(), (nameof(Category.Id)), nameof(Category.Name)),
-            UnitList=new SelectList(ctx.Units.ToList(), (nameof(Category.Id)), nameof(Unit.Name))
-            };
+            addProductVM ??= new AddProductVM();
+
+            // Populate select lists on whatever model we have
+            addProductVM.CategoryList = new SelectList(ctx.Categories.ToList(), nameof(Category.Id), nameof(Category.Name));
+            addProductVM.SupplierList = new SelectList(ctx.Suppliers.ToList(), nameof(Supplier.Id), nameof(Supplier.Name));
+            addProductVM.UnitList = new SelectList(ctx.Units.ToList(), nameof(Unit.Id), nameof(Unit.Name));
+            
 
             return View(addProductVM);
         }

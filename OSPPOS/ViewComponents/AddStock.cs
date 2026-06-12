@@ -1,16 +1,30 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using OSPPOS.Data;
+using OSPPOS.Models;
 using OSPPOS.ViewModels;
 
-namespace OSPPOS.ViewComponents
-{
-    public class AddStock:ViewComponent
+
+
+    namespace OSPPOS.ViewComponents
     {
-
-        public IViewComponentResult Invoke()
+        public class AddStock(XContext ctx) : ViewComponent
         {
-            AddStockVM addStockVM = new();
+            public IViewComponentResult Invoke(AddStockVM addStockVM = null)
+            {
+                addStockVM ??= new AddStockVM();
 
-            return View(addStockVM);
+                addStockVM.ProductList = new SelectList(
+                    ctx.Products.Where(p => p.IsActive).ToList(),
+                    nameof(Product.Id),
+                    nameof(Product.Name));
+
+                addStockVM.SupplierList = new SelectList(
+                    ctx.Suppliers.ToList(),
+                    nameof(Supplier.Id),
+                    nameof(Supplier.Name));
+
+                return View(addStockVM);
+            }
         }
     }
-}

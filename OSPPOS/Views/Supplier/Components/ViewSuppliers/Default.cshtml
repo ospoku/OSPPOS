@@ -24,7 +24,7 @@
         <h6 class="m-0 font-weight-bold text-primary d-inline">Suppliers</h6>
         
           
-        <button id="btnAddMemo" class="btn btn-sm btn-rounded  btn-outline-primary fa-pull-right" onclick="document.getElementById('AddMemoDialog').showModal()"><i class="fa fa-fw fa-plus-circle"></i>Add Memo</button>
+        <button id="btnAddSupplier" class="btn btn-sm btn-rounded rounded-5 btn-outline-primary fa-pull-right" onclick="document.getElementById('AddSupplierDialog').showModal()"><i class="fa fa-fw fa-plus-circle"></i>Add Supplier</button>
         </div>
         <div class="card-body">
          
@@ -106,4 +106,3 @@
 
 @await Component.InvokeAsync(nameof(AddSupplier))
 <dialog id="EditMemoDialog"><div id="EditMemoDialogContent"></div></dialog>
-<dialog id="CommentMemoDialog" class="col-md-6 border-0 rounded p-0"><div id="CommentMemoDialogContent"></div></dialog>
