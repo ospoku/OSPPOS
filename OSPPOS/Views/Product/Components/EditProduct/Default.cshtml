@@ -196,7 +196,7 @@
 
         document.getElementById('editProductErrors').style.display = 'none';
 
-        // pu.min / popup.js confirmation
+       @*  // pu.min / popup.js confirmation
         pu.confirm({
             title: 'Update product?',
             message: 'Are you sure you want to save these changes?',
@@ -206,8 +206,25 @@
                 document.getElementById('editProductForm').submit();
             }
         });
-    });
-
+    }); *@
+        pujs.popup(
+        'Update product?',               // title
+        'Are you sure you want to save?', // message
+        [
+            {
+                text: 'Yes, update',
+                color: 'var(--blue)',
+                callback: () => {
+                    document.getElementById('editProductForm').submit();
+                }
+            },
+            {
+                text: 'Cancel',
+                callback: () => { }   // empty callback — just closes
+            }
+        ],
+        'horiz'   // button layout: 'horiz' or 'vert'
+    );
     // Recalculate margin on load
     document.addEventListener('DOMContentLoaded', function () {
         calcEditMargin();
