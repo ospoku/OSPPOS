@@ -23,7 +23,7 @@
         <h6 class="m-0 font-weight-bold text-primary d-inline">Stocks</h6>
         
           
-        <button id="btnAddStock" class="btn btn-sm btn-rounded rounded-5 btn-outline-primary fa-pull-right" onclick="document.getElementById('AddStockDialog').showModal()"><i class="fa fa-fw fa-plus-circle"></i>Add Stock</button>
+        <button id="btnAddStock" class="btn btn-sm btn-rounded rounded-5 btn-outline-primary fa-pull-right" onclick="document.getElementById('AddStockBatchDialog').showModal()"><i class="fa fa-fw fa-plus-circle"></i>Add Stock</button>
         </div>
         <div class="card-body">
          
@@ -103,6 +103,6 @@
 
 </script>
 
-@await Component.InvokeAsync(nameof(AddStock))
+@await Component.InvokeAsync(nameof(AddStockBatch))
 <dialog id="EditMemoDialog"><div id="EditMemoDialogContent"></div></dialog>
 <dialog id="CommentMemoDialog" class="col-md-6 border-0 rounded p-0"><div id="CommentMemoDialogContent"></div></dialog>

@@ -1,17 +1,20 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OSPPOS.Data;
 using OSPPOS.Models;
+using OSPPOS.Services;
+using OSPPOS.ViewModels;
 using System;
 
 namespace OSPPOS.Controllers
 {
     
         [Authorize]
-        public class CustomerController(XContext db) : Controller
+        public class CustomerController(XContext ctx, EntityService entityService, INotyfService notyf) : Controller
         {
-            private readonly XContext ctx = db;
+           
 
         public async Task<IActionResult> Index() =>
                 View(await ctx.Customers
@@ -22,16 +25,40 @@ namespace OSPPOS.Controllers
         public IActionResult ViewCustomers() { return ViewComponent(nameof(ViewCustomers)); }
 
             [HttpPost, ValidateAntiForgeryToken]
-            public async Task<IActionResult> Create(Customer model)
+
+        
+        public async Task<IActionResult> AddCustomer(AddCustomerVM vm)
+        {
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid) return View(model);
-                ctx.Customers.Add(model);
-                await ctx.SaveChangesAsync();
-                TempData["Success"] = "Customer created.";
-                return RedirectToAction(nameof(Index));
+                return ViewComponent(nameof(AddCustomer), new { vm });
             }
 
-            public async Task<IActionResult> Edit(int id)
+            var addThisCustomer = new Customer
+            {
+                Name = vm.Name,
+                Email = vm.Email,
+                Phone = vm.Phone,
+                Address = vm.Address,
+                TaxNumber = vm.TaxNumber,
+                CreditLimit = vm.AllowCredit ? vm.CreditLimit : 0,
+                AllowCredit = vm.AllowCredit,
+                IsActive = vm.IsActive
+            };
+
+            bool result = await entityService.AddEntityAsync(addThisCustomer, User);
+
+            if (!result)
+            {
+                notyf.Error("Failed to add customer. Please try again.");
+                return ViewComponent(nameof(AddCustomer), new { vm }); // reshow dialog with values intact
+            }
+
+            notyf.Success("Customer added successfully.");
+            return RedirectToAction(nameof(ViewCustomers));
+        }
+
+        public async Task<IActionResult> Edit(int id)
             {
                 var c = await ctx.Customers.FindAsync(id);
                 if (c is null) return NotFound();
@@ -40,7 +67,7 @@ namespace OSPPOS.Controllers
 
             [HttpPost, ValidateAntiForgeryToken]
             public async Task<IActionResult> Edit(Customer model)
-            {
+        {
                 if (!ModelState.IsValid) return View(model);
                 ctx.Customers.Update(model);
                 await ctx.SaveChangesAsync();

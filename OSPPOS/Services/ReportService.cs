@@ -208,7 +208,7 @@ namespace OSPPOS.Services
                 ws.Cell(row, 1).Value = p.SKU;
                 ws.Cell(row, 2).Value = p.Name;
                 ws.Cell(row, 3).Value = p.Category?.Name;
-                ws.Cell(row, 4).Value = p.Unit;
+                ws.Cell(row, 4).Value = p.UnitId;
                 ws.Cell(row, 5).Value = p.CurrentStock;
                 ws.Cell(row, 6).Value = p.ReorderLevel;
                 ws.Cell(row, 7).Value = (double)p.CostPrice;

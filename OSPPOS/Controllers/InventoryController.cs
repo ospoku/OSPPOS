@@ -29,7 +29,7 @@ public class InventoryController(XContext db, IReportService report) : Controlle
     // Stock movement for a single product
     public async Task<IActionResult> Movement(int id)
     {
-        var product = await ctx.Products.Include(p => p.Category).FirstOrDefaultAsync(p => p.Id == id);
+        var product = await ctx.Products.Include(p => p.Category).FirstOrDefaultAsync(p => p.ProductId == id);
         if (product is null) return NotFound();
 
         var batches = await ctx.StockBatchItems

@@ -5,17 +5,16 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OSPPOS.Data;
 using OSPPOS.Interfaces;
-using OSPPOS.ViewComponents;
+using OSPPOS.Models;
 using OSPPOS.ViewModels;
 using System.Security.Claims;
-
 namespace OSPPOS.Controllers;
 
 [Authorize]
-public class StockController(IStockService stock, XContext db) : Controller
+public class StockController(IStockService stock, XContext ctx) : Controller
 {
     private readonly IStockService _stock = stock;
-    private readonly XContext _db = db;
+
 
     // GET /Stock
     public async Task<IActionResult> Index(DateTime? from, DateTime? to)
@@ -38,40 +37,51 @@ public class StockController(IStockService stock, XContext db) : Controller
 
     
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddStock(AddStockVM addStockVM)
+    public async Task<IActionResult> AddStockBatch(AddStockBatchVM vm)
+    {
+        if (!ModelState.IsValid)
         {
-            if (!ModelState.IsValid)
-            {
-                return ViewComponent(nameof(AddStock), new { addStockVM });
-            }
-
-            // Find the product and update its stock
-            var product = await ctx.Products.FindAsync(addStockVM.ProductId);
-            if (product == null)
-            {
-                ModelState.AddModelError("ProductId", "Product not found");
-                return ViewComponent(nameof(AddStock), new { addStockVM });
-            }
-
-            // Record the stock entry
-            var stockEntry = new Stock
-            {
-                ProductId = addStockVM.ProductId,
-                SupplierId = addStockVM.SupplierId,
-                Quantity = addStockVM.Quantity,
-                CostPrice = addStockVM.CostPrice,
-                Notes = addStockVM.Notes,
-                DateAdded = DateTime.UtcNow,
-                AddedByUserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
-            };
-
-            product.CurrentStock += addStockVM.Quantity;
-
-            ctx.StockEntries.Add(stockEntry);
-            await ctx.SaveChangesAsync();
-
-            return RedirectToAction(nameof(ViewProducts));
+            return ViewComponent(nameof(AddStockBatch), new { vm });
         }
+
+        var batch = new StockBatch
+        {
+            GRNNumber = await GenerateGRNNumberAsync(),
+            SupplierId = vm.SupplierId,
+            ReceivedDate = vm.ReceivedDate,
+            SupplierInvoiceRef = vm.SupplierInvoiceRef,
+            Notes = vm.Notes,
+            ReceivedById = User.FindFirstValue(ClaimTypes.NameIdentifier)!
+        };
+
+        foreach (var item in vm.Items)
+        {
+            batch.Items.Add(new StockBatchItem
+            {
+                ProductId = item.ProductId,
+                Quantity = item.Quantity,
+                UnitCost = item.UnitCost,
+                ExpiryDate = item.ExpiryDate
+            });
+
+            // Update running stock on the product
+            var product = await ctx.Products.FindAsync(item.ProductId);
+            if (product != null)
+                product.CurrentStock += item.Quantity;
+        }
+
+        ctx.StockBatches.Add(batch);
+        await ctx.SaveChangesAsync();
+
+        return RedirectToAction(nameof(ViewStocks));
+    }
+
+    private async Task<string> GenerateGRNNumberAsync()
+    {
+        var count = await ctx.StockBatches.CountAsync();
+        return $"GRN-{DateTime.UtcNow.Year}-{(count + 1):D3}";
+    }
+    
     
 
     // GET /Stock/Details/5
@@ -85,13 +95,13 @@ public class StockController(IStockService stock, XContext db) : Controller
     private async Task PopulateDropDownsAsync()
     {
         ViewBag.Suppliers = new SelectList(
-            await _db.Suppliers.Where(s => s.IsActive).OrderBy(s => s.Name).ToListAsync(),
+            await ctx.Suppliers.Where(s => s.IsActive).OrderBy(s => s.Name).ToListAsync(),
             "Id", "Name");
-        ViewBag.Products = await _db.Products
+        ViewBag.Products = await ctx.Products
             .Include(p => p.Category)
             .Where(p => p.IsActive)
             .OrderBy(p => p.Category.Name).ThenBy(p => p.Name)
-            .Select(p => new { p.Id, Name = $"{p.Name} ({p.SKU}) – Stock: {p.CurrentStock}", p.CostPrice })
+            .Select(p => new { p.ProductId, Name = $"{p.Name} ({p.SKU}) – Stock: {p.CurrentStock}", p.CostPrice })
             .ToListAsync();
     }
 

@@ -1,21 +1,24 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using DocumentFormat.OpenXml.ExtendedProperties;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using OSPPOS.ViewComponents;
 using OSPPOS.Data;
 using OSPPOS.Models;
-using System;
+using OSPPOS.Services;
+using OSPPOS.ViewComponents;
 using OSPPOS.ViewModels;
+using System;
 
 namespace OSPPOS.Controllers
 {
    
 
     [Authorize]
-    public class ProductController(XContext db) : Controller
+    public class ProductController(XContext ctx,EntityService entityService, Notification notyf) : Controller
     {
-        private readonly XContext ctx = db;
+        
 
         public IActionResult ViewProducts()
         {
@@ -42,15 +45,29 @@ namespace OSPPOS.Controllers
             {
                 Name = addProductVM.Name,
                 Description = addProductVM.Description,
+                CategoryId=addProductVM.CategoryId,
+                SupplierId=addProductVM.SupplierId,
+                CostPrice = addProductVM.CostPrice,
+                IsActive=addProductVM.IsActive,
+                SellingPrice = addProductVM.SellingPrice,
+                SKU=addProductVM.SKU,
+                ReorderLevel=addProductVM.ReorderLevel,
+                UnitId=addProductVM.UnitId,
+                WholesalePrice=addProductVM.WholesalePrice,
+                CurrentStock=addProductVM.CurrentStock,
+
             };
 
-            if (string.IsNullOrWhiteSpace(addProductVM.SKU))
-                addProductVM.SKU = await GenerateSKUAsync(addThisProduct.CategoryId);
+            bool result = await entityService.AddEntityAsync(addThisProduct, User);
 
-            ctx.Products.Add(addThisProduct);
-            await ctx.SaveChangesAsync();
+            if (!result)
+            {
+                notyf.Error("Failed to add customer. Please try again.");
+                return ViewComponent(nameof(AddCustomer), new { vm }); // reshow dialog with values intact
+            }
 
-            return RedirectToAction(nameof(ViewProducts));
+            notyf.Success("Customer added successfully.");
+            return RedirectToAction(nameof(ViewCustomers));
         }
 
         public async Task<IActionResult> Edit(int id)

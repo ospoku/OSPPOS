@@ -723,7 +723,7 @@ function buildCartJson() {
                                     <div class="d-flex align-items-center px-3 py-2
                                                 border-bottom product-row"
                                          style="font-size:.85rem"
-                                         data-product-id="@p.Id"
+                                         data-product-id="@p.ProductId"
                                          data-price="@p.SellingPrice"
                                          data-stock="@p.CurrentStock"
                                          data-name="@p.Name"
@@ -749,7 +749,7 @@ function buildCartJson() {
                                         <div style="width:90px">
                                             <input type="number"
                                                    name="Items[@itemIndex].ProductId"
-                                                   value="@p.Id"
+                                                   value="@p.ProductId"
                                                    style="display:none" />
                                             <input type="number"
                                                    name="Items[@itemIndex].Quantity"
@@ -764,7 +764,7 @@ function buildCartJson() {
                                         <!-- Line total -->
                                         <div class="text-end ms-2 fw-semibold"
                                              style="width:90px;font-size:.82rem"
-                                             id="lt_@p.Id">
+                                             id="lt_@p.ProductId">
                                             —
                                         </div>
 

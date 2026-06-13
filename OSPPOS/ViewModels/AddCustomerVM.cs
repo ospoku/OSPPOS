@@ -11,13 +11,14 @@ namespace OSPPOS.ViewModels
         public string Name { get; set; } = string.Empty;
         [DataType(DataType.EmailAddress)]
         public string? Email { get; set; }
+        public string Phone { get; set; }
         public string? Address { get; set; }
         public string? TaxNumber { get; set; }
         public decimal CreditLimit { get; set; } = 0;
         public bool AllowCredit { get; set; } = false;
         public bool IsActive { get; set; } = true;
+
+
     }
-
 }
-
 

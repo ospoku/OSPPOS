@@ -10,19 +10,12 @@ namespace OSPPOS.ViewModels
 {
     public class AddSupplierVM
     {
-        public int? CustomerId { get; set; }
-        public string? WalkInCustomerName { get; set; }
-        public SaleType SaleType { get; set; } = SaleType.Cash;
-        public DateTime? DueDate { get; set; }
-        public string? Notes { get; set; }
-        public decimal DiscountPercent { get; set; } = 0;
-        public decimal Discount { get; set; } = 0;
-        public List<SaleItemVm> Items { get; set; } = [];
+        public string Name { get; set; } = string.Empty;
+        public string Phone { get; set; } = null!;
+                public string Email {  get; set; } = string.Empty;
+                public string Address { get; set; }= string.Empty;
+                public bool IsActive { get; set; }=false;
 
-        // For initial cash payment
-        public decimal CashReceived { get; set; } = 0;
-        
-        public string? PaymentReference { get; set; }
     }
 }
 

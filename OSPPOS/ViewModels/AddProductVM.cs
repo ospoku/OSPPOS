@@ -13,16 +13,16 @@ namespace OSPPOS.ViewModels
     public class AddProductVM
     {
         // Select Lists
-        public SelectList CategoryList { get; set; }
+        public SelectList CategoryList { get; set; }  
         public SelectList SupplierList { get; set; }
         public SelectList UnitList { get; set; }
 
         // Foreign Keys
         [Required(ErrorMessage = "Please select a category")]
-        public string CategoryId { get; set; }
+        public int CategoryId { get; set; }
 
-        public string SupplierId { get; set; }
-        public string UnitId { get; set; }
+        public int SupplierId { get; set; }
+        public int UnitId { get; set; }
 
         // Product Details
         [Required(ErrorMessage = "Product name is required")]
@@ -47,7 +47,7 @@ namespace OSPPOS.ViewModels
 
         [Range(0, double.MaxValue)]
         [DataType(DataType.Currency)]
-        public decimal? WholesalePrice { get; set; }
+        public decimal WholesalePrice { get; set; }
 
         // Stock
         [Range(0, int.MaxValue)]

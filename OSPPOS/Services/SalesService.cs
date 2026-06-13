@@ -13,7 +13,7 @@ namespace OSPPOS.Services
 
     public class SalesService(XContext ctx) : ISalesService
         {
-            private readonly XContext context = ctx;
+            
 
         public async Task<(bool, string, SaleOrder?)> CreateSaleAsync(CreateSaleVm vm, string userId)
             {

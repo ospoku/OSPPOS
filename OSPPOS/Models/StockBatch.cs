@@ -12,6 +12,7 @@ namespace OSPPOS.Models
         public string GRNNumber { get; set; } = string.Empty;   // e.g. GRN-2024-001
         public int SupplierId { get; set; }
         public Supplier Supplier { get; set; } = null!;
+        
 
         public DateTime ReceivedDate { get; set; } = DateTime.UtcNow;
         public string? SupplierInvoiceRef { get; set; }
@@ -21,7 +22,7 @@ namespace OSPPOS.Models
 
         public decimal TotalCost => Items.Sum(i => i.TotalCost);
 
-        public ICollection<StockBatchItem> Items { get; set; } = new List<StockBatchItem>();
+        public ICollection<StockBatchItem> Items { get; set; } = [];
     }
 
   

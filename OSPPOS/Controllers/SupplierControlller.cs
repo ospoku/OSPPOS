@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OSPPOS.Data;
 using OSPPOS.Models;
+using OSPPOS.ViewModels;
 using System;
 
 namespace OSPPOS.Controllers
@@ -22,15 +23,25 @@ namespace OSPPOS.Controllers
         public IActionResult Create() => View(new Supplier());
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Supplier model)
+        
+        public async Task<IActionResult> AddSupplier(AddSupplierVM vm)
         {
-            if (!ModelState.IsValid) return View(model);
-            ctx.Suppliers.Add(model);
-            await ctx.SaveChangesAsync();
-            TempData["Success"] = "Supplier added.";
-            return RedirectToAction(nameof(Index));
-        }
+       
 
+            var addThisSupplier = new Supplier
+            {
+                Name = vm.Name,
+                Phone = vm.Phone,
+                Email = vm.Email,
+                Address = vm.Address,
+                IsActive = vm.IsActive
+            };
+
+            ctx.Suppliers.Add(addThisSupplier);
+            await ctx.SaveChangesAsync();
+
+            return RedirectToAction(nameof(ViewSuppliers));
+        }
         public async Task<IActionResult> Edit(int id)
         {
             var s = await ctx.Suppliers.FindAsync(id);
