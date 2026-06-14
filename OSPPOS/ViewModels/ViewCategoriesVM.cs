@@ -8,11 +8,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace OSPPOS.ViewModels
 {
-    public class ViewSuppliersVM
+    public class ViewCategoriesVM
     {
        
         public string Name { get; set; } = string.Empty;
-      
+        public string? ContactPerson { get; set; }
         public string? Phone { get; set; }
         public string? Email { get; set; }
         public string? Address { get; set; }
@@ -25,6 +25,8 @@ namespace OSPPOS.ViewModels
         public bool CanInsert { get; set; } public bool CanUpdate { get; set; } 
         public bool CanPrint { get; set; }
         public Guid PublicId { get; set; }
+        public string Code { get; internal set; }
+        public string? Description { get; internal set; }
     }
 }
 

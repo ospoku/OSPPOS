@@ -14,7 +14,7 @@
     @using (Html.BeginForm("EditProduct", "Product", FormMethod.Post, new { id = "editProductForm" }))
     {
         @Html.AntiForgeryToken()
-        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="ProductId" />
 
         <div class="modal-body">
 

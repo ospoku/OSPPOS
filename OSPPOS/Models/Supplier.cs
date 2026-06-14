@@ -13,7 +13,7 @@ namespace OSPPOS.Models
             public string? Email { get; set; }
             public string? Address { get; set; }
             public bool IsActive { get; set; } = true;
-            
+            public Guid PublicId { get; set; }= new Guid();
 
             public ICollection<Product> Products { get; set; } = [];
             public ICollection<StockBatch> StockBatches { get; set; } = [];

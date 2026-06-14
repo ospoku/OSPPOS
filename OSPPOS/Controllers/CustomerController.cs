@@ -1,27 +1,30 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using AspNetCoreHero.ToastNotification.Notyf;
+using DocumentFormat.OpenXml.InkML;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OSPPOS.Data;
 using OSPPOS.Models;
 using OSPPOS.Services;
+using OSPPOS.ViewComponents;
 using OSPPOS.ViewModels;
 using System;
+using System.Diagnostics.Metrics;
 
 namespace OSPPOS.Controllers
 {
     
         [Authorize]
-        public class CustomerController(XContext ctx, EntityService entityService, INotyfService notyf) : Controller
+        public class CustomerController(XContext ctx, EntityService entityService, INotyfService notyf, IDataProtectionProvider provider) : Controller
         {
-           
+        
 
-        public async Task<IActionResult> Index() =>
-                View(await ctx.Customers
-                    .Include(c => c.SaleOrders).ThenInclude(o => o.Payments)
-                    .OrderBy(c => c.Name).ToListAsync());
 
-            public IActionResult AddCustomer() => View(new Customer());
+
+       
+
         public IActionResult ViewCustomers() { return ViewComponent(nameof(ViewCustomers)); }
 
             [HttpPost, ValidateAntiForgeryToken]
@@ -31,7 +34,8 @@ namespace OSPPOS.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return ViewComponent(nameof(AddCustomer), new { vm });
+                notyf.Error("Enter all fields and try again.");
+                return ViewComponent(nameof(ViewCustomers));
             }
 
             var addThisCustomer = new Customer
@@ -51,31 +55,49 @@ namespace OSPPOS.Controllers
             if (!result)
             {
                 notyf.Error("Failed to add customer. Please try again.");
-                return ViewComponent(nameof(AddCustomer), new { vm }); // reshow dialog with values intact
+                return ViewComponent(nameof(ViewCustomers), new { vm }); // reshow dialog with values intact
             }
 
             notyf.Success("Customer added successfully.");
             return RedirectToAction(nameof(ViewCustomers));
         }
+        [HttpGet]
+        public IActionResult EditLetter(Guid Id) => ViewComponent(nameof(EditLetter), Id);
 
-        public async Task<IActionResult> Edit(int id)
-            {
-                var c = await ctx.Customers.FindAsync(id);
-                if (c is null) return NotFound();
-                return View(c);
-            }
-
-            [HttpPost, ValidateAntiForgeryToken]
-            public async Task<IActionResult> Edit(Customer model)
+        [HttpPost]
+        public async Task<IActionResult> EditLetterAsync(Guid id, Customer customer)
         {
-                if (!ModelState.IsValid) return View(model);
-                ctx.Customers.Update(model);
-                await ctx.SaveChangesAsync();
-                TempData["Success"] = "Customer updated.";
-                return RedirectToAction(nameof(Index));
-            }
+            try
+            {
+                var customerToUpdate = await ctx.Customers.FirstOrDefaultAsync(a => a.PublicId == customer.PublicId);
+                if (customerToUpdate == null)
+                {
+                    return NotFound();
+                }
 
-            public async Task<IActionResult> Statement(int id)
+                customerToUpdate.Address = customer.Address;
+                customerToUpdate.TaxNumber = customer.TaxNumber;
+                
+                ctx.Customers.Attach(customerToUpdate);
+                ctx.Customers.Entry(customerToUpdate).State = EntityState.Modified;
+
+                if (await ctx.SaveChangesAsync() > 0)
+                {
+                    notyf.Success("Record successfully updated.");
+                    return RedirectToAction("ViewLetters");
+                }
+                else
+                {
+                    notyf.Error("Document saving failed.");
+                    return ViewComponent(nameof(ViewCustomers));
+                }
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Error", "Home", new { message = "An error occurred while updating the document: " + ex.Message });
+            }
+        }
+        public async Task<IActionResult> Statement(int id)
             {
                 var c = await ctx.Customers
                     .Include(x => x.SaleOrders).ThenInclude(o => o.Items).ThenInclude(i => i.Product)

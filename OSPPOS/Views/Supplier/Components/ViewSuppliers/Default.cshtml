@@ -20,7 +20,7 @@
   
 }
 <div class="card rounded-5 table-responsive shadow mb-4">
-    <div class="card-header py-3"><i class="fas fa-fw fa-file-alt"></i>
+    <div class="card-header py-3"><i class="fas fa-fw fa-truck"></i>
         <h6 class="m-0 font-weight-bold text-primary d-inline">Suppliers</h6>
         
           
@@ -31,44 +31,45 @@
            <table class="table dataTables_wrapper">
                 <thead>
                     <tr><th>SN</th>
-                        <th>RefN</th>
-                        <th>Title</th>
-                        <th>Sender</th>
-                        <th>Assignee(s)</th>  
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Address</th>  
                      
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                @foreach (var Memo in Model.ToList())
+                @foreach (var Supplier in Model.ToList())
                 {
                     <tr>
                         <td></td>
-                        <td></td>
-                        <td class="ellipsed-text"></td>
+                        <td>@Supplier.Name</td>
+                        <td>@Supplier.Phone</td>
+                        <td class="ellipsed-text">@Supplier.Email</td>
                         
-                            <td class="ellipsed-text"></td>
+                            <td class="ellipsed-text">@Supplier.Address</td>
                             <td>
 
-                           <td>
+                           
 
                                 <div class="btn-group" role="group">
                                     <button id="btnGroupDrop1" type="button" class="btn btn-sm btn-rounded btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         Select Action
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                    @if(Memo.CanEdit)
+                                    @if(Supplier.CanEdit)
                                     {
 
-                                        <button  onclick="openDialogFromData(this)" data-url="EditMemo" data-user-id="@protector.Protect(Memo.PublicId.ToString())" data-dialog-id="EditMemoDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-edit mr-3 text-warning"></i>Edit</button>
+                                        <button  onclick="openDialogFromData(this)" data-url="EditSupplier" data-user-id="@protector.Protect(Supplier.PublicId.ToString())" data-dialog-id="EditSupplierDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-edit mr-3 text-warning"></i>Edit</button>
                                         }
 
-                                       <button  onclick="openDialogFromData(this)" data-url="CommentMemo" data-user-id="@protector.Protect(Memo.PublicId.ToString())" data-dialog-id="CommentMemoDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-comment mr-3 text-dark"></i>Comment</button>
+                                       
 
-                                       @if(Memo.CanPrint)
+                                       @if(Supplier.CanPrint)
                                        {
 
-                                        <button type="button" class="dropdown-item-custom" onclick="printMemoIframe('@protector.Protect(Memo.PublicId.ToString())')">
+                                        <button type="button" class="dropdown-item-custom" onclick="printMemoIframe('@protector.Protect(Supplier.PublicId.ToString())')">
                                             <i style="width:15px; height:15px" class="fa fa-print mr-3 text-primary"></i>Print
                                         </button>
                                        }
@@ -105,4 +106,4 @@
 </script>
 
 @await Component.InvokeAsync(nameof(AddSupplier))
-<dialog id="EditMemoDialog"><div id="EditMemoDialogContent"></div></dialog>
+<dialog id="EditSupplierDialog"><div id="EditSupplierDialogContent"></div></dialog>

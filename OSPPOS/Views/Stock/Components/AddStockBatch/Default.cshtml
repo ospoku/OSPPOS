@@ -1,5 +1,5 @@
 @model OSPPOS.ViewModels.AddStockBatchVM
-
+@* 
 <dialog id="AddStockBatchDialog" class="col-md-8 border-0 rounded p-0">
     <div class="modal-header">
         <h6 class="m-0 font-weight-bold d-inline">
@@ -177,7 +177,7 @@
         document.getElementById('batchTotal').textContent = totals.toFixed(2);
     }
 
-</script>
+</script> *@
 <dialog id="AddStockBatchDialog" class="col-md-8 border-0 rounded p-0">
     <div class="modal-header">
         <h6 class="m-0 font-weight-bold d-inline">
@@ -237,7 +237,7 @@
                         <i class="fas fa-plus me-1"></i> Add line
                     </button>
                 </div>
-                <div class="table-responsive">
+                <div class="table-responsive p-3">
                     <table class="table table-sm table-hover align-middle mb-0" style="table-layout:fixed;min-width:600px">
                         <colgroup>
                             <col style="width:35%">
@@ -248,7 +248,7 @@
                             <col style="width:6%">
                             <col style="width:6%">
                         </colgroup>
-                        <thead class="table-light">
+                        <thead class="bg-white">
                             <tr>
                                 <th class="small">Product</th>
                                 <th class="small">Qty</th>
@@ -279,8 +279,7 @@
                                                 <option value="">Select product</option>
                                                 @foreach (var item in Model.ProductList)
                                                 {
-                                                    <option value="@item.Value"
-                                                            @(item.Value == Model.Items[i].ProductId.ToString() ? "selected" : "")>
+                                                    <option value="@item.Value@(item.Value == Model.Items[i].ProductId.ToString() ? "selected" : "")">
                                                         @item.Text
                                                     </option>
                                                 }

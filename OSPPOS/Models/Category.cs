@@ -9,6 +9,7 @@ namespace OSPPOS.Models
     {
         [Key]
         public int CategoryId { get; set; }
+        public Guid PublicId { get; set; }
 
         [Required]
         public string Code { get; set; }
@@ -19,9 +20,7 @@ namespace OSPPOS.Models
     //public string Type { get; set; } = string.Empty;
         public bool IsActive { get; set; } = true;
         public ICollection<Product> Products { get; set; } = [];
-
-        
-      
+        public int Id { get; internal set; }
     }
 
 }

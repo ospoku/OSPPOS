@@ -8,19 +8,24 @@ namespace OSPPOS.ViewModels
 {
     public class EditProductVM
     {
-        public int? CustomerId { get; set; }
-        public string? WalkInCustomerName { get; set; }
-        public SaleType SaleType { get; set; } = SaleType.Cash;
-        public DateTime? DueDate { get; set; }
-        public string? Notes { get; set; }
-        public decimal DiscountPercent { get; set; } = 0;
-        public decimal Discount { get; set; } = 0;
-        public List<SaleItemVm> Items { get; set; } = [];
+        public int ProductId { get; set; }
+        public int? CategoryId { get; set; }
+        public int SupplierId {  get; set; }
+        public SelectList SupplierList { get; set; } = null!;
+        public string? SKU { get; set; }
+        public string? Name { get; set; } = null;
+        public SelectList CategoryList { get; set; }= null!;
+        public decimal WholesalePrice {  get; set; }
+        public decimal SellingPrice { get; set; }
+        public string? Description { get; set; }
+        public decimal CurrentStock { get; set; } = 0;
+        public decimal CostPrice { get; set; } = 0;
+        public int ReorderLevel { get; set; }
 
         // For initial cash payment
-        public decimal CashReceived { get; set; } = 0;
-        public PaymentMethod PaymentMethod { get; set; } 
-        public string? PaymentReference { get; set; }
+        public SelectList UnitList { get; set; } = null!;
+        public int UnitId { get; set; } 
+        public bool IsActive { get; set; }
     }
 }
 

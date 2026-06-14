@@ -4,7 +4,7 @@ namespace OSPPOS.Data
 {
     public class TableAudit
     {
-
+        public Guid PublicId = new();
         public bool IsDeleted { get; set; }
         public string? CreatedBy { get; set; } 
         [DataType(DataType.Date)]

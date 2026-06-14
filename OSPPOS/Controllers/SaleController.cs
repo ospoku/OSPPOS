@@ -90,9 +90,9 @@ public class SaleController(ISalesService sales, XContext ctx, EntityService ent
             {
                 Amount = vm.CashReceived,
                 PaymentMethod = vm.PaymentMethod,
-                PaymentReference = vm.PaymentReference,
-                PaidById = User.FindFirstValue(ClaimTypes.NameIdentifier)!,
-                PaidDate = DateTime.UtcNow
+                Reference = vm.PaymentReference,
+              
+              
             });
 
             order.PaymentStatus = vm.CashReceived >= order.TotalAmount
@@ -168,7 +168,7 @@ public class SaleController(ISalesService sales, XContext ctx, EntityService ent
     {
         var p = await ctx.Products
             .Include(p => p.Unit)
-            .FirstOrDefaultAsync(p => p.Id == productId);
+            .FirstOrDefaultAsync(p => p.ProductId == productId);
 
         if (p is null) return NotFound();
 

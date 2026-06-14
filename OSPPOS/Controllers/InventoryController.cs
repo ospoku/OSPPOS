@@ -33,9 +33,9 @@ public class InventoryController(XContext db, IReportService report) : Controlle
         if (product is null) return NotFound();
 
         var batches = await ctx.StockBatchItems
-            .Include(i => i.StockBatch).ThenInclude(b => b.Supplier)
+            .Include(i => i).ThenInclude(b => b)
             .Where(i => i.ProductId == id)
-            .OrderByDescending(i => i.StockBatch.ReceivedDate)
+            .OrderByDescending(i => i)
             .ToListAsync();
 
         var sales = await ctx.SaleOrderItems

@@ -1,4 +1,5 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using AspNetCoreHero.ToastNotification.Notyf;
 using DocumentFormat.OpenXml.ExtendedProperties;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,7 @@ namespace OSPPOS.Controllers
    
 
     [Authorize]
-    public class ProductController(XContext ctx,EntityService entityService, Notification notyf) : Controller
+    public class ProductController(XContext ctx,EntityService entityService, INotyfService notyf) : Controller
     {
         
 
@@ -63,7 +64,7 @@ namespace OSPPOS.Controllers
             if (!result)
             {
                 notyf.Error("Failed to add customer. Please try again.");
-                return ViewComponent(nameof(AddCustomer), new { vm }); // reshow dialog with values intact
+                return ViewComponent(nameof(AddCustomer), new {addProductVM }); // reshow dialog with values intact
             }
 
             notyf.Success("Customer added successfully.");

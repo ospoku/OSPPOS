@@ -25,6 +25,7 @@ builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<EntityService>();
 builder.Services.AddScoped<AssignmentService>();
 
+
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IStockService, StockService>();
 builder.Services.AddScoped<ISalesService, SalesService>();
