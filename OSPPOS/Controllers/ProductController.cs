@@ -37,10 +37,10 @@ namespace OSPPOS.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> AddProduct(AddProductVM addProductVM)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return ViewComponent(nameof(AddProduct), new { addProductVM });
-            //}
+            if (!ModelState.IsValid)
+            { notyf.Error("Enter all required fields. Please try again.");
+                return ViewComponent(nameof(ViewCustomers));
+            }
 
             Product addThisProduct = new()
             {
@@ -64,7 +64,7 @@ namespace OSPPOS.Controllers
             if (!result)
             {
                 notyf.Error("Failed to add customer. Please try again.");
-                return ViewComponent(nameof(AddCustomer), new {addProductVM }); // reshow dialog with values intact
+                return ViewComponent(nameof(ViewCustomers)); // reshow dialog with values intact
             }
 
             notyf.Success("Customer added successfully.");
