@@ -19,11 +19,7 @@ namespace OSPPOS.Controllers
         [Authorize]
         public class CustomerController(XContext ctx, EntityService entityService, INotyfService notyf, IDataProtectionProvider provider) : Controller
         {
-        
-
-
-
-       
+    
 
         public IActionResult ViewCustomers() { return ViewComponent(nameof(ViewCustomers)); }
 
@@ -62,10 +58,10 @@ namespace OSPPOS.Controllers
             return RedirectToAction(nameof(ViewCustomers));
         }
         [HttpGet]
-        public IActionResult EditLetter(Guid Id) => ViewComponent(nameof(EditLetter), Id);
+        public IActionResult EditCustomer(Guid Id) => ViewComponent(nameof(EditLetter), Id);
 
         [HttpPost]
-        public async Task<IActionResult> EditLetterAsync(Guid id, Customer customer)
+        public async Task<IActionResult> EditCustomerAsync(Guid id, Customer customer)
         {
             try
             {
