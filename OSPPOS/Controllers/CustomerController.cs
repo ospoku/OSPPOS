@@ -58,7 +58,7 @@ namespace OSPPOS.Controllers
             return RedirectToAction(nameof(ViewCustomers));
         }
         [HttpGet]
-        public IActionResult EditCustomer(Guid Id) => ViewComponent(nameof(EditLetter), Id);
+        public IActionResult EditCustomer(Guid Id) => ViewComponent(nameof(EditCustomer), Id);
 
         [HttpPost]
         public async Task<IActionResult> EditCustomerAsync(Guid id, Customer customer)

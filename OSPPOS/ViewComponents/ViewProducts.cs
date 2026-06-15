@@ -6,28 +6,46 @@ using OSPPOS.ViewModels;
 namespace OSPPOS.ViewComponents
 {
 
-    public class ViewProducts(XContext ctx):ViewComponent
+    public class ViewProducts(XContext ctx) : ViewComponent
     {
+        //        public IViewComponentResult Invoke()
+        //        {
+        //            var products = ctx.Products
+        //                .Include(p => p.Category)
+        //                .Include(p => p.Supplier)
+        //                .OrderBy(p => p.Category.Name)
+        //                .ThenBy(p => p.Name)
+        //                .Select(p => new ViewProductsVM {Category=p.Category.Name,ReorderLevel=p.ReorderLevel,IsActive=p.IsActive, WholesalePrice=p.WholesalePrice,Unit=p.Unit.Name, Name=p.Name,TotalProducts }).ToList();
 
 
+
+        //            return View(products);
+        //        }
+        //    }
+        //}
         public IViewComponentResult Invoke()
         {
-           
+            var productList = ctx.Products
+                .Include(p => p.Category)
+                .Include(p => p.Supplier)
+                .Include(p => p.Unit)
+                .OrderBy(p => p.Category.Name)
+                .ThenBy(p => p.Name)
+                .ToList();
 
-
-
-            var products = ctx.Products
-                           .Include(p => p.Category)
-                           .Include(p => p.Supplier)
-                           .OrderBy(p => p.Category.Name)
-                           .ThenBy(p => p.Name).ToList();
-            ViewProductsVM viewProductsVM = new()
+            var result = productList.Select(p => new ViewProductsVM
             {
-                Products=products,
-                TotalProducts=products.Count(),
-            };
+                Name = p.Name,
+                Category = p.Category.Name,
+                Unit = p.Unit.Name,
+                WholesalePrice = p.WholesalePrice,
+                ReorderLevel = p.ReorderLevel,
+                IsActive = p.IsActive,
+                CurrentStock=p.CurrentStock,
+                TotalProducts = productList.Count
+            }).ToList();
 
-            return View(viewProductsVM);
+            return View(result);
         }
     }
 }

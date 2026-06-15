@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OSPPOS.Models;
+using System;
 using System.Security.Claims;
 
 namespace OSPPOS.Data
@@ -22,32 +23,151 @@ namespace OSPPOS.Data
                 await rol.CreateAsync(new AppRole() { Name = "Admin", Rolename = "Admin", Description = "Role for admin users" });
             }
 
- 
             if (!dcx.Categories.Any())
             {
-                dcx.Categories.AddRange(new Category
-                {
-                    Name = "Repairs",
-                    Code = "BID",
-                    Description = "Name for a Patient who was broguth in Dead"
-                },
-                new Category
-                {
-                    Name = "Maintenance",
-                    Code = "DIW",
-                    Description = "Name for a Patient who Died in Ward"
-                },
-                new Category
-                {
-                    Name = "Replacement",
-                    Code = "DIW",
-                    Description = "Name for a Patient who Died in Ward"
-                });
-            }
-                
-      
+                dcx.Categories.AddRange(
+                    new Category { Name = "Electronics", Code = "ELE", Description = "Electronic devices" },
+                    new Category { Name = "Accessories", Code = "ACC", Description = "Device accessories" },
+                    new Category { Name = "Services", Code = "SRV", Description = "Service offerings" },
+                    new Category { Name = "Groceries", Code = "GRC", Description = "Food and essentials" }
+                );
 
-    
+                dcx.SaveChanges();
+            }
+
+            // --------------------
+            // UNITS
+            // --------------------
+            if (!dcx.Units.Any())
+            {
+                dcx.Units.AddRange(
+                    new Unit { Name = "Piece", Code = "pcs" },
+                    new Unit { Name = "Kilogram", Code = "kg" },
+                    new Unit { Name = "Liter", Code = "L" }
+                );
+
+                dcx.SaveChanges();
+            }
+
+            // --------------------
+            // SUPPLIERS
+            // --------------------
+            if (!dcx.Suppliers.Any())
+            {
+                dcx.Suppliers.AddRange(
+                    new Supplier { Name = "TechSource Ltd", Phone = "0240000001", Email = "sales@techsource.com" },
+                    new Supplier { Name = "Ghana Wholesale Traders", Phone = "0240000002", Email = "info@ghanawholesale.com" },
+                    new Supplier { Name = "FreshMart Supplies", Phone = "0240000003", Email = "contact@freshmart.com" }
+                );
+
+                dcx.SaveChanges();
+            }
+
+            // --------------------
+            // CUSTOMERS
+            // --------------------
+            if (!dcx.Customers.Any())
+            {
+                dcx.Customers.AddRange(
+                    new Customer { Name = "Walk-in Customer", Phone = "0000000000" },
+                    new Customer { Name = "Kwame Mensah", Phone = "0241111111", Email = "kwame.mensah@email.com" },
+                    new Customer { Name = "Ama Owusu", Phone = "0242222222", Email = "ama.owusu@email.com" },
+                    new Customer { Name = "Kofi Asare", Phone = "0243333333", Email = "kofi.asare@email.com" }
+                );
+
+                dcx.SaveChanges();
+            }
+
+            // --------------------
+            // PRODUCTS (FIXED PROPERLY)
+            // --------------------
+            if (!dcx.Products.Any())
+            {
+                var electronics = dcx.Categories.First(c => c.Code == "ELE");
+                var accessories = dcx.Categories.First(c => c.Code == "ACC");
+                var services = dcx.Categories.First(c => c.Code == "SRV");
+                var groceries = dcx.Categories.First(c => c.Code == "GRC");
+
+                var pcs = dcx.Units.First(u => u.Code == "pcs");
+                var kg = dcx.Units.First(u => u.Code == "kg");
+                var liter = dcx.Units.First(u => u.Code == "L");
+
+                var techSupplier = dcx.Suppliers.First(s => s.Name == "TechSource Ltd");
+                var wholesaleSupplier = dcx.Suppliers.First(s => s.Name == "Ghana Wholesale Traders");
+                var grocerySupplier = dcx.Suppliers.First(s => s.Name == "FreshMart Supplies");
+
+                dcx.Products.AddRange(
+
+                    // 1. Electronics (2 products)
+                    new Product
+                    {
+                        Name = "Samsung Smartphone",
+                        SellingPrice = 1200m,
+                        CategoryId = electronics.CategoryId,
+                        UnitId = pcs.UnitId,
+                        SupplierId = techSupplier.SupplierId
+                    },
+                    new Product
+                    {
+                        Name = "Laptop",
+                        SellingPrice = 2500m,
+                        CategoryId = electronics.CategoryId,
+                        UnitId = pcs.UnitId,
+                        SupplierId = techSupplier.SupplierId
+                    },
+
+                    // 2. Accessories (2 products)
+                    new Product
+                    {
+                        Name = "Phone Charger",
+                        SellingPrice = 50m,
+                        CategoryId = accessories.CategoryId,
+                        UnitId = pcs.UnitId,
+                        SupplierId = wholesaleSupplier.SupplierId 
+                    },
+                    new Product
+                    {
+                        Name = "Earphones",
+                        SellingPrice = 80m,
+                        CategoryId = accessories.CategoryId,
+                        UnitId = pcs.UnitId,
+                        SupplierId = wholesaleSupplier.SupplierId
+                    },
+
+                    // 3. Services (1 product)
+                    new Product
+                    {
+                        Name = "Phone Repair",
+                        SellingPrice = 150m,
+                        CategoryId = services.CategoryId,
+                        UnitId = pcs.UnitId,
+                        SupplierId = techSupplier.SupplierId
+                    },
+
+                    // 4. Groceries (2 products)
+                    new Product
+                    {
+                        Name = "Rice",
+                        SellingPrice = 10m,
+                        CategoryId = groceries.CategoryId,
+                        UnitId = kg.UnitId,
+                        SupplierId = grocerySupplier.SupplierId
+                    },
+                    new Product
+                    {
+                        Name = "Cooking Oil",
+                        SellingPrice = 15m,
+                        CategoryId = groceries.CategoryId,
+                        UnitId = liter.UnitId,
+                        SupplierId = grocerySupplier.SupplierId
+                    }
+                );
+
+                dcx.SaveChanges();
+            }
+
+
+
 
             List<Claim> claimlist =
             [

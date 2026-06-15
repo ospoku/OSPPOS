@@ -11,7 +11,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@model OSPPOS.ViewModels.ViewProductsVM;
+@model IEnumerable<OSPPOS.ViewModels.ViewProductsVM>;
 @inject Microsoft.AspNetCore.DataProtection.IDataProtectionProvider DataProtectionProvider
 
 @{
@@ -49,9 +49,10 @@
                 </thead>
                 <tbody>
                   
-  @foreach (var p in Model.Products)
+  @foreach (var p in Model)
                 {
                     <tr class="@(p.IsLowStock ? "table-warning" : "")">
+                        <td></td>
                         <td class="text-muted small">@(p.SKU ?? "—")</td>
                         <td class="ellipsed-text">
                             <span class="fw-semibold">@p.Name</span>
@@ -61,7 +62,7 @@
                             }
                         </td>
                         <td>
-                
+                @p.Category
                         </td>
                         <td class="small">@p.Unit</td>
                         <td class="text-end">@p.CostPrice.ToString("N2")</td>
@@ -95,18 +96,18 @@
                                     </button>
 
                                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                    @if(Model.CanEdit)
+                                    @if(p.CanEdit)
                                     {
 
-                                        <button  onclick="openDialogFromData(this)" data-url="EditMemo" data-user-id="@protector.Protect(Model.PublicId.ToString())" data-dialog-id="EditMemoDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-edit mr-3 text-warning"></i>Edit</button>
+                                        <button  onclick="openDialogFromData(this)" data-url="EditProduct" data-user-id="@protector.Protect(p.PublicId.ToString())" data-dialog-id="EditProductDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-edit mr-3 text-warning"></i>Edit</button>
                                         }
 
-                                       <button  onclick="openDialogFromData(this)" data-url="CommentMemo" data-user-id="@protector.Protect(Model.PublicId.ToString())" data-dialog-id="CommentMemoDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-comment mr-3 text-dark"></i>Comment</button>
+                                    
 
-                                       @if(Model.CanPrint)
+                                       @if(p.CanPrint)
                                        {
 
-                                        <button type="button" class="dropdown-item-custom" onclick="printMemoIframe('@protector.Protect(Model.PublicId.ToString())')">
+                                        <button type="button" class="dropdown-item-custom" onclick="printMemoIframe('@protector.Protect(p.PublicId.ToString())')">
                                             <i style="width:15px; height:15px" class="fa fa-print mr-3 text-primary"></i>Print
                                         </button>
                                        }
@@ -127,10 +128,10 @@
 
     
     <div class="card-footer rounded-5 border-0 bg-white text-muted small">
-        @Model.TotalProducts product(s) &nbsp;|&nbsp;
-        Stock cost value: <strong>GHS @Model.Products.Sum(p => p.CurrentStock * p.CostPrice).ToString("N2")</strong> &nbsp;|&nbsp;
-        Retail value: <strong>GHS @Model.Products.Sum(p => p.CurrentStock * p.SellingPrice).ToString("N2")</strong>
-
+        <span>@Model.Count().ToString() product(s) &nbsp;|&nbsp;</span>
+        Stock cost value: <strong>GHS @Model.Sum(p => p.CurrentStock * p.CostPrice).ToString("N2")</strong> &nbsp;|&nbsp;
+        Retail value: <strong>GHS @Model.Sum(p => p.CurrentStock * p.SellingPrice).ToString("N2")</strong> 
+        
 </div>
 </div>
 <iframe id="printFrame" style="display:none;"></iframe>
