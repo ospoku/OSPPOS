@@ -30,10 +30,11 @@
             <table class="table dataTables_wrapper">
                 <thead>
                     <tr><th>SN</th>
-                        <th>RefN</th>
-                        <th>Title</th>
-                        <th>Sender</th>
-                        <th>Assignee(s)</th>  
+                    <th>Supplier</th>
+                    <th>Supplier Invoce</th>
+                        <th>Received Date</th>
+                        <th>Notes</th>
+                        <th>Items</th>  
                      
                         <th>Action</th>
                     </tr>
@@ -42,12 +43,14 @@
                       @foreach (var stock in Model.ToList())
                 {
                     <tr>
-                        <td>@stock.Notes</td>
-<td></td>
-                        <td class="ellipsed-text"></td>
+                        <td></td>
+                        <td>@stock.SupplierId</td>
+                        <td>@stock.SupplierInvoice</td>
+                        <td>@stock.DateReceived</td>
+                        <td class="ellipsed-text">@stock.Notes</td>
                         
-                            <td class="ellipsed-text"></td>
-
+                         
+                        <td><a asp-action="">@stock.StockBatchItems.Count()</a></td>
                            <td>
 
                                 <div class="btn-group" role="group">
@@ -58,10 +61,10 @@
                                     @if(stock.CanEdit)
                                     {
 
-                                        <button  onclick="openDialogFromData(this)" data-url="EditMemo" data-user-id="@protector.Protect(stock.PublicId.ToString())" data-dialog-id="EditMemoDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-edit mr-3 text-warning"></i>Edit</button>
+                                        <button  onclick="openDialogFromData(this)" data-url="EditStock" data-user-id="@protector.Protect(stock.PublicId.ToString())" data-dialog-id="EditMemoDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-edit mr-3 text-warning"></i>Edit</button>
                                         }
 
-                                       <button  onclick="openDialogFromData(this)" data-url="CommentMemo" data-user-id="@protector.Protect(stock.PublicId.ToString())" data-dialog-id="CommentMemoDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-comment mr-3 text-dark"></i>Comment</button>
+                                      
 
                                        @if(stock.CanPrint)
                                        {

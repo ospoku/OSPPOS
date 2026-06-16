@@ -30,13 +30,7 @@ public class SaleController(ISalesService sales, XContext ctx, EntityService ent
         return View(orders);
     }
 
-    // GET /Sale/Create (POS screen)
-    public async Task<IActionResult> Create()
-    {
-        var vm = new AddSaleVM();
-        await PopulateDropDownsAsync(vm);
-        return View(vm);
-    }
+   
 
     // POST /Sale/AddSale
     [HttpPost, ValidateAntiForgeryToken]
@@ -45,11 +39,11 @@ public class SaleController(ISalesService sales, XContext ctx, EntityService ent
         // Remove empty lines
         vm.Items.RemoveAll(i => i.ProductId == 0 || i.Quantity == 0);
 
-        if (!vm.Items.Any())
+        if (vm.Items.Count == 0)
         {
             notyf.Error("Please add at least one item.");
-            await PopulateDropDownsAsync(vm);
-            return View("Create", vm);
+
+            return ViewComponent(nameof(ViewSales));
         }
 
         // Build the SaleOrder
@@ -105,12 +99,12 @@ public class SaleController(ISalesService sales, XContext ctx, EntityService ent
         if (!result)
         {
             notyf.Error("Failed to add sale. Please try again.");
-            await PopulateDropDownsAsync(vm);
-            return View("Create", vm);
+
+            return ViewComponent(nameof(ViewSales));
         }
 
         notyf.Success($"Sale {order.OrderNumber} added successfully.");
-        return RedirectToAction(nameof(Index));
+        return ViewComponent(nameof(ViewSales));
     }
 
     // GET /Sale/Receipt/5
@@ -187,24 +181,10 @@ public class SaleController(ISalesService sales, XContext ctx, EntityService ent
         return ViewComponent(nameof(ViewSales));
     }
 
-    // ?? Helpers ????????????????????????????????????????????????
+   
 
-    private async Task PopulateDropDownsAsync(AddSaleVM vm)
-    {
-        vm.Customers = await ctx.Customers
-            .Where(c => c.IsActive)
-            .OrderBy(c => c.Name)
-            .ToListAsync();
 
-        vm.Products = await ctx.Products
-            .Include(p => p.Category)
-            .Where(p => p.IsActive && p.CurrentStock > 0)
-            .OrderBy(p => p.Category.Name)
-            .ThenBy(p => p.Name)
-            .ToListAsync();
-    }
-
-    private async Task<string> GenerateOrderNumberAsync()
+         private async Task<string> GenerateOrderNumberAsync()
     {
         var count = await ctx.SaleOrders.CountAsync();
         return $"INV-{DateTime.UtcNow.Year}-{(count + 1):D4}";

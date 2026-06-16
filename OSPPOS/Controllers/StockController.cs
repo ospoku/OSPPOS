@@ -39,10 +39,10 @@ public class StockController(IStockService stock, XContext ctx) : Controller
         [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> AddStockBatch(AddStockBatchVM vm)
     {
-        if (!ModelState.IsValid)
-        {
-            return ViewComponent(nameof(AddStockBatch), new { vm });
-        }
+        //if (!ModelState.IsValid)
+        //{
+        //    return ViewComponent(nameof(AddStockBatch), new { vm });
+        //}
 
         var batch = new StockBatch
         {

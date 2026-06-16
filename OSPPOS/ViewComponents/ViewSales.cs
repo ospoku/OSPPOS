@@ -10,7 +10,7 @@ namespace OSPPOS.ViewComponents
         {
            
 
-            var sale = ctx.SaleOrders.Select(s => new ViewSalesVM { }).ToList();
+            var sale = ctx.SaleOrders.Select(s => new ViewSalesVM {AmountDue=s.AmountDue,AmountPaid=s.AmountPaid}).ToList();
 
             return View(sale);
         }

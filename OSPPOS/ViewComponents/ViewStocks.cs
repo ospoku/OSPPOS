@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.AspNetCore.Mvc;
 using OSPPOS.Data;
 using OSPPOS.Models;
 using OSPPOS.ViewModels;
@@ -11,7 +12,15 @@ namespace OSPPOS.ViewComponents
 
         public IViewComponentResult Invoke()
         {
-            List<ViewStocksVM> stocks = ctx.StockBatchItems.Select(s => new ViewStocksVM { }).ToList();
+            
+
+          var stocks = ctx.StockBatches.Select(s => new ViewStocksVM 
+            {
+                SupplierId=s.Supplier.Name,
+                SupplierInvoice=s.SupplierInvoiceRef,
+                Notes=s.Notes,
+                StockBatchItems=s.Items.ToList() }
+            ).ToList();
     
 
             return View(stocks);
