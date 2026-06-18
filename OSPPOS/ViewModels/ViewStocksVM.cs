@@ -28,7 +28,7 @@ namespace OSPPOS.ViewModels
           public DateTime ExpiryDate { get; set; }
        
        
-        public SaleType SaleType { get; set; } = SaleType.Cash;
+    
         public DateTime? DueDate { get; set; }
     
         public decimal DiscountPercent { get; set; } = 0;

@@ -11,7 +11,8 @@ namespace OSPPOS.ViewModels
     {
         public int? CustomerId { get; set; }
         public string? WalkInCustomerName { get; set; }
-        public SaleType SaleType { get; set; } = SaleType.Cash;
+        public SelectList SaleTypes { get; set; }
+        public int SaleTypeId { get; set; } 
         public DateTime? DueDate { get; set; }
         public string? Notes { get; set; }
         public decimal DiscountPercent { get; set; } = 0;
@@ -20,8 +21,9 @@ namespace OSPPOS.ViewModels
 
         // For initial cash payment
         public decimal CashReceived { get; set; } = 0;
-        public PaymentMethod PaymentMethod { get; set; } 
+        public int PaymentMethodId { get; set; } 
         public string? PaymentReference { get; set; }
+        public int PaymentStatusId {  get; set; }
  
 
         // For dropdowns in the view

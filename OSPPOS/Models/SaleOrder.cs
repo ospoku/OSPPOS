@@ -4,11 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OSPPOS.Models
 {
-   
-
-    public enum PaymentStatus { Unpaid, Partial, Paid }
-    public enum SaleType { Cash, Credit }
-
+  
     public class SaleOrder:TableAudit
     {
         [Key]
@@ -18,22 +14,22 @@ namespace OSPPOS.Models
         public int? CustomerId { get; set; }
         public Customer? Customer { get; set; }
         public string? WalkInCustomerName { get; set; }           // for non-account sales
-
-        public SaleType SaleType { get; set; } = SaleType.Cash;
-        public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Unpaid;
+        public int SaleTypeId { get; set; }
+        public SaleType SaleType { get; set; } 
+        public int PaymentStatusId { get; set; }
+        public PaymentStatus PaymentStatus { get; set; } 
 
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;
         public DateTime? DueDate { get; set; }                    // for credit sales
         public string? Notes { get; set; }
 
-        public string SoldById { get; set; } = string.Empty;
-        public AppUser? SoldBy { get; set; }
+        
 
         public decimal Discount { get; set; } = 0;               // flat discount
         public decimal DiscountPercent { get; set; } = 0;
 
-        public ICollection<SaleOrderItem> Items { get; set; } = new List<SaleOrderItem>();
-        public ICollection<Payment> Payments { get; set; } = new List<Payment>();
+        public ICollection<SaleOrderItem> Items { get; set; } = [];
+        public ICollection<Payment> Payments { get; set; } = [];
 
         public decimal SubTotal => Items.Sum(i => i.LineTotal);
         public decimal DiscountAmount => DiscountPercent > 0

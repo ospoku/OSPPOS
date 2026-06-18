@@ -31,14 +31,14 @@ namespace OSPPOS.Services
                     OrderNumber = await GenerateOrderNumberAsync(),
                     CustomerId = vm.CustomerId,
                     WalkInCustomerName = vm.WalkInCustomerName,
-                    SaleType = vm.SaleType,
+                    SaleTypeId = vm.SaleTypeId,
                     OrderDate = DateTime.UtcNow,
                     DueDate = vm.DueDate,
                     Notes = vm.Notes,
                     Discount = vm.Discount,
                     DiscountPercent = vm.DiscountPercent,
-                    PaymentStatus = PaymentStatus.Unpaid,
-                    SoldById = userId
+                    PaymentStatusId = vm.PaymentStatusId,
+                    
                 };
 
                 foreach (var item in vm.Items)
@@ -114,7 +114,7 @@ namespace OSPPOS.Services
                     .Include(o => o.Items).ThenInclude(i => i.Product)
                     .Include(o => o.Customer)
                     .Include(o => o.Payments)
-                    .Include(o => o.SoldBy)
+                   
                     .FirstOrDefaultAsync(o => o.Id == id);
 
             public async Task<List<SaleOrder>> GetOrdersAsync(
@@ -128,8 +128,8 @@ namespace OSPPOS.Services
 
                 if (from.HasValue) q = q.Where(o => o.OrderDate >= from.Value);
                 if (to.HasValue) q = q.Where(o => o.OrderDate <= to.Value.AddDays(1));
-                if (status.HasValue) q = q.Where(o => o.PaymentStatus == status.Value);
-                if (type.HasValue) q = q.Where(o => o.SaleType == type.Value);
+                if (status.HasValue) q = q.Where(o => o.PaymentStatus == status);
+                if (type.HasValue) q = q.Where(o => o.SaleType == type);
 
                 return await q.OrderByDescending(o => o.OrderDate).ToListAsync();
             }

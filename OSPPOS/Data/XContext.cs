@@ -17,10 +17,10 @@ namespace OSPPOS.Data
       
  
       
-      
+      public DbSet<PaymentMethod> PaymentMethods { get; set; }
         
-    
-       
+    public DbSet<PaymentStatus> PaymentStatuses { get; set; }
+       public DbSet<SaleType> SaleTypes { get; set; } 
        public DbSet<Unit> Units { get; set; }
         
     
