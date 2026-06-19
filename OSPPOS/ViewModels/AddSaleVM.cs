@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using OSPPOS.Enums;
 using OSPPOS.Models;
 using System.ComponentModel.DataAnnotations;
 
@@ -29,8 +30,26 @@ namespace OSPPOS.ViewModels
         // For dropdowns in the view
         public List<Customer> Customers { get; set; } = [];
         public List<Product> Products { get; set; } = [];
+       
+            // 🔹 Customer (optional)
+    
+      
+
+            // 🔹 Sale details
+        
+
+            // 🔹 Items (REQUIRED)
+        
+
+            // 🔹 Initial Payment (optional but powerful)
+            public decimal InitialPayment { get; set; } = 0;
+
+            public Enums.PaymentMethod PaymentMethod { get; set; } = PaymentMethod.Cash;
+
+         
+        }
     }
-}
+
 
 
 

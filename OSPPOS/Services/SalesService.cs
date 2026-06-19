@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using OSPPOS.Data;
 using OSPPOS.Interfaces;
 using OSPPOS.Models;
+using OSPPOS.ViewModels;
 using System;
 
 namespace OSPPOS.Services
@@ -13,17 +14,27 @@ namespace OSPPOS.Services
 
     public class SalesService(XContext ctx) : ISalesService
         {
-            
 
-        public async Task<(bool, string, SaleOrder?)> CreateSaleAsync(CreateSaleVm vm, string userId)
+
+        public async Task<(bool, string, SaleOrder?)> AddSaleAsync(AddSaleVM vm, string userId)
+        {
+            using var tx = await ctx.Database.BeginTransactionAsync();
+
+            try
             {
-                // Validate stock availability
+                var productIds = vm.Items.Select(i => i.ProductId).ToList();
+
+                var products = await ctx.Products
+                    .Where(p => productIds.Contains(p.ProductId))
+                    .ToDictionaryAsync(p => p.ProductId);
+
+                // 🔒 STOCK VALIDATION
                 foreach (var item in vm.Items)
                 {
-                    var product = await ctx.Products.FindAsync(item.ProductId);
-                    if (product is null) return (false, $"Product id {item.ProductId} not found.", null);
+                    var product = products[item.ProductId];
+
                     if (product.CurrentStock < item.Quantity)
-                        return (false, $"Insufficient stock for {product.Name}. Available: {product.CurrentStock}", null);
+                        return (false, $"Insufficient stock for {product.Name}", null);
                 }
 
                 var order = new SaleOrder
@@ -31,18 +42,16 @@ namespace OSPPOS.Services
                     OrderNumber = await GenerateOrderNumberAsync(),
                     CustomerId = vm.CustomerId,
                     WalkInCustomerName = vm.WalkInCustomerName,
-                    SaleTypeId = vm.SaleTypeId,
-                    OrderDate = DateTime.UtcNow,
-                    DueDate = vm.DueDate,
                     Notes = vm.Notes,
                     Discount = vm.Discount,
                     DiscountPercent = vm.DiscountPercent,
-                    PaymentStatusId = vm.PaymentStatusId,
-                    
+                    DueDate = vm.DueDate
                 };
 
                 foreach (var item in vm.Items)
                 {
+                    var product = products[item.ProductId];
+
                     order.Items.Add(new SaleOrderItem
                     {
                         ProductId = item.ProductId,
@@ -50,33 +59,48 @@ namespace OSPPOS.Services
                         UnitPrice = item.UnitPrice
                     });
 
-                    // Deduct stock
-                    var product = await ctx.Products.FindAsync(item.ProductId);
-                    if (product is not null) product.CurrentStock -= item.Quantity;
+                    // 🔥 STOCK UPDATE
+                    product.CurrentStock -= item.Quantity;
+
+                    ctx.StockMovements.Add(new StockMovement
+                    {
+                        ProductId = item.ProductId,
+                        Quantity = -item.Quantity,
+                        ReferenceId = order.Id,
+                        Type = "SALE"
+                    });
                 }
 
                 ctx.SaleOrders.Add(order);
-                await ctx   .SaveChangesAsync();
+                await ctx.SaveChangesAsync();
 
-                // Record initial payment for cash sales
-                if (vm.SaleType == SaleType.Cash && vm.CashReceived > 0)
+                // 🔥 INITIAL PAYMENT (optional, flexible)
+                if (vm.InitialPayment > 0)
                 {
-                    var payVm = new RecordPaymentVm
+                    ctx.Payments.Add(new Payment
                     {
                         SaleOrderId = order.Id,
-                        Amount = Math.Min(vm.CashReceived, order.TotalAmount),
+                        Amount = vm.InitialPayment,
                         Method = vm.PaymentMethod,
                         Reference = vm.PaymentReference
-                    };
-                    await RecordPaymentAsync(payVm, userId);
+                    });
+
+                    await ctx.SaveChangesAsync();
                 }
 
-                // Reload with navigation props
-                var saved = await GetOrderAsync(order.Id);
-                return (true, string.Empty, saved);
-            }
+                await tx.CommitAsync();
 
-            public async Task<(bool, string)> RecordPaymentAsync(RecordPaymentVm vm, string userId)
+                var saved = await GetOrderAsync(order.Id);
+                return (true, "", saved);
+            }
+            catch (Exception ex)
+            {
+                await tx.RollbackAsync();
+                return (false, ex.Message, null);
+            }
+        }
+
+        public async Task<(bool, string)> RecordPaymentAsync(RecordPaymentVm vm, string userId)
             {
                 var order = await ctx.SaleOrders
                     .Include(o => o.Payments)

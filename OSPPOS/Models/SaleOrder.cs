@@ -1,45 +1,54 @@
 ﻿using OSPPOS.Data;
+using OSPPOS.Enums;
+using OSPPOS.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OSPPOS.Models
 {
-  
-    public class SaleOrder:TableAudit
+
+    public class SaleOrder : TableAudit
     {
-        [Key]
         public int Id { get; set; }
-        public string OrderNumber { get; set; } = string.Empty;   // e.g. INV-2024-0001
+
+        public string OrderNumber { get; set; } = string.Empty;
 
         public int? CustomerId { get; set; }
         public Customer? Customer { get; set; }
-        public string? WalkInCustomerName { get; set; }           // for non-account sales
-        public int SaleTypeId { get; set; }
-        public SaleType SaleType { get; set; } 
-        public int PaymentStatusId { get; set; }
-        public PaymentStatus PaymentStatus { get; set; } 
+        public string? WalkInCustomerName { get; set; }
 
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;
-        public DateTime? DueDate { get; set; }                    // for credit sales
+        public DateTime? DueDate { get; set; }   // optional (only if you care about deadlines)
+
         public string? Notes { get; set; }
 
-        
-
-        public decimal Discount { get; set; } = 0;               // flat discount
+        public decimal Discount { get; set; } = 0;
         public decimal DiscountPercent { get; set; } = 0;
 
-        public ICollection<SaleOrderItem> Items { get; set; } = [];
-        public ICollection<Payment> Payments { get; set; } = [];
+        public ICollection<SaleOrderItem> Items { get; set; } = new List<SaleOrderItem>();
+        public ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
+        // 🔥 COMPUTED VALUES (single source of truth)
         public decimal SubTotal => Items.Sum(i => i.LineTotal);
-        public decimal DiscountAmount => DiscountPercent > 0
-            ? SubTotal * DiscountPercent / 100 : Discount;
+
+        public decimal DiscountAmount =>
+            DiscountPercent > 0 ? SubTotal * DiscountPercent / 100 : Discount;
+
         public decimal TotalAmount => SubTotal - DiscountAmount;
+
         public decimal AmountPaid => Payments.Sum(p => p.Amount);
+
         public decimal AmountDue => TotalAmount - AmountPaid;
 
-        public string CustomerDisplay => Customer?.Name ?? WalkInCustomerName ?? "Walk-in";
+        public PaymentState PaymentState =>
+            AmountPaid >= TotalAmount ? PaymentState.Paid :
+            AmountPaid > 0 ? PaymentState.Partial :
+            PaymentState.Unpaid;
+
+        public string CustomerDisplay =>
+            Customer?.Name ?? WalkInCustomerName ?? "Walk-in";
     }
+}
 
     public class SaleOrderItem
     {
@@ -58,4 +67,4 @@ namespace OSPPOS.Models
     }
 
 
-}
+
