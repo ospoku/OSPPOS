@@ -19,17 +19,16 @@
     var protector = DataProtectionProvider.CreateProtector("IdProtector");
   
 }
-<div class="card table-responsive shadow mb-4 rounded-5">
-    <div class="card-header py-3"><i class="fas fa-fw fa-tags"></i>
+<div class="card shadow mb-4 rounded-5">
+    <div class=" card-header rounded-top-5 px-3 py-3"><i class="fas fa-fw fa-tags"></i>
         <h6 class="m-0 font-weight-bold text-primary d-inline">Products</h6>
-        
-          
         <button id="btnAddMemo" class="btn btn-sm btn-rounded rounded-5 btn-outline-primary fa-pull-right" onclick="document.getElementById('AddProductDialog').showModal()"><i class="fa fa-fw fa-plus-circle"></i>Add Product</button>
         </div>
-
-        <div class="card-body responsive">
-         
-            <table class="table table-responsive-lg dataTables_wrapper" id="tblProducts">
+        <div class="card-body">
+         <h5 class="card-title">xxxxxxxxxx</h5>
+         <p class="card-text text-muted">xxxxxxxxxxxxx</p>
+         <div class="table-responsive">
+            <table class="table dataTables_wrapper" id="tblProducts">
                 <thead>
                     <tr><th>SN</th>
                     <th>SKU</th>
@@ -124,10 +123,10 @@
                 </tbody>
             </table>
        </div>
-     
+     </div>
 
     
-    <div class="card-footer rounded-5 border-0 bg-white text-muted small">
+    <div class="card-footer rounded-bottom-5 border-0 text-muted small">
         <span>@Model.Count().ToString() product(s) &nbsp;|&nbsp;</span>
         Stock cost value: <strong>GHS @Model.Sum(p => p.CurrentStock * p.CostPrice).ToString("N2")</strong> &nbsp;|&nbsp;
         Retail value: <strong>GHS @Model.Sum(p => p.CurrentStock * p.SellingPrice).ToString("N2")</strong> 
