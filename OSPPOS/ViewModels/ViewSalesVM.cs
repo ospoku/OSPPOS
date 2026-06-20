@@ -11,12 +11,14 @@ namespace OSPPOS.ViewModels
     public class ViewSalesVM
     {
         public int? CustomerId { get; set; }
+        public string CustomerName { get; set; }
         public string? WalkInCustomerName { get; set; }
-        public SaleType SaleType { get; set; } = SaleType.Cash;
+        public string SaleType { get; set; } 
         public DateTime? DueDate { get; set; }
-        public int TotalAmount { get; set; }
-        public int AmountPaid { get; set; }
-        public int AmountDue { get; set; }
+        public string Status { get; set; }
+        public decimal TotalAmount { get; set; }
+        public decimal AmountPaid { get; set; }
+        public decimal AmountDue { get; set; }
         public string? Notes { get; set; }
         public decimal DiscountPercent { get; set; } = 0;
         public decimal Discount { get; set; } = 0;
@@ -43,7 +45,7 @@ namespace OSPPOS.ViewModels
         public int? PageTotalTotalTotal { get;set; }
         public int? PageTotalTotalCount { get; set; }
         public bool CanPrint {  get; set; }
-        public string PublicId { get; set; }
+        public Guid PublicId { get; set; }
     }
 }
 

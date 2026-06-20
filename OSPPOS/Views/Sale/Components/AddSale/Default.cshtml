@@ -575,7 +575,7 @@ function buildCartJson() {
         </button>
     </div>
 
-    @using (Html.BeginForm("AddSale", "Sales", FormMethod.Post,
+    @using (Html.BeginForm("AddSale", "Sale", FormMethod.Post,
         new { id = "addSaleForm" }))
     {
         @Html.AntiForgeryToken()
@@ -890,7 +890,7 @@ function buildCartJson() {
                         onclick="document.getElementById('AddSaleDialog').close()">
                     Cancel
                 </button>
-                <button type="submit" id="confirmBtn"
+                <button  id="confirmBtn"
                         class="btn btn-success btn-sm px-4" disabled>
                     <i class="fas fa-check-circle me-1"></i>
                     Confirm sale &mdash;
