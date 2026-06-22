@@ -1,56 +1,50 @@
 ﻿
+using DocumentFormat.OpenXml.InkML;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OSPPOS.Data;
 using OSPPOS.Interfaces;
 using OSPPOS.Models;
 using OSPPOS.ViewModels;
 using System;
-
+using System.Security.Claims;
 namespace OSPPOS.Services
 {
-
-
-  
-
-    public class SalesService(XContext ctx) : ISalesService
+    public class SaleService(XContext ctx) : ISaleService
         {
-
-
-        public async Task<(bool, string, SaleOrder?)> AddSaleAsync(AddSaleVM vm, string userId)
+        public async Task<(bool Success, string Error, SaleOrder? Order)> AddSaleAsync(AddSaleVM addSaleVM, string userId)
         {
-            using var tx = await ctx.Database.BeginTransactionAsync();
-
             try
             {
-                var productIds = vm.Items.Select(i => i.ProductId).ToList();
+                var productIds = addSaleVM.Items.Select(i => i.ProductId).ToList();
 
                 var products = await ctx.Products
                     .Where(p => productIds.Contains(p.ProductId))
                     .ToDictionaryAsync(p => p.ProductId);
 
-                // 🔒 STOCK VALIDATION
-                foreach (var item in vm.Items)
-                {
-                    var product = products[item.ProductId];
-
-                    if (product.CurrentStock < item.Quantity)
-                        return (false, $"Insufficient stock for {product.Name}", null);
-                }
-
                 var order = new SaleOrder
                 {
                     OrderNumber = await GenerateOrderNumberAsync(),
-                    CustomerId = vm.CustomerId,
-                    WalkInCustomerName = vm.WalkInCustomerName,
-                    Notes = vm.Notes,
-                    Discount = vm.Discount,
-                    DiscountPercent = vm.DiscountPercent,
-                    DueDate = vm.DueDate
+                    CustomerId = addSaleVM.CustomerId,
+                    WalkInCustomerName = addSaleVM.WalkInCustomerName,
+                    Notes = addSaleVM.Notes,
+                    Discount = addSaleVM.Discount,
+                    DiscountPercent = addSaleVM.DiscountPercent,
+                    DueDate = addSaleVM.DueDate,
+                    CreatedBy=userId,
                 };
 
-                foreach (var item in vm.Items)
+                foreach (var item in addSaleVM.Items)
                 {
-                    var product = products[item.ProductId];
+                    if (!products.TryGetValue(item.ProductId, out var product))
+                    {
+                        return (false, $"Product not found: {item.ProductId}", null);
+                    }
+
+                    if (product.CurrentStock < item.Quantity)
+                    {
+                        return (false, $"Insufficient stock for {product.Name}", null);
+                    }
 
                     order.Items.Add(new SaleOrderItem
                     {
@@ -59,75 +53,84 @@ namespace OSPPOS.Services
                         UnitPrice = item.UnitPrice
                     });
 
-                    // 🔥 STOCK UPDATE
                     product.CurrentStock -= item.Quantity;
 
                     ctx.StockMovements.Add(new StockMovement
                     {
                         ProductId = item.ProductId,
                         Quantity = -item.Quantity,
-                        ReferenceId = order.Id,
+                        Order = order,
                         Type = "SALE"
                     });
                 }
 
                 ctx.SaleOrders.Add(order);
-                await ctx.SaveChangesAsync();
 
-                // 🔥 INITIAL PAYMENT (optional, flexible)
-                if (vm.InitialPayment > 0)
+                if (addSaleVM.InitialPayment > 0)
                 {
                     ctx.Payments.Add(new Payment
                     {
-                        SaleOrderId = order.Id,
-                        Amount = vm.InitialPayment,
-                        Method = vm.PaymentMethod,
-                        Reference = vm.PaymentReference
+                        Amount = addSaleVM.InitialPayment,
+                        Reference = addSaleVM.PaymentReference,
+                        Order = order
                     });
-
-                    await ctx.SaveChangesAsync();
                 }
+                foreach (var entry in ctx.ChangeTracker.Entries())
+                {
+                    if (entry.Entity.GetType().GetProperty("CreatedBy") != null)
+                    {
+                        entry.Property("CreatedBy").CurrentValue = userId;
+                    }
 
-                await tx.CommitAsync();
+                    if (entry.Entity.GetType().GetProperty("CreatedDate") != null)
+                    {
+                        entry.Property("CreatedDate").CurrentValue = DateTime.UtcNow;
+                    }
+                }
+                await ctx.SaveChangesAsync(userId);
 
                 var saved = await GetOrderAsync(order.Id);
+
                 return (true, "", saved);
             }
+
             catch (Exception ex)
             {
-                await tx.RollbackAsync();
-                return (false, ex.Message, null);
+                var fullError = ex.ToString(); // includes stack trace
+                return (false, fullError, null);
             }
+
+
         }
 
-        public async Task<(bool, string)> RecordPaymentAsync(RecordPaymentVm vm, string userId)
+
+        public async Task<(bool, string)> RecordPaymentAsync(RecordPaymentVM  recordPaymentVM, string userId)
             {
                 var order = await ctx.SaleOrders
                     .Include(o => o.Payments)
-                    .FirstOrDefaultAsync(o => o.Id == vm.SaleOrderId);
+                    .FirstOrDefaultAsync(o => o.Id == recordPaymentVM.SaleOrderId);
 
                 if (order is null) return (false, "Order not found.");
-                if (vm.Amount > order.AmountDue + 0.01m) return (false, "Payment exceeds amount due.");
+                if (recordPaymentVM.Amount > order.AmountDue + 0.01m) return (false, "Payment exceeds amount due.");
 
                 var payment = new Payment
                 {
-                    SaleOrderId = vm.SaleOrderId,
+                   
                     CustomerId = order.CustomerId,
-                    Amount = vm.Amount,
-                    
+                    Amount = recordPaymentVM.Amount,
                     PaymentDate = DateTime.UtcNow,
-                    Reference = vm.Reference,
-                    Notes = vm.Notes,
+                    Reference = recordPaymentVM.Reference,
+                    Notes = recordPaymentVM.Notes,
                    
                 };
 
                 ctx.Payments.Add(payment);
 
                 // Reload payments to recalculate
-                var totalPaid = order.Payments.Sum(p => p.Amount) + vm.Amount;
-                order.PaymentStatus = totalPaid >= order.TotalAmount - 0.01m
-                    ? PaymentStatus.Paid
-                    : totalPaid > 0 ? PaymentStatus.Partial : PaymentStatus.Unpaid;
+                var totalPaid = order.Payments.Sum(p => p.Amount) + recordPaymentVM.Amount;
+                //order.PaymentStatus = totalPaid >= order.TotalAmount - 0.01m
+                //    ? PaymentStatus.Paid
+                //    : totalPaid > 0 ? PaymentStatus.Partial : PaymentStatus.Unpaid;
 
                 await ctx.SaveChangesAsync();
                 return (true, string.Empty);
@@ -152,8 +155,8 @@ namespace OSPPOS.Services
 
                 if (from.HasValue) q = q.Where(o => o.OrderDate >= from.Value);
                 if (to.HasValue) q = q.Where(o => o.OrderDate <= to.Value.AddDays(1));
-                if (status.HasValue) q = q.Where(o => o.PaymentStatus == status);
-                if (type.HasValue) q = q.Where(o => o.SaleType == type);
+                //if (status.HasValue) q = q.Where(o => o.PaymentStatus == status);
+                //if (type.HasValue) q = q.Where(o => o.SaleType == type);
 
                 return await q.OrderByDescending(o => o.OrderDate).ToListAsync();
             }

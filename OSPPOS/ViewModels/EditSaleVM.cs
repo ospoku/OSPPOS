@@ -1,7 +1,5 @@
 ﻿using OSPPOS.Models;
 
-
-
 namespace OSPPOS.ViewModels
 {
     public class EditSaleVM

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using OSPPOS.Data;
 using OSPPOS.Interfaces;
 using OSPPOS.Models;
+using OSPPOS.ViewModels;
 using System;
 using System.Drawing;
 
@@ -17,7 +18,7 @@ namespace OSPPOS.Services
     {
         private readonly XContext ctx = db;
 
-        public async Task<SalesReportVm> GetSalesReportAsync(DateTime from, DateTime to)
+        public async Task<SalesReportVM> GetSalesReportAsync(DateTime from, DateTime to)
         {
             var orders = await ctx.SaleOrders
                 .Include(o => o.Customer)
@@ -27,10 +28,10 @@ namespace OSPPOS.Services
                 .OrderByDescending(o => o.OrderDate)
                 .ToListAsync();
 
-            return new SalesReportVm { From = from, To = to, Orders = orders };
+            return new SalesReportVM { From = from, To = to, Orders = orders };
         }
 
-        public async Task<StockReportVm> GetStockReportAsync()
+        public async Task<StockReportVM> GetStockReportAsync()
         {
             var products = await ctx.Products
                 .Include(p => p.Category)
@@ -39,7 +40,7 @@ namespace OSPPOS.Services
                 .OrderBy(p => p.Category.Name).ThenBy(p => p.Name)
                 .ToListAsync();
 
-            return new StockReportVm
+            return new StockReportVM
             {
                 AllProducts = products,
                 LowStockProducts = products.Where(p => p.IsLowStock).ToList()
@@ -50,24 +51,24 @@ namespace OSPPOS.Services
         {
             var customers = await ctx.Customers
                 .Include(c => c.SaleOrders).ThenInclude(o => o.Payments)
-                .Where(c => c.SaleOrders.Any(o => o.PaymentStatus != PaymentStatus.Paid))
+                .Where(c => c.SaleOrders.Any())
                 .ToListAsync();
 
             var today = DateTime.Today;
             var debtors = customers.Select(c =>
             {
-                var unpaidOrders = c.SaleOrders.Where(o => o.PaymentStatus != PaymentStatus.Paid);
+                
                 var aging = new DebtorAgingVm { Customer = c };
-                foreach (var order in unpaidOrders)
-                {
-                    var dueDate = order.DueDate ?? order.OrderDate;
-                    var days = (today - dueDate).Days;
-                    var due = order.AmountDue;
-                    if (days <= 30) aging.Current += due;
-                    else if (days <= 60) aging.Days30 += due;
-                    else if (days <= 90) aging.Days60 += due;
-                    else aging.Days90Plus += due;
-                }
+                //foreach (var order in unpaidOrders)
+                //{
+                //    var dueDate = order.DueDate ?? order.OrderDate;
+                //    var days = (today - dueDate).Days;
+                //    var due = order.AmountDue;
+                //    if (days <= 30) aging.Current += due;
+                //    else if (days <= 60) aging.Days30 += due;
+                //    else if (days <= 90) aging.Days60 += due;
+                //    else aging.Days90Plus += due;
+                //}
                 return aging;
             }).Where(a => a.TotalOwed > 0).ToList();
 
@@ -96,7 +97,7 @@ namespace OSPPOS.Services
                 .ToList();
         }
 
-        public async Task<DashboardVm> GetDashboardAsync()
+        public async Task<DashboardVM> GetDashboardAsync()
         {
             var today = DateTime.Today;
             var monthStart = new DateTime(today.Year, today.Month, 1);
@@ -115,7 +116,7 @@ namespace OSPPOS.Services
                 .Where(p => p.IsActive && p.CurrentStock <= p.ReorderLevel)
                 .Take(10).ToListAsync();
 
-            return new DashboardVm
+            return new DashboardVM
             {
                 TodaySales = todayOrders.Sum(o => o.TotalAmount),
                 TodayTransactions = todayOrders.Count,
@@ -154,11 +155,11 @@ namespace OSPPOS.Services
                 ws.Cell(row, 1).Value = o.OrderNumber;
                 ws.Cell(row, 2).Value = o.OrderDate.ToString("dd/MM/yyyy HH:mm");
                 ws.Cell(row, 3).Value = o.CustomerDisplay;
-                ws.Cell(row, 4).Value = o.SaleType.ToString();
+                
                 ws.Cell(row, 5).Value = (double)o.TotalAmount;
                 ws.Cell(row, 6).Value = (double)o.AmountPaid;
                 ws.Cell(row, 7).Value = (double)o.AmountDue;
-                ws.Cell(row, 8).Value = o.PaymentStatus.ToString();
+               
                 ws.Cell(row, 5).Style.NumberFormat.Format = "#,##0.00";
                 ws.Cell(row, 6).Style.NumberFormat.Format = "#,##0.00";
                 ws.Cell(row, 7).Style.NumberFormat.Format = "#,##0.00";

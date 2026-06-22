@@ -34,13 +34,6 @@ namespace OSPPOS.Controllers
             return ViewComponent(nameof(SystemSetup));
         }
 
-
-
-
-
-
-
-
     }
 
 

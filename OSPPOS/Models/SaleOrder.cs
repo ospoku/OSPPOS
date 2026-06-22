@@ -14,7 +14,7 @@ namespace OSPPOS.Models
         public string OrderNumber { get; set; } = string.Empty;
 
         public int? CustomerId { get; set; }
-        public Customer? Customer { get; set; }
+        public Customer? Customer { get; set; } = null!;
         public string? WalkInCustomerName { get; set; }
 
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;
@@ -25,8 +25,8 @@ namespace OSPPOS.Models
         public decimal Discount { get; set; } = 0;
         public decimal DiscountPercent { get; set; } = 0;
 
-        public ICollection<SaleOrderItem> Items { get; set; } = new List<SaleOrderItem>();
-        public ICollection<Payment> Payments { get; set; } = new List<Payment>();
+        public ICollection<SaleOrderItem> Items { get; set; } = [];
+        public ICollection<Payment> Payments { get; set; } = [];
 
         // 🔥 COMPUTED VALUES (single source of truth)
         public decimal SubTotal => Items.Sum(i => i.LineTotal);
@@ -50,21 +50,18 @@ namespace OSPPOS.Models
     }
 }
 
-    public class SaleOrderItem
-    {
-        [Key]
-        public int Id { get; set; }
-        [ForeignKey(nameof(SaleOrderItem.SaleOrderId))]
-        public int SaleOrderId { get; set; }
-        public SaleOrder SaleOrder { get; set; } = null!;
-        [ForeignKey(nameof(SaleOrderItem.ProductId))]
-        public int ProductId { get; set; }
-        public Product Product { get; set; } = null!;
+public class SaleOrderItem
+{
+    [Key]
+    public int Id { get; set; }
+    [ForeignKey(nameof(SaleOrderItem.SaleOrderId))]
+    public int SaleOrderId { get; set; }
+    public SaleOrder SaleOrder { get; set; } = null!;
+    [ForeignKey(nameof(SaleOrderItem.ProductId))]
+    public int ProductId { get; set; }
+    public Product Product { get; set; } = null!;
 
-        public int Quantity { get; set; }
-        public decimal UnitPrice { get; set; }
-        public decimal LineTotal => Quantity * UnitPrice;
-    }
-
-
-
+    public int Quantity { get; set; }
+    public decimal UnitPrice { get; set; }
+    public decimal LineTotal => Quantity;
+}
