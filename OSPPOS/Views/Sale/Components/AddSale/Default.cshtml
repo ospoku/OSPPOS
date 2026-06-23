@@ -37,26 +37,6 @@
                         <div class="card-body py-2">
                             <div class="row g-2 align-items-end">
 
-                                <!-- Sale type toggle -->
-                             @*    <div class="col-sm-4">
-                                    <label class="form-label mb-1 small fw-semibold">Sale type</label>
-                                    <div class="d-flex gap-2">
-                                        <div class="sale-type-btn flex-fill text-center text-success active"
-                                             id="btnCash" onclick="setSaleType('cash')"
-                                             style="cursor:pointer;border:2px solid currentColor;
-                                                    border-radius:8px;padding:6px 10px">
-                                            <i class="fas fa-money-bill-wave d-block mb-1"></i>
-                                            <span style="font-size:.75rem" class="fw-semibold">Cash</span>
-                                        </div>
-                                        <div class="sale-type-btn flex-fill text-center text-muted"
-                                             id="btnCredit" onclick="setSaleType('credit')"
-                                             style="cursor:pointer;border:2px solid transparent;
-                                                    border-radius:8px;padding:6px 10px">
-                                            <i class="fas fa-clock d-block mb-1"></i>
-                                            <span style="font-size:.75rem" class="fw-semibold">Credit</span>
-                                        </div>
-                                    </div>
-                                </div> *@
 
                                 <!-- Walk-in name (cash) -->
                                 <div class="col-sm-8 did-floating-label-content" id="walkInGroup">
@@ -73,7 +53,7 @@
                                             class=" dmx-choices"
                                             onchange="onCustomerChange(this)" asp-for="CustomerId" asp-items="Model.Customers">
                                         <option value="">-- select customer --</option>
-                                        @foreach (var c in Model.Customers
+                              @*           @foreach (var c in Model.Customers
                                             .Where(c => c.IsActive && c.AllowCredit)
                                             .OrderBy(c => c.Name))
                                         {
@@ -86,7 +66,7 @@
                                                     ? $" — owes GHS {c.TotalDebt:N2}"
                                                     : "")
                                             </option>
-                                        }
+                                        } *@
                                     </select>
 
                                     <!-- Credit info strip -->

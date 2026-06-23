@@ -21,19 +21,36 @@ namespace OSPPOS.Services
                 var products = await ctx.Products
                     .Where(p => productIds.Contains(p.ProductId))
                     .ToDictionaryAsync(p => p.ProductId);
+                if (addSaleVM.CustomerId == null && string.IsNullOrWhiteSpace(addSaleVM.WalkInCustomerName))
+                {
+                    addSaleVM.WalkInCustomerName = null!;
+                    return (false, "Customer is required", null);
+
+                }
 
                 var order = new SaleOrder
                 {
                     OrderNumber = await GenerateOrderNumberAsync(),
+
                     CustomerId = addSaleVM.CustomerId,
                     WalkInCustomerName = addSaleVM.WalkInCustomerName,
                     Notes = addSaleVM.Notes,
                     Discount = addSaleVM.Discount,
                     DiscountPercent = addSaleVM.DiscountPercent,
                     DueDate = addSaleVM.DueDate,
-                    CreatedBy=userId,
+                    CreatedBy = userId,
                 };
 
+                if (addSaleVM.CustomerId != null)
+                {
+                    order.CustomerId = addSaleVM.CustomerId;
+                    order.WalkInCustomerName = null;
+                }
+                else
+                {
+                    order.CustomerId = null;
+                    order.WalkInCustomerName = addSaleVM.WalkInCustomerName;
+                }
                 foreach (var item in addSaleVM.Items)
                 {
                     if (!products.TryGetValue(item.ProductId, out var product))
@@ -166,8 +183,10 @@ namespace OSPPOS.Services
                 var year = DateTime.Today.Year;
                 var count = await ctx.SaleOrders.CountAsync(o => o.OrderDate.Year == year);
                 return $"INV-{year}-{(count + 1):D5}";
-            }
+            }    
+   
         }
+
 
 
     }
