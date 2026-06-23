@@ -50,50 +50,7 @@ namespace OSPPOS.Services
                 return false;
             }
         }
-        //public async Task<bool> EditEntityAsync<T>(T model, ClaimsPrincipal userClaim) where T : class
-        //{
-        //    var user = await usm.GetUserAsync(userClaim);
-        //    if (user == null)
-        //    {
-        //        notyf.Error("User is not authenticated.", 5);
-        //        return false;
-        //    }
-
-        //    var modelType = model.GetType();
-        //    var modifiedByProp = modelType.GetProperty("ModifiedBy");
-        //    var modifiedDateProp = modelType.GetProperty("ModifiedDate");
-
-        //    if (modifiedByProp != null)
-        //    {
-        //        modifiedByProp.SetValue(model, user.UserName);
-        //    }
-
-        //    if (modifiedDateProp != null)
-        //    {
-        //        modifiedDateProp.SetValue(model, DateTime.UtcNow);
-        //    }
-
-        //    try
-        //    {
-        //        dcx.Set<T>().Update(model);
-
-        //        if (await dcx.SaveChangesAsync(user.UserName) > 0)
-        //        {
-        //            notyf.Success("Record successfully updated!", 5);
-        //            return true;
-        //        }
-        //        else
-        //        {
-        //            notyf.Error("Error, record could not be updated.", 5);
-        //            return false;
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        notyf.Error("An error occurred: " + ex.Message, 5);
-        //        return false;
-        //    }
-        //}
+ 
        
         public async Task<bool> DeleteEntityAsync<T>(T model, ClaimsPrincipal userClaim) where T : class
         {

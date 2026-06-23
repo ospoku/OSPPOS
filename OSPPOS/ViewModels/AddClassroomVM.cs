@@ -14,23 +14,8 @@ public class StockBatchItemVm
     public DateTime? ExpiryDate { get; set; }
 }
 
-// ─── Sales ─────────────────────────────────────────────────────
-public class CreateSaleVm
-{
-    public int? CustomerId { get; set; }
-    public string? WalkInCustomerName { get; set; }
-    
-    public DateTime? DueDate { get; set; }
-    public string? Notes { get; set; }
-    public decimal DiscountPercent { get; set; } = 0;
-    public decimal Discount { get; set; } = 0;
-    public List<SaleItemVm> Items { get; set; } = [];
 
-    // For initial cash payment
-    public decimal CashReceived { get; set; } = 0;
-    public PaymentMethod PaymentMethod { get; set; } 
-    public string? PaymentReference { get; set; }
-}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
 
 public class SaleItemVm
 {
@@ -41,7 +26,7 @@ public class SaleItemVm
 }
 
 // ─── Payment ───────────────────────────────────────────────────
-public class RecordPaymentVm
+public class RecordPaymentVM
 {
     [Required] public int SaleOrderId { get; set; }
     [Required, Range(0.01, 9999999)] public decimal Amount { get; set; }
@@ -51,24 +36,8 @@ public class RecordPaymentVm
 }
 
 // ─── Reports ───────────────────────────────────────────────────
-public class SalesReportVm
-{
-    public DateTime From { get; set; } = DateTime.Today.AddDays(-30);
-    public DateTime To { get; set; } = DateTime.Today;
-    public List<SaleOrder> Orders { get; set; } = [];
-    public decimal TotalRevenue => Orders.Sum(o => o.TotalAmount);
-    public decimal TotalReceived => Orders.Sum(o => o.AmountPaid);
-    public decimal TotalOutstanding => Orders.Sum(o => o.AmountDue);
-    public int TotalTransactions => Orders.Count;
-}
 
-public class StockReportVm
-{
-    public List<Product> LowStockProducts { get; set; } = [];
-    public List<Product> AllProducts { get; set; } = [];
-    public decimal TotalStockValue => AllProducts.Sum(p => p.CurrentStock * p.CostPrice);
-    public decimal TotalRetailValue => AllProducts.Sum(p => p.CurrentStock * p.SellingPrice);
-}
+
 
 public class DebtorReportVm
 {
@@ -94,15 +63,6 @@ public class TopProductVm
     public decimal TotalProfit { get; set; }
 }
 
-public class DashboardVm
-{
-    public decimal TodaySales { get; set; }
-    public decimal MonthSales { get; set; }
-    public decimal TotalOutstanding { get; set; }
-    public int LowStockCount { get; set; }
-    public int TodayTransactions { get; set; }
-    public List<Product> LowStockItems { get; set; } = [];
-    public List<SaleOrder> RecentSales { get; set; } = [];
-}
+
 
 

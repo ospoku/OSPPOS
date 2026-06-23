@@ -381,6 +381,7 @@
 //}
 
 using AspNetCoreHero.ToastNotification.Abstractions;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -396,7 +397,7 @@ using System.Security.Claims;
 namespace OSPPOS.Controllers;
 
 [Authorize]
-public class SaleController(ISalesService sales, XContext ctx, EntityService entityService, INotyfService notyf) : Controller
+public class SaleController(ISaleService sales, XContext ctx, INotyfService notyf) : Controller
 {
     // GET /Sale
     public async Task<IActionResult> Index(DateTime? from, DateTime? to,
@@ -404,99 +405,36 @@ public class SaleController(ISalesService sales, XContext ctx, EntityService ent
     {
         from ??= DateTime.Today.AddDays(-30);
         to ??= DateTime.Today;
-        var orders = await sales.GetOrdersAsync(from, to, statusId, saleTypeId);
+        //var orders = await sales.GetOrdersAsync(from, to, statusId, saleTypeId);
         ViewBag.From = from.Value.ToString("yyyy-MM-dd");
         ViewBag.To = to.Value.ToString("yyyy-MM-dd");
       
        
-        return View(orders);
+        return View();
     }
 
     // POST /Sale/AddSale
     [HttpPost, ValidateAntiForgeryToken]
-    public async Task<IActionResult> AddSale(AddSaleVM vm)
+    public async Task <IActionResult> AddSale(AddSaleVM addSaleVM)
     {
-        // Remove empty lines
-        vm.Items.RemoveAll(i => i.ProductId == 0 || i.Quantity == 0);
 
-        if (vm.Items.Count == 0)
+        var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var result = await sales.AddSaleAsync(addSaleVM, user);
+
+        if (!result.Success)
         {
-            notyf.Error("Please add at least one item.");
-
+            //notyf.Error("Failed to add sale. Please try again.");
+            notyf.Error(result.Error ?? "Failed to add sale.");
             return ViewComponent(nameof(ViewSales));
         }
-
-        // Look up the chosen sale type so we know whether this is a credit sale
-        var saleType = await ctx.SaleTypes.FindAsync(vm.SaleTypeId);
-
-        // The order always starts out at whichever status is flagged as the default;
-        // it's updated below if cash was received
-        var unpaidStatus = await ctx.PaymentStatuses.FirstOrDefaultAsync(s => s.IsDefault);
-        if (unpaidStatus is null)
+        else
         {
-            notyf.Error("Payment status configuration is missing.");
-            return ViewComponent(nameof(ViewSales));
+
+            notyf.Success($"Sale added successfully.");
+              return ViewComponent(nameof(ViewSales));
         }
 
-        // Build the SaleOrder
-        var order = new SaleOrder
-        {
-            OrderNumber = await GenerateOrderNumberAsync(),
-            CustomerId = vm.CustomerId,
-            WalkInCustomerName = vm.WalkInCustomerName,
-            SaleTypeId = vm.SaleTypeId,
-            DueDate = saleType?.IsCredit == true ? vm.DueDate : null,
-            Notes = vm.Notes,
-            Discount = vm.Discount,
-            DiscountPercent = vm.DiscountPercent,
-            OrderDate = DateTime.UtcNow,
-            PaymentStatusId = unpaidStatus.PaymentStatusId,
-        };
-
-        // Map line items and reduce stock
-        foreach (var item in vm.Items)
-        {
-            order.Items.Add(new SaleOrderItem
-            {
-                ProductId = item.ProductId,
-                Quantity = item.Quantity,
-                UnitPrice = item.UnitPrice
-            });
-
-            var product = await ctx.Products.FindAsync(item.ProductId);
-            if (product != null)
-                product.CurrentStock -= item.Quantity;
-        }
-
-        // Record initial payment if cash was received
-        if (vm.CashReceived > 0)
-        {
-            order.Payments.Add(new Payment
-            {
-                Amount = vm.CashReceived,
-                PaymentMethodId = vm.PaymentMethodId,
-                Reference = vm.PaymentReference,
-            });
-
-            var isFullyPaid = vm.CashReceived >= order.TotalAmount;
-            var paymentStatus = isFullyPaid
-                ? await ctx.PaymentStatuses.FirstOrDefaultAsync(s => s.IsFullyPaid)
-                : await ctx.PaymentStatuses.FirstOrDefaultAsync(s => s.IsPartiallyPaid);
-            if (paymentStatus != null)
-                order.PaymentStatusId = paymentStatus.PaymentStatusId;
-        }
-
-        bool result = await entityService.AddEntityAsync(order, User);
-
-        if (!result)
-        {
-            notyf.Error("Failed to add sale. Please try again.");
-
-            return ViewComponent(nameof(ViewSales));
-        }
-
-        notyf.Success($"Sale {order.OrderNumber} added successfully.");
-        return ViewComponent(nameof(ViewSales));
+      
     }
 
     // GET /Sale/Receipt/5
@@ -521,12 +459,12 @@ public class SaleController(ISalesService sales, XContext ctx, EntityService ent
         var order = await sales.GetOrderAsync(id);
         if (order is null) return NotFound();
         ViewBag.Order = order;
-        return View(new RecordPaymentVm { SaleOrderId = id, Amount = order.AmountDue });
+        return View(new RecordPaymentVM { SaleOrderId = id, Amount = order.AmountDue });
     }
 
     // POST /Sale/RecordPayment
     [HttpPost, ValidateAntiForgeryToken]
-    public async Task<IActionResult> RecordPayment(RecordPaymentVm vm)
+    public async Task<IActionResult> RecordPayment(RecordPaymentVM vm)
     {
         if (!ModelState.IsValid)
         {

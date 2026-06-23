@@ -15,10 +15,9 @@ namespace OSPPOS.ViewComponents
             AddSaleVM addSaleVM = new()
             {
 
-                Customers = await ctx.Customers
-            .Where(c => c.IsActive)
-            .OrderBy(c => c.Name)
-            .ToListAsync(),
+                Customers = new SelectList(ctx.Customers.Where(c => c.IsActive && c.AllowCredit)
+            .OrderBy(c => c.Name),nameof(Customer.CustomerId),nameof(Customer.Name)),
+         
 
                 Products = await ctx.Products
             .Include(p => p.Category)

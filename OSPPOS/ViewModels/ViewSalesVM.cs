@@ -13,7 +13,7 @@ namespace OSPPOS.ViewModels
         public int? CustomerId { get; set; }
         public string CustomerName { get; set; }
         public string? WalkInCustomerName { get; set; }
-        public string SaleType { get; set; } 
+        public string SaleType { get; set; }
         public DateTime? DueDate { get; set; }
         public string Status { get; set; }
         public decimal TotalAmount { get; set; }
