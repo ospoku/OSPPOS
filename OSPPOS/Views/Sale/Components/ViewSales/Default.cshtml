@@ -56,16 +56,15 @@
             <table class="table dataTables_wrapper">
                 <thead>
                     <tr><th>SN</th>
-                       
-                    
                     <th>Customer</th>
+                    <th>Order Number</th>
                     <th>Date</th>
                     <th>Type</th>
                     <th>Amount</th>
                     <th>Paid</th>
                     <th>Balance</th>
                     <th>Status</th>
-                    <th></th>
+                    <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,9 +72,10 @@
                 {
                     <tr>
                         <td></td>
-<td>@sale.CustomerId</td>
-                        <td>@sale.CustomerId</td>
-                    
+
+                        <td>@sale.CustomerName</td>
+                        <td>@sale.OrderNumber</td>
+                    <td>@sale.OrderDate</td>
                         <td>@sale.DueDate</td>
                         <td>@sale.SaleType</td>
                         <td>@sale.AmountDue</td>

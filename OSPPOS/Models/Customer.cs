@@ -11,9 +11,9 @@ namespace OSPPOS.Models
         [Key]
         public int CustomerId { get; set; }
         
-        public required string Name { get; set; } = string.Empty;
+        public  string Name { get; set; } = string.Empty;
         [Required]
-        public required string Phone { get; set; }
+        public string Phone { get; set; } = string.Empty;
         public string? Email { get; set; }
         public string? Address { get; set; }
         public string? TaxNumber { get; set; }

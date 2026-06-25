@@ -53,8 +53,7 @@
                                             class=" dmx-choices"
                                             onchange="onCustomerChange(this)" asp-for="CustomerId" asp-items="Model.Customers">
                                         <option value="">-- select customer --</option>
-                              @*           @foreach (var c in Model.Customers
-                                            .Where(c => c.IsActive && c.AllowCredit)
+                                     @*  @foreach (var c in Model.Customers.Where(c => c.IsActive && c.AllowCredit)
                                             .OrderBy(c => c.Name))
                                         {
                                             <option value="@c.CustomerId"
@@ -66,12 +65,12 @@
                                                     ? $" — owes GHS {c.TotalDebt:N2}"
                                                     : "")
                                             </option>
-                                        } *@
+                                        }  *@
                                     </select>
 
                                     <!-- Credit info strip -->
                                     <div id="creditInfo" class="mt-1 px-2 py-1 rounded small"
-                                         style="background:#fff8e1;display:none">
+                                         style="background:#fff8e1;display:block">
                                         <span class="text-muted">Limit:</span>
                                         <strong id="ciLimit">—</strong>
                                         &nbsp;|&nbsp;
@@ -84,13 +83,13 @@
                                 </div>
 
                                 <!-- Due date (credit only) -->
-                                <div class="col-sm-6" id="dueDateGroup" style="display:none">
+                                <div class="col-sm-6" id="dueDateGroup" style="display:block">
                                     <div class="input-group">
                                         <div class="input-group-text">
                                             <i class="fas fa-calendar-check"></i>
                                         </div>
                                         <div class="did-floating-label-content">
-                                    <input type="date" name="DueDate" id="dueDate"
+                                    <input type="date" name="DueDate" id="dueDate" asp-for=@Model.DueDate
                                            class="did-floating-input" asp-format="{0:dd/MMM/yyyy}" />  
                                            <label class="did-floating-label" for="dueDate">Due Date</label>
                                 </div>
@@ -234,7 +233,7 @@
                             </div>
 
                             <!-- Payment reference -->
-                            <div class="mb-3" id="referenceGroup" style="display:none">
+                            <div class="mb-3" id="referenceGroup" style="display:block">
                                 <label class="form-label small fw-semibold">
                                     Reference
                                     <span class="text-muted fw-normal">(MoMo ID / cheque #)</span>
@@ -257,7 +256,7 @@
 
                                     <!-- Floating label + input -->
                                     <div class="did-floating-label-content">
-                                        <input type="number" asp-for="@Model.Notes"
+                                        <input type="number" asp-for="@Model.CashReceived"
                                                class="did-floating-input text-end" name="CashReceived"
                                                id="tenderedField"
                                                placeholder=" " min="0" step="0.01" value="0" oninput="calcChange()" />

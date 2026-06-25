@@ -11,6 +11,8 @@ namespace OSPPOS.ViewModels
     public class ViewSalesVM
     {
         public int? CustomerId { get; set; }
+        public string OrderNumber { get; set; }
+        public DateTime OrderDate { get; set; }
         public string CustomerName { get; set; }
         public string? WalkInCustomerName { get; set; }
         public string SaleType { get; set; }

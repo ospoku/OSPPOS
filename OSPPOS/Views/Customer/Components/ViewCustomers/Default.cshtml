@@ -28,47 +28,80 @@
         </div>
         <div class="card-body">
          
-            <table class="table dataTables_wrapper">
+            <table class="table table-responsive dataTables_wrapper">
                 <thead>
                     <tr><th>SN</th>
-                        <th>RefN</th>
-                        <th>Title</th>
-                        <th>Sender</th>
-                        <th>Assignee(s)</th>  
-                     
-                        <th>Action</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th>Tax Number</th>
+                        <th>IsActive</th>
+                    <th>Allow Credit</th>
+                    <th>Credit Limit</th>
+                    <th>Sales Order</th>
+                    <th>Payments</th>
+            <th>Total Debt</th>
+                  
+                   
+                    <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                      @foreach (var Memo in Model)
+                      @foreach (var customer in Model)
                 {
                     <tr>
                         <td></td>
-<td>@Memo.Notes</td>
-                        <td class="ellipsed-text"> @Memo.Notes</td>
+<td>@customer.Name</td>
+                        <td class="ellipsed-text"> @customer.Phone</td>
                         
-                            <td class="ellipsed-text">@Memo.Notes</td>
-                            <td>
-</td>
-                           <td>
+                            <td class="ellipsed-text">@customer.Email</td>
+                        <td class ="ellipsed-text">
+                            @customer.Address</td>
+                        <td>@customer.TaxNumber</td>
+                        <td>@customer.IsActive</td>
+                        <td>@customer.AllowCredit</td>
+                        <td>@customer.CreditLimit</td>
+                        <td>@foreach (var order in @customer.SaleOrders.ToList())
+                            {
+                                <ul>
+                                    <li>
+                                        @order.ToString()
+                                    </li>
+                                </ul>
+                            }
+                        </td>
+                        <td>
+                            @foreach (var order in @customer.Payments.ToList())
+                            {
+                                <ul>
+                                    <li>
+                                        @order.ToString()
+                                    </li>
+                                </ul>
+                            }
+                        </td>
+                        <td>@customer.TotalDebt</td>
+                       
+                        <td>
 
                                 <div class="btn-group" role="group">
                                     <button id="btnGroupDrop1" type="button" class="btn btn-sm btn-rounded btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         Select Action
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                    @if(Memo.CanEdit)
+                                    @if(customer.CanEdit)
                                     {
 
-                                        <button  onclick="openDialogFromData(this)" data-url="EditCustomer" data-user-id="@protector.Protect(Memo.PublicId.ToString())" data-dialog-id="EditCustomerDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-edit mr-3 text-warning"></i>Edit</button>
+                                        <button  onclick="openDialogFromData(this)" data-url="EditCustomer" data-user-id="@protector.Protect(customer.PublicId.ToString())" data-dialog-id="EditCustomerDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-edit mr-3 text-warning"></i>Edit</button>
                                         }
 
                                     
 
-                                       @if(Memo.CanPrint)
+                                       @if(customer.CanPrint)
                                        {
 
-                                        <button type="button" class="dropdown-item-custom" onclick="printMemoIframe('@protector.Protect(Memo.PublicId.ToString())')">
+                                        <button type="button" class="dropdown-item-custom" onclick="printcustomerIframe('@protector.Protect(customer.PublicId.ToString())')">
                                             <i style="width:15px; height:15px" class="fa fa-print mr-3 text-primary"></i>Print
                                         </button>
                                        }
@@ -96,9 +129,9 @@
 <iframe id="printFrame" style="display:none;"></iframe>
 
 <script type="text/javascript">
-    function printMemoIframe(memoId) {
+    function printcustomerIframe(customerId) {
         const printFrame = document.getElementById('printFrame');
-        printFrame.src = `/Memo/PrintMemo?Id=${memoId}`;
+        printFrame.src = `/customer/Printcustomer?Id=${customerId}`;
         printFrame.onload = function () {
             printFrame.contentWindow.focus();
             printFrame.contentWindow.print();
