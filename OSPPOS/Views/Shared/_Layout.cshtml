@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿@* <!DOCTYPE html>
 <html lang="en">
 
 @using Microsoft.AspNetCore.Identity
@@ -159,7 +159,7 @@
                         <h6 class="collapse-header">Account</h6>
                         <a class="collapse-item" asp-action="ViewUsers" asp-controller="Account">Users</a> *@
                       
-                    </div>
+                    @* </div>
                 </div>
             </li>
 
@@ -321,14 +321,14 @@
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
                 @* <div class="container my-auto"> *@
-                    <div class="copyright text-center my-auto">
+                  @*   <div class="copyright text-center my-auto">
                         <span>Copyright &copy; Your Website 2021</span>
-                    </div>
+                    </div> *@
                @*  </div> *@
-            </footer>
+            @* </footer> *@
             <!-- End of Footer -->
 
-        </div>
+       @*  </div>
         <!-- End of Content Wrapper -->
 
     </div>
@@ -362,13 +362,13 @@
             </div>
         </div>
     </div>
- 
+  *@
 
 
 
 
 
-
+@* 
 
     <!-- Bootstrap core JavaScript-->
     <script src="~/lib/jquery/jquery.min.js"></script>
@@ -406,4 +406,745 @@
 
   
  
+</html>*@
+ @* 
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+  
+    <link href="~/styles.css" rel="stylesheet" />
+</head>
+<body class="h-full bg-gray-950 text-gray-200">
+    <!-- Top Navbar -->
+    <header class="h-16 bg-gray-900 border-b border-gray-800 fixed w-full z-50 flex items-center px-4 md:px-6">
+        <div class="flex items-center justify-between w-full max-w-screen-2xl mx-auto">
+            <div class="flex items-center gap-x-3">
+                <button onclick="toggleMobileSidebar()" class="md:hidden p-3 hover:bg-gray-800 rounded-2xl">
+                    <i id="mobileToggleIcon" class="fa-solid fa-bars text-2xl"></i>
+                </button>
+                <button onclick="toggleSidebar()" class="hidden md:block p-3 hover:bg-gray-800 rounded-2xl">
+                    <i id="toggleIcon" class="fa-solid fa-bars text-2xl"></i>
+                </button>
+                <div class="flex items-center gap-x-3">
+                    <div class="w-8 h-8 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-bold text-xl">A</div>
+                    <span id="logoText" class="logo-text font-semibold text-xl md:text-2xl tracking-tight">AdminPro</span>
+                </div>
+            </div>
+
+            <div class="hidden md:block flex-1 max-w-md mx-8">
+                <div class="relative">
+                    <input type="text" id="searchInput" class="w-full bg-gray-800 border border-gray-700 rounded-2xl py-3 pl-11 pr-4 text-sm focus:outline-none focus:border-blue-500" placeholder="Search anything...">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-gray-500"></i>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-x-4 md:gap-x-6">
+                <button onclick="toggleNotifications()" class="relative p-2 hover:bg-gray-800 rounded-2xl">
+                    <i class="fa-solid fa-bell text-xl"></i>
+                    <span id="notificationCount" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-[10px] rounded-full flex items-center justify-center text-white font-medium">0</span>
+                </button>
+                <div onclick="toggleUserMenu()" class="flex items-center gap-x-3 cursor-pointer">
+                    <div class="hidden sm:block text-right">
+                        <div class="text-sm font-semibold">Alex Rivera</div>
+                    </div>
+                    <img src="https://picsum.photos/id/64/128/128" class="w-8 h-8 md:w-9 md:h-9 rounded-2xl ring-2 ring-blue-500/30">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex h-screen pt-16">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar w-72 bg-gray-900 border-r border-gray-800 flex-shrink-0 overflow-hidden md:relative">
+            <div class="pt-6 h-full flex flex-col">
+                <nav class="flex-1 px-3 space-y-1">
+                    <a href="#" onclick="setActive(this)" class="nav-link active flex items-center gap-x-3 px-5 py-3.5 rounded-2xl text-sm font-medium">
+                        <i class="fa-solid fa-gauge-high w-5"></i>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                    <a href="#" onclick="setActive(this)" class="nav-link flex items-center gap-x-3 px-5 py-3.5 rounded-2xl text-sm font-medium">
+                        <i class="fa-solid fa-users w-5"></i>
+                        <span class="nav-text">Users</span>
+                    </a>
+                    <a href="#" onclick="setActive(this)" class="nav-link flex items-center gap-x-3 px-5 py-3.5 rounded-2xl text-sm font-medium">
+                        <i class="fa-solid fa-box w-5"></i>
+                        <span class="nav-text">Products</span>
+                    </a>
+                    <a href="#" onclick="setActive(this)" class="nav-link flex items-center gap-x-3 px-5 py-3.5 rounded-2xl text-sm font-medium">
+                        <i class="fa-solid fa-cart-shopping w-5"></i>
+                        <span class="nav-text">Orders</span>
+                        <span class="ml-auto badge bg-green-500 text-green-950 text-xs px-2 py-0.5 rounded-full font-bold">48</span>
+                    </a>
+                    <a href="#" onclick="setActive(this)" class="nav-link flex items-center gap-x-3 px-5 py-3.5 rounded-2xl text-sm font-medium">
+                        <i class="fa-solid fa-chart-pie w-5"></i>
+                        <span class="nav-text">Analytics</span>
+                    </a>
+                    <a href="#" onclick="setActive(this)" class="nav-link flex items-center gap-x-3 px-5 py-3.5 rounded-2xl text-sm font-medium">
+                        <i class="fa-solid fa-file-invoice-dollar w-5"></i>
+                        <span class="nav-text">Finance</span>
+                    </a>
+                    <div class="h-px bg-gray-800 my-6 mx-4"></div>
+                    <a href="#" onclick="setActive(this)" class="nav-link flex items-center gap-x-3 px-5 py-3.5 rounded-2xl text-sm font-medium">
+                        <i class="fa-solid fa-gear w-5"></i>
+                        <span class="nav-text">Settings</span>
+                    </a>
+                    <a href="#" onclick="showMessagesPanel()" class="nav-link flex items-center gap-x-3 px-5 py-3.5 rounded-2xl text-sm font-medium">
+                        <i class="fa-solid fa-envelope w-5"></i>
+                        <span class="nav-text">Messages</span>
+                    </a>
+                </nav>
+
+                <!-- Shutdown Button -->
+                <div class="p-4 border-t border-gray-800 mt-auto">
+                    <button onclick="confirmShutdown()"
+                            class="w-full flex items-center gap-x-3 px-5 py-3.5 text-red-400 hover:bg-red-950/50 hover:text-red-300 rounded-2xl text-sm font-medium transition-all">
+                        <i class="fa-solid fa-power-off w-5"></i>
+                        <span class="nav-text">Shutdown System</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+            <main class="main-content bg-gray-950 p-4 md:p-8 flex-1 overflow-auto">
+                <div class="max-w-screen-2xl mx-auto">
+                    <h1 class="text-3xl md:text-4xl font-bold tracking-tight">Dashboard</h1>
+                    <p class="text-gray-500">Welcome back, Alex.</p>
+
+                    <div class="mt-10">
+                        <h2 class="text-xl font-semibold mb-4">Test Features</h2>
+                        <div class="flex flex-wrap gap-3">
+                            <button onclick="showMessage('Operation completed successfully!', 'success')" class="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-2xl">Success Toast</button>
+                            <button onclick="showMessage('Failed to connect to database', 'error')" class="bg-red-600 hover:bg-red-700 px-6 py-3 rounded-2xl">Error Toast</button>
+                            <button onclick="confirmShutdown()" class="bg-red-600 hover:bg-red-700 px-6 py-3 rounded-2xl">Shutdown System</button>
+                        </div>
+                    </div>
+                </div>
+                @RenderBody()
+            </main>
+
+            <footer class="h-16 bg-gray-900 border-t border-gray-800 flex items-center px-4 md:px-8 text-sm text-gray-500 shrink-0">
+                <div class="max-w-screen-2xl mx-auto w-full flex justify-between">
+                    <div>© 2026 AdminPro</div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed bottom-6 right-6 z-[100] flex flex-col gap-3"></div>
+
+    <!-- Notification Panel -->
+    <div id="notificationPanel" class="hidden fixed top-20 right-6 w-96 bg-gray-900 border border-gray-700 rounded-3xl shadow-2xl z-50 overflow-hidden">
+        <div class="p-4 border-b border-gray-700 flex justify-between items-center">
+            <h3 class="font-semibold">Notifications</h3>
+            <div class="flex gap-2">
+                <button onclick="markAllRead()" class="text-xs px-3 py-1 hover:bg-gray-800 rounded-xl">Mark all read</button>
+                <button onclick="clearAllNotifications()" class="text-xs px-3 py-1 text-red-400 hover:bg-gray-800 rounded-xl">Clear all</button>
+            </div>
+        </div>
+        <div id="notificationList" class="max-h-[420px] overflow-auto p-2"></div>
+    </div>
+
+    <!-- Shutdown Modal -->
+    <div id="shutdownModal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-[200]">
+        <div class="bg-gray-900 rounded-3xl p-8 w-full max-w-sm border border-red-500/30">
+            <div class="text-center">
+                <i class="fa-solid fa-power-off text-6xl text-red-500 mb-6"></i>
+                <h2 class="text-2xl font-bold mb-2">Shutdown System?</h2>
+                <p class="text-gray-400 mb-8">This action will terminate all active sessions.</p>
+                <div class="flex gap-4">
+                    <button onclick="cancelShutdown()" class="flex-1 py-3.5 bg-gray-800 hover:bg-gray-700 rounded-2xl">Cancel</button>
+                    <button onclick="performShutdown()" class="flex-1 py-3.5 bg-red-600 hover:bg-red-700 rounded-2xl font-semibold">Shutdown Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sidebar controls
+        let isCollapsed = false;
+        let isMobileOpen = false;
+
+        function toggleSidebar() {
+            isCollapsed = !isCollapsed;
+            const sidebar = document.getElementById('sidebar');
+            const logoText = document.getElementById('logoText');
+            const toggleIcon = document.getElementById('toggleIcon');
+            if (isCollapsed) {
+                sidebar.classList.add('sidebar-collapsed');
+                logoText.style.opacity = '0';
+                toggleIcon.classList.replace('fa-bars', 'fa-bars-staggered');
+            } else {
+                sidebar.classList.remove('sidebar-collapsed');
+                logoText.style.opacity = '1';
+                toggleIcon.classList.replace('fa-bars-staggered', 'fa-bars');
+            }
+        }
+
+        function toggleMobileSidebar() {
+            isMobileOpen = !isMobileOpen;
+            document.getElementById('sidebar').classList.toggle('open', isMobileOpen);
+        }
+
+        function setActive(el) {
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        // Notification System
+        let notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+
+        function saveNotifications() {
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+        }
+
+        function updateNotificationCount() {
+            const unread = notifications.filter(n => !n.read).length;
+            const countEl = document.getElementById('notificationCount');
+            countEl.textContent = unread || '';
+            countEl.style.display = unread ? 'flex' : 'none';
+        }
+
+        function showMessage(text, type = 'info', title = '') {
+            const toast = document.createElement('div');
+            const bg = type === 'success' ? 'bg-green-600' : type === 'error' ? 'bg-red-600' : type === 'warning' ? 'bg-yellow-600' : 'bg-blue-600';
+
+            toast.className = `px-6 py-4 rounded-2xl shadow-2xl flex items-start gap-3 w-80 text-white ${bg}`;
+            toast.innerHTML = `
+                <i class="fa-solid ${type==='success'?'fa-check-circle':type==='error'?'fa-xmark-circle':type==='warning'?'fa-triangle-exclamation':'fa-info-circle'} mt-0.5"></i>
+                <div class="flex-1">
+                    ${title ? `<div class="font-semibold">${title}</div>` : ''}
+                    <div>${text}</div>
+                </div>
+            `;
+            document.getElementById('toastContainer').appendChild(toast);
+
+            notifications.unshift({
+                id: Date.now(),
+                title: title || type.charAt(0).toUpperCase() + type.slice(1),
+                message: text,
+                type,
+                timestamp: new Date().toISOString(),
+                read: false
+            });
+
+            saveNotifications();
+            updateNotificationCount();
+            renderNotifications();
+
+            setTimeout(() => {
+                toast.style.transition = 'all 0.3s';
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(20px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        function renderNotifications() {
+            const container = document.getElementById('notificationList');
+            container.innerHTML = notifications.length === 0
+                ? `<div class="p-8 text-center text-gray-500">No notifications</div>`
+                : '';
+
+            notifications.forEach((notif, i) => {
+                const div = document.createElement('div');
+                div.className = `p-4 rounded-2xl mx-2 mb-2 cursor-pointer ${notif.read ? 'opacity-70' : 'bg-gray-800/60'}`;
+                div.innerHTML = `
+                    <div class="flex gap-3">
+                        <i class="fa-solid ${notif.type==='success'?'fa-check-circle text-green-400':notif.type==='error'?'fa-xmark-circle text-red-400':notif.type==='warning'?'fa-triangle-exclamation text-yellow-400':'fa-info-circle text-blue-400'}"></i>
+                        <div class="flex-1">
+                            <div class="font-medium">${notif.title}</div>
+                            <div class="text-sm text-gray-400">${notif.message}</div>
+                            <div class="text-xs text-gray-500 mt-1">${new Date(notif.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
+                        </div>
+                    </div>
+                `;
+                div.onclick = () => {
+                    notifications[i].read = true;
+                    saveNotifications();
+                    updateNotificationCount();
+                    renderNotifications();
+                };
+                container.appendChild(div);
+            });
+        }
+
+        function toggleNotifications() {
+            const panel = document.getElementById('notificationPanel');
+            panel.classList.toggle('hidden');
+            if (!panel.classList.contains('hidden')) renderNotifications();
+        }
+
+        function showMessagesPanel() {
+            toggleNotifications();
+        }
+
+        function markAllRead() {
+            notifications.forEach(n => n.read = true);
+            saveNotifications();
+            updateNotificationCount();
+            renderNotifications();
+        }
+
+        function clearAllNotifications() {
+            if (confirm("Clear all notifications?")) {
+                notifications = [];
+                saveNotifications();
+                updateNotificationCount();
+                renderNotifications();
+            }
+        }
+
+        // Shutdown
+        function confirmShutdown() {
+            document.getElementById('shutdownModal').classList.remove('hidden');
+        }
+
+        function cancelShutdown() {
+            document.getElementById('shutdownModal').classList.add('hidden');
+        }
+
+        function performShutdown() {
+            cancelShutdown();
+            showMessage("Initiating system shutdown...", "info");
+
+            setTimeout(() => {
+                const shutdownScreen = document.createElement('div');
+                shutdownScreen.className = "fixed inset-0 bg-black z-[999] flex items-center justify-center flex-col gap-6";
+                shutdownScreen.innerHTML = `
+                    <i class="fa-solid fa-power-off text-red-500 text-7xl animate-pulse"></i>
+                    <h1 class="text-4xl font-bold">Shutting Down...</h1>
+                    <p class="text-gray-400">Please wait</p>
+                `;
+                document.body.appendChild(shutdownScreen);
+
+                setTimeout(() => {
+                    shutdownScreen.innerHTML = `
+                        <i class="fa-solid fa-check-circle text-green-500 text-7xl"></i>
+                        <h1 class="text-4xl font-bold">Shutdown Complete</h1>
+                        <p class="text-gray-400 mt-2">You can safely close this window.</p>
+                    `;
+                }, 2200);
+            }, 600);
+        }
+
+        // Close notification panel when clicking outside
+        document.addEventListener('click', (e) => {
+            const panel = document.getElementById('notificationPanel');
+            if (panel && !panel.classList.contains('hidden') &&
+                !e.target.closest('#notificationPanel') &&
+                !e.target.closest('button[onclick="toggleNotifications()"]')) {
+                panel.classList.add('hidden');
+            }
+        });
+
+        // Init
+        window.onload = () => {
+            updateNotificationCount();
+            renderNotifications();
+        };
+    </script>
+</body>
+</html>
+ *@
+
+<!DOCTYPE html>
+<html lang="en" class="h-full dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link href="~/styles.css" rel="stylesheet" />
+
+    <script>
+        // Initialize theme
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+            updateThemeIcon();
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.classList.contains('dark');
+
+            if (isDark) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+            updateThemeIcon();
+        }
+
+        function updateThemeIcon() {
+            const isDark = document.documentElement.classList.contains('dark');
+            const moon = document.getElementById('themeMoon');
+            const sun = document.getElementById('themeSun');
+            if (moon) moon.classList.toggle('hidden', !isDark);
+            if (sun) sun.classList.toggle('hidden', isDark);
+        }
+
+        window.onload = initTheme;
+    </script>
+</head>
+
+<body class="h-full bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-200 transition-colors duration-200">
+    <!-- Top Navbar -->
+    <header class="h-16 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 fixed w-full z-50 flex items-center px-4 md:px-6">
+        <div class="flex items-center justify-between w-full max-w-screen-2xl mx-auto">
+            <div class="flex items-center gap-x-3">
+                <button onclick="toggleMobileSidebar()" class="md:hidden p-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-2xl transition-colors">
+                    <i id="mobileToggleIcon" class="fa-solid fa-bars text-2xl"></i>
+                </button>
+                <button onclick="toggleSidebar()" class="hidden md:block p-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-2xl transition-colors">
+                    <i id="toggleIcon" class="fa-solid fa-bars text-2xl"></i>
+                </button>
+                <div class="flex items-center gap-x-3">
+                    <div class="w-8 h-8 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-bold text-xl">A</div>
+                    <span id="logoText" class="logo-text font-semibold text-xl md:text-2xl tracking-tight">AdminPro</span>
+                </div>
+            </div>
+
+            <div class="hidden md:block flex-1 max-w-md mx-8">
+                <div class="relative">
+                    <input type="text" id="searchInput"
+                           class="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-2xl py-3 pl-11 pr-4 text-sm focus:outline-none focus:border-blue-500 transition-colors"
+                           placeholder="Search anything...">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-gray-400"></i>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-x-4 md:gap-x-6">
+                <!-- Theme Toggle -->
+                <button onclick="toggleTheme()" class="p-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-2xl transition-colors">
+                    <i id="themeMoon" class="fa-solid fa-moon text-xl"></i>
+                    <i id="themeSun" class="fa-solid fa-sun text-xl hidden"></i>
+                </button>
+
+                <button onclick="toggleNotifications()" class="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-2xl transition-colors">
+                    <i class="fa-solid fa-bell text-xl"></i>
+                    <span id="notificationCount" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-[10px] rounded-full flex items-center justify-center text-white font-medium">0</span>
+                </button>
+
+                <div onclick="toggleUserMenu()" class="flex items-center gap-x-3 cursor-pointer">
+                    <div class="hidden sm:block text-right">
+                        <div class="text-sm font-semibold">Alex Rivera</div>
+                    </div>
+                    <img src="https://picsum.photos/id/64/128/128" class="w-8 h-8 md:w-9 md:h-9 rounded-2xl ring-2 ring-blue-500/30">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex h-screen pt-16">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar w-72 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex-shrink-0 overflow-hidden md:relative transition-colors">
+            <div class="pt-6 h-full flex flex-col">
+                <nav class="flex-1 px-3 space-y-1">
+                    <a href="#" onclick="setActive(this)" class="nav-link active flex items-center gap-x-3 px-5 py-3.5 rounded-2xl text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800">
+                        <i class="fa-solid fa-gauge-high w-5"></i>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                    <a href="#" onclick="setActive(this)" class="nav-link flex items-center gap-x-3 px-5 py-3.5 rounded-2xl text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800">
+                        <i class="fa-solid fa-users w-5"></i>
+                        <span class="nav-text">Users</span>
+                    </a>
+                    <a href="#" onclick="setActive(this)" class="nav-link flex items-center gap-x-3 px-5 py-3.5 rounded-2xl text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800">
+                        <i class="fa-solid fa-box w-5"></i>
+                        <span class="nav-text">Products</span>
+                    </a>
+                    <a href="#" onclick="setActive(this)" class="nav-link flex items-center gap-x-3 px-5 py-3.5 rounded-2xl text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800">
+                        <i class="fa-solid fa-cart-shopping w-5"></i>
+                        <span class="nav-text">Orders</span>
+                        <span class="ml-auto badge bg-green-500 text-green-950 text-xs px-2 py-0.5 rounded-full font-bold">48</span>
+                    </a>
+                    <a href="#" onclick="setActive(this)" class="nav-link flex items-center gap-x-3 px-5 py-3.5 rounded-2xl text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800">
+                        <i class="fa-solid fa-chart-pie w-5"></i>
+                        <span class="nav-text">Analytics</span>
+                    </a>
+                    <a href="#" onclick="setActive(this)" class="nav-link flex items-center gap-x-3 px-5 py-3.5 rounded-2xl text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800">
+                        <i class="fa-solid fa-file-invoice-dollar w-5"></i>
+                        <span class="nav-text">Finance</span>
+                    </a>
+                    <div class="h-px bg-gray-200 dark:bg-gray-800 my-6 mx-4"></div>
+                    <a href="#" onclick="setActive(this)" class="nav-link flex items-center gap-x-3 px-5 py-3.5 rounded-2xl text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800">
+                        <i class="fa-solid fa-gear w-5"></i>
+                        <span class="nav-text">Settings</span>
+                    </a>
+                    <a href="#" onclick="showMessagesPanel()" class="nav-link flex items-center gap-x-3 px-5 py-3.5 rounded-2xl text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800">
+                        <i class="fa-solid fa-envelope w-5"></i>
+                        <span class="nav-text">Messages</span>
+                    </a>
+                </nav>
+
+                <!-- Shutdown Button -->
+                <div class="p-4 border-t border-gray-200 dark:border-gray-800 mt-auto">
+                    <button onclick="confirmShutdown()"
+                            class="w-full flex items-center gap-x-3 px-5 py-3.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/50 hover:text-red-700 dark:hover:text-red-300 rounded-2xl text-sm font-medium transition-all">
+                        <i class="fa-solid fa-power-off w-5"></i>
+                        <span class="nav-text">Shutdown System</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+            <main class="main-content bg-gray-50 dark:bg-gray-950 p-4 md:p-8 flex-1 overflow-auto transition-colors">
+                <div class="max-w-screen-2xl mx-auto">
+                    <h1 class="text-3xl md:text-4xl font-bold tracking-tight">Dashboard</h1>
+                    <p class="text-gray-600 dark:text-gray-500">Welcome back, Alex.</p>
+
+                    <div class="mt-10">
+                        <h2 class="text-xl font-semibold mb-4">Test Features</h2>
+                        <div class="flex flex-wrap gap-3">
+                            <button onclick="showMessage('Operation completed successfully!', 'success')" class="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-2xl text-white">Success Toast</button>
+                            <button onclick="showMessage('Failed to connect to database', 'error')" class="bg-red-600 hover:bg-red-700 px-6 py-3 rounded-2xl text-white">Error Toast</button>
+                            <button onclick="confirmShutdown()" class="bg-red-600 hover:bg-red-700 px-6 py-3 rounded-2xl text-white">Shutdown System</button>
+                        </div>
+                    </div>
+                </div>
+                @RenderBody()
+            </main>
+
+            <footer class="h-16 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 flex items-center px-4 md:px-8 text-sm text-gray-500 shrink-0 transition-colors">
+                <div class="max-w-screen-2xl mx-auto w-full flex justify-between">
+                    <div>© 2026 AdminPro</div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed bottom-6 right-6 z-[100] flex flex-col gap-3"></div>
+
+    <!-- Notification Panel -->
+    <div id="notificationPanel" class="hidden fixed top-20 right-6 w-96 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-3xl shadow-2xl z-50 overflow-hidden transition-colors">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+            <h3 class="font-semibold">Notifications</h3>
+            <div class="flex gap-2">
+                <button onclick="markAllRead()" class="text-xs px-3 py-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl">Mark all read</button>
+                <button onclick="clearAllNotifications()" class="text-xs px-3 py-1 text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl">Clear all</button>
+            </div>
+        </div>
+        <div id="notificationList" class="max-h-[420px] overflow-auto p-2"></div>
+    </div>
+
+    <!-- Shutdown Modal -->
+    <div id="shutdownModal" class="hidden fixed inset-0 bg-black/70 dark:bg-black/80 flex items-center justify-center z-[200]">
+        <div class="bg-white dark:bg-gray-900 rounded-3xl p-8 w-full max-w-sm border border-red-500/30 shadow-xl">
+            <div class="text-center">
+                <i class="fa-solid fa-power-off text-6xl text-red-500 mb-6"></i>
+                <h2 class="text-2xl font-bold mb-2">Shutdown System?</h2>
+                <p class="text-gray-600 dark:text-gray-400 mb-8">This action will terminate all active sessions.</p>
+                <div class="flex gap-4">
+                    <button onclick="cancelShutdown()" class="flex-1 py-3.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-2xl">Cancel</button>
+                    <button onclick="performShutdown()" class="flex-1 py-3.5 bg-red-600 hover:bg-red-700 rounded-2xl font-semibold text-white">Shutdown Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sidebar controls
+        let isCollapsed = false;
+        let isMobileOpen = false;
+
+        function toggleSidebar() {
+            isCollapsed = !isCollapsed;
+            const sidebar = document.getElementById('sidebar');
+            const logoText = document.getElementById('logoText');
+            const toggleIcon = document.getElementById('toggleIcon');
+            if (isCollapsed) {
+                sidebar.classList.add('sidebar-collapsed');
+                logoText.style.opacity = '0';
+                toggleIcon.classList.replace('fa-bars', 'fa-bars-staggered');
+            } else {
+                sidebar.classList.remove('sidebar-collapsed');
+                logoText.style.opacity = '1';
+                toggleIcon.classList.replace('fa-bars-staggered', 'fa-bars');
+            }
+        }
+
+        function toggleMobileSidebar() {
+            isMobileOpen = !isMobileOpen;
+            document.getElementById('sidebar').classList.toggle('open', isMobileOpen);
+        }
+
+        function setActive(el) {
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        // Notification System
+        let notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+
+        function saveNotifications() {
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+        }
+
+        function updateNotificationCount() {
+            const unread = notifications.filter(n => !n.read).length;
+            const countEl = document.getElementById('notificationCount');
+            countEl.textContent = unread || '';
+            countEl.style.display = unread ? 'flex' : 'none';
+        }
+
+        function showMessage(text, type = 'info', title = '') {
+            const toast = document.createElement('div');
+            const bg = type === 'success' ? 'bg-green-600' : type === 'error' ? 'bg-red-600' : type === 'warning' ? 'bg-yellow-600' : 'bg-blue-600';
+            toast.className = `px-6 py-4 rounded-2xl shadow-2xl flex items-start gap-3 w-80 text-white ${bg}`;
+            toast.innerHTML = `
+                <i class="fa-solid ${type==='success'?'fa-check-circle':type==='error'?'fa-xmark-circle':type==='warning'?'fa-triangle-exclamation':'fa-info-circle'} mt-0.5"></i>
+                <div class="flex-1">
+                    ${title ? `<div class="font-semibold">${title}</div>` : ''}
+                    <div>${text}</div>
+                </div>
+            `;
+            document.getElementById('toastContainer').appendChild(toast);
+
+            notifications.unshift({
+                id: Date.now(),
+                title: title || type.charAt(0).toUpperCase() + type.slice(1),
+                message: text,
+                type,
+                timestamp: new Date().toISOString(),
+                read: false
+            });
+
+            saveNotifications();
+            updateNotificationCount();
+            renderNotifications();
+
+            setTimeout(() => {
+                toast.style.transition = 'all 0.3s';
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(20px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        function renderNotifications() {
+            const container = document.getElementById('notificationList');
+            container.innerHTML = notifications.length === 0
+                ? `<div class="p-8 text-center text-gray-500 dark:text-gray-400">No notifications</div>`
+                : '';
+
+            notifications.forEach((notif, i) => {
+                const div = document.createElement('div');
+                div.className = `p-4 rounded-2xl mx-2 mb-2 cursor-pointer ${notif.read ? 'opacity-70' : 'bg-gray-100 dark:bg-gray-800'}`;
+                div.innerHTML = `
+                    <div class="flex gap-3">
+                        <i class="fa-solid ${notif.type==='success'?'fa-check-circle text-green-400':notif.type==='error'?'fa-xmark-circle text-red-400':notif.type==='warning'?'fa-triangle-exclamation text-yellow-400':'fa-info-circle text-blue-400'}"></i>
+                        <div class="flex-1">
+                            <div class="font-medium">${notif.title}</div>
+                            <div class="text-sm text-gray-600 dark:text-gray-400">${notif.message}</div>
+                            <div class="text-xs text-gray-500 mt-1">${new Date(notif.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
+                        </div>
+                    </div>
+                `;
+                div.onclick = () => {
+                    notifications[i].read = true;
+                    saveNotifications();
+                    updateNotificationCount();
+                    renderNotifications();
+                };
+                container.appendChild(div);
+            });
+        }
+
+        function toggleNotifications() {
+            const panel = document.getElementById('notificationPanel');
+            panel.classList.toggle('hidden');
+            if (!panel.classList.contains('hidden')) renderNotifications();
+        }
+
+        function showMessagesPanel() {
+            toggleNotifications();
+        }
+
+        function markAllRead() {
+            notifications.forEach(n => n.read = true);
+            saveNotifications();
+            updateNotificationCount();
+            renderNotifications();
+        }
+
+        function clearAllNotifications() {
+            if (confirm("Clear all notifications?")) {
+                notifications = [];
+                saveNotifications();
+                updateNotificationCount();
+                renderNotifications();
+            }
+        }
+
+        // Shutdown
+        function confirmShutdown() {
+            document.getElementById('shutdownModal').classList.remove('hidden');
+        }
+
+        function cancelShutdown() {
+            document.getElementById('shutdownModal').classList.add('hidden');
+        }
+
+        function performShutdown() {
+            cancelShutdown();
+            showMessage("Initiating system shutdown...", "info");
+            setTimeout(() => {
+                const shutdownScreen = document.createElement('div');
+                shutdownScreen.className = "fixed inset-0 bg-black z-[999] flex items-center justify-center flex-col gap-6";
+                shutdownScreen.innerHTML = `
+                    <i class="fa-solid fa-power-off text-red-500 text-7xl animate-pulse"></i>
+                    <h1 class="text-4xl font-bold text-white">Shutting Down...</h1>
+                    <p class="text-gray-400">Please wait</p>
+                `;
+                document.body.appendChild(shutdownScreen);
+                setTimeout(() => {
+                    shutdownScreen.innerHTML = `
+                        <i class="fa-solid fa-check-circle text-green-500 text-7xl"></i>
+                        <h1 class="text-4xl font-bold text-white">Shutdown Complete</h1>
+                        <p class="text-gray-400 mt-2">You can safely close this window.</p>
+                    `;
+                }, 2200);
+            }, 600);
+        }
+
+        // Close notification panel when clicking outside
+        document.addEventListener('click', (e) => {
+            const panel = document.getElementById('notificationPanel');
+            if (panel && !panel.classList.contains('hidden') &&
+                !e.target.closest('#notificationPanel') &&
+                !e.target.closest('button[onclick="toggleNotifications()"]')) {
+                panel.classList.add('hidden');
+            }
+        });
+
+        // Init
+        window.onload = () => {
+            initTheme();
+            updateNotificationCount();
+            renderNotifications();
+        };
+    </script>
+</body>
 </html>

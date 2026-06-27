@@ -40,4 +40,129 @@
     <div class="tab-pane fade" id="pills-perdiem" role="tabpanel" aria-labelledby="pills-perdiem-tab"></div>
 </div>
 
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdminPro - Settings Tabs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css"> <!-- Use your existing styles.css -->
+</head>
+<body class="h-full bg-gray-950 text-gray-200">
+    <div class="max-w-screen-2xl mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-8">System Settings</h1>
 
+        <!-- Tab Navigation -->
+        <div class="border-b border-gray-800 pb-1 mb-6">
+            <div class="flex items-center gap-2 overflow-x-auto pb-3 hide-scrollbar">
+                <button onclick="switchTab(0)" class="tab-button active flex items-center gap-x-3 px-6 py-3.5 bg-gray-900 hover:bg-gray-800 border border-gray-700 hover:border-gray-600 rounded-2xl text-sm font-medium whitespace-nowrap transition-all">
+                    <i class="fas fa-object-group text-red-400"></i>
+                    Categories
+                </button>
+
+                <button onclick="switchTab(1)" class="tab-button flex items-center gap-x-3 px-6 py-3.5 bg-gray-900 hover:bg-gray-800 border border-gray-700 hover:border-gray-600 rounded-2xl text-sm font-medium whitespace-nowrap transition-all">
+                    <i class="fas fa-balance-scale text-red-400"></i>
+                    Unit of Measurements
+                </button>
+
+                <button onclick="switchTab(2)" class="tab-button flex items-center gap-x-3 px-6 py-3.5 bg-gray-900 hover:bg-gray-800 border border-gray-700 hover:border-gray-600 rounded-2xl text-sm font-medium whitespace-nowrap transition-all">
+                    <i class="fas fa-institution text-blue-400"></i>
+                    Departments
+                </button>
+
+                <button onclick="switchTab(3)" class="tab-button flex items-center gap-x-3 px-6 py-3.5 bg-gray-900 hover:bg-gray-800 border border-gray-700 hover:border-gray-600 rounded-2xl text-sm font-medium whitespace-nowrap transition-all">
+                    <i class="fas fa-plane-departure text-yellow-400"></i>
+                    Transport Modes
+                </button>
+
+                <button onclick="switchTab(4)" class="tab-button flex items-center gap-x-3 px-6 py-3.5 bg-gray-900 hover:bg-gray-800 border border-gray-700 hover:border-gray-600 rounded-2xl text-sm font-medium whitespace-nowrap transition-all">
+                    <i class="fas fa-cash-register text-gray-400"></i>
+                    Cash Limit
+                </button>
+
+                <button onclick="switchTab(5)" class="tab-button flex items-center gap-x-3 px-6 py-3.5 bg-gray-900 hover:bg-gray-800 border border-gray-700 hover:border-gray-600 rounded-2xl text-sm font-medium whitespace-nowrap transition-all">
+                    <i class="fas fa-cart-shopping text-gray-400"></i>
+                    Fees & Charges
+                </button>
+
+                <button onclick="switchTab(6)" class="tab-button flex items-center gap-x-3 px-6 py-3.5 bg-gray-900 hover:bg-gray-800 border border-gray-700 hover:border-gray-600 rounded-2xl text-sm font-medium whitespace-nowrap transition-all">
+                    <i class="fas fa-money-check-dollar text-purple-400"></i>
+                    Per Diems
+                </button>
+            </div>
+        </div>
+
+        <!-- Tab Contents -->
+        <div class="tab-content">
+            <div id="tab-0" class="tab-pane active bg-gray-900 rounded-3xl p-8 border border-gray-700">
+                <h2 class="text-2xl font-semibold mb-4">📋 Categories</h2>
+                <p class="text-gray-400">Content for Categories will go here...</p>
+            </div>
+            <div id="tab-1" class="tab-pane hidden bg-gray-900 rounded-3xl p-8 border border-gray-700">
+                <h2 class="text-2xl font-semibold mb-4">⚖️ Unit of Measurements</h2>
+                <p class="text-gray-400">Content for Units of Measurement will go here...</p>
+            </div>
+            <div id="tab-2" class="tab-pane hidden bg-gray-900 rounded-3xl p-8 border border-gray-700">
+                <h2 class="text-2xl font-semibold mb-4">🏢 Departments</h2>
+                <p class="text-gray-400">Content for Departments will go here...</p>
+            </div>
+            <div id="tab-3" class="tab-pane hidden bg-gray-900 rounded-3xl p-8 border border-gray-700">
+                <h2 class="text-2xl font-semibold mb-4">✈️ Transport Modes</h2>
+                <p class="text-gray-400">Content for Transport Modes will go here...</p>
+            </div>
+            <div id="tab-4" class="tab-pane hidden bg-gray-900 rounded-3xl p-8 border border-gray-700">
+                <h2 class="text-2xl font-semibold mb-4">💵 Cash Limit</h2>
+                <p class="text-gray-400">Content for Cash Limit will go here...</p>
+            </div>
+            <div id="tab-5" class="tab-pane hidden bg-gray-900 rounded-3xl p-8 border border-gray-700">
+                <h2 class="text-2xl font-semibold mb-4">🛒 Fees & Charges</h2>
+                <p class="text-gray-400">Content for Fees & Charges will go here...</p>
+            </div>
+            <div id="tab-6" class="tab-pane hidden bg-gray-900 rounded-3xl p-8 border border-gray-700">
+                <h2 class="text-2xl font-semibold mb-4">💰 Per Diems</h2>
+                <p class="text-gray-400">Content for Per Diems will go here...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabIndex) {
+            // Remove active from all buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Add active to selected button
+            document.querySelectorAll('.tab-button')[tabIndex].classList.add('active');
+
+            // Hide all tab panes
+            document.querySelectorAll('.tab-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+
+            // Show selected tab
+            document.getElementById(`tab-${tabIndex}`).classList.remove('hidden');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            switchTab(0);
+        });
+    </script>
+
+    <style>
+        .tab-button.active {
+            background-color: #1f2937 !important;
+            border-color: #60a5fa !important;
+            color: #60a5fa !important;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</body>
+</html>
