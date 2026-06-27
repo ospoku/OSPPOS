@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using DMX.Models;
-using DMX.ViewComponents;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 
 namespace OSPPOS.Controllers
@@ -14,13 +11,7 @@ namespace OSPPOS.Controllers
         public IActionResult Index()
         {
             
-          //var breadcrumbs   = new List<BreadcrumbItem>
-          //  {
-          //      new BreadcrumbItem{Title="Home", Url="/"},
-          //      new BreadcrumbItem{Title="Memos", Url="/ViewMemos"}
-          //  };
-
-          //  ViewBag.BreadcrumbItems = breadcrumbs;
+  
 
             return View();
         }

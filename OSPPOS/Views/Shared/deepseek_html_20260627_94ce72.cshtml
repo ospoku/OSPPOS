@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+  <title>Dim Admin · Clear Read Messages</title>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Font Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400..700;1,14..32,400..700&display=swap" rel="stylesheet">
+    <link href="~/lib/fontsource/roboto-mono/files/roboto-mono-cyrillic-100-normal.woff2" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #15171e;
+      color: #e8edf5;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .dashboard {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      grid-template-rows: 100vh;
+      height: 100vh;
+      background: #1a1d27;
+      transition: grid-template-columns 0.25s ease;
+    }
+    .dashboard.collapsed {
+      grid-template-columns: 72px 1fr;
+    }
+
+    /* ----- SIDEBAR (collapsible) ----- */
+    .sidebar {
+      background: #0f1119;
+      color: #b6c0d0;
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem 0.6rem;
+      border-right: 1px solid #2a2e3a;
+      overflow: hidden;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      transition: padding 0.2s;
+    }
+    .dashboard.collapsed .sidebar { padding: 1.5rem 0.3rem; }
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #f0f4fe;
+      padding: 0 0.6rem 1rem 0.6rem;
+      border-bottom: 1px solid #282e3c;
+      white-space: nowrap;
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+    .dashboard.collapsed .sidebar-brand span {
+      opacity: 0;
+      width: 0;
+      display: none;
+    }
+    .sidebar-brand i { color: #6c8cff; font-size: 1.6rem; min-width: 2rem; }
+    .sidebar-nav {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      overflow: hidden;
+    }
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 0.7rem 0.8rem;
+      border-radius: 12px;
+      color: #b0bacf;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: all 0.15s;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .dashboard.collapsed .sidebar-nav a span {
+      opacity: 0;
+      width: 0;
+      display: none;
+    }
+    .sidebar-nav a i { width: 1.5rem; font-size: 1.1rem; text-align: center; min-width: 1.5rem; }
+    .sidebar-nav a:hover { background: #262d3d; color: #eef3ff; }
+    .sidebar-nav a.active { background: #2a3245; color: #d6e2ff; box-shadow: inset 3px 0 0 #6c8cff; }
+    .sidebar-nav .nav-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #5e6a7e;
+      margin: 0.8rem 0 0.3rem 0.8rem;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .dashboard.collapsed .sidebar-nav .nav-label {
+      opacity: 0; height: 0; margin: 0; display: none;
+    }
+    .sidebar-shutdown {
+      margin-top: auto;
+      border-top: 1px solid #282e3c;
+      padding-top: 1rem;
+    }
+    .sidebar-shutdown button {
+      width: 100%;
+      background: #1e2433;
+      border: none;
+      color: #f0a0a0;
+      padding: 0.7rem 0.6rem;
+      border-radius: 40px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      border: 1px solid #3c3140;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .dashboard.collapsed .sidebar-shutdown button span {
+      opacity: 0; width: 0; display: none;
+    }
+    .sidebar-shutdown button i { font-size: 1rem; min-width: 1.5rem; }
+    .sidebar-shutdown button:hover { background: #3b2c3a; color: #ffbaba; border-color: #9f6b7a; }
+
+    .sidebar-collapse-toggle {
+      background: transparent;
+      border: none;
+      color: #7e8aa8;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0.6rem 0.8rem;
+      border-radius: 40px;
+      transition: background 0.2s;
+      margin-top: 0.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      width: 100%;
+    }
+    .sidebar-collapse-toggle:hover { background: #202636; color: #c8d4f0; }
+    .dashboard.collapsed .sidebar-collapse-toggle span { display: none; }
+    .sidebar-collapse-toggle i { font-size: 1rem; min-width: 1.5rem; transition: transform 0.3s; }
+    .dashboard.collapsed .sidebar-collapse-toggle i { transform: rotate(180deg); }
+
+    /* ----- MAIN AREA ----- */
+    .main-area {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+      background: #1a1d27;
+      position: relative;
+    }
+
+    /* HEADER */
+    .header {
+      background: #181c26;
+      padding: 0.8rem 2rem;
+      border-bottom: 1px solid #2a2f3d;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+      min-height: 70px;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.5rem;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .header-left .menu-toggle {
+      background: transparent;
+      border: none;
+      color: #b6c4dc;
+      font-size: 1.4rem;
+      cursor: pointer;
+      display: none;
+    }
+    .header-left h2 {
+      font-weight: 500;
+      font-size: 1.3rem;
+      color: #e8effa;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1.8rem;
+    }
+    .header-right .icon-wrap {
+      position: relative;
+      cursor: pointer;
+      color: #b6c4dc;
+      font-size: 1.3rem;
+      transition: color 0.2s;
+    }
+    .header-right .icon-wrap:hover { color: #d6e2ff; }
+    .header-right .icon-wrap .badge {
+      position: absolute;
+      top: -8px;
+      right: -10px;
+      background: #e85a6f;
+      color: #fff;
+      font-size: 0.6rem;
+      font-weight: 600;
+      padding: 0.2rem 0.5rem;
+      border-radius: 40px;
+      border: 2px solid #181c26;
+      line-height: 1.2;
+      min-width: 18px;
+      text-align: center;
+    }
+    .header-right .icon-wrap .badge-blue {
+      background: #4a8af4;
+    }
+    .header-right .profile {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: #cdd8ec;
+      font-weight: 500;
+    }
+    .header-right .profile i { font-size: 1.6rem; color: #8596b5; }
+
+    /* CONTENT (scrollable) */
+    .content-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.8rem 2rem 1.5rem 2rem;
+      background: #1a1d27;
+      scrollbar-width: thin;
+      scrollbar-color: #3d455a #1a1d27;
+    }
+    .content-scroll::-webkit-scrollbar { width: 6px; }
+    .content-scroll::-webkit-scrollbar-track { background: #1a1d27; }
+    .content-scroll::-webkit-scrollbar-thumb { background: #3d455a; border-radius: 20px; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .stat-card {
+      background: #222837;
+      padding: 1.5rem 1.2rem;
+      border-radius: 24px;
+      border: 1px solid #2d3445;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+    .stat-card .stat-title { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; color: #8f9bb5; }
+    .stat-card .stat-value { font-size: 2.2rem; font-weight: 600; color: #eef3ff; margin: 0.4rem 0 0.1rem; }
+    .stat-card .stat-change { font-size: 0.8rem; color: #7be0b0; }
+    .chart-placeholder {
+      background: #222837;
+      border-radius: 24px;
+      padding: 2rem 1.5rem;
+      border: 1px solid #2d3445;
+      margin-bottom: 2rem;
+    }
+    .chart-placeholder .chart-bar {
+      display: flex;
+      align-items: flex-end;
+      gap: 1rem;
+      height: 150px;
+      margin-top: 0.5rem;
+    }
+    .chart-placeholder .bar {
+      flex: 1;
+      background: #3a4460;
+      border-radius: 12px 12px 4px 4px;
+      height: calc(40% + 10% * var(--h, 0));
+      min-height: 16px;
+      background: linear-gradient(180deg, #6c8cff, #4a62b0);
+    }
+    .chart-placeholder .bar:nth-child(1) { --h: 0.8; }
+    .chart-placeholder .bar:nth-child(2) { --h: 1.2; }
+    .chart-placeholder .bar:nth-child(3) { --h: 0.4; }
+    .chart-placeholder .bar:nth-child(4) { --h: 1.6; }
+    .chart-placeholder .bar:nth-child(5) { --h: 0.9; }
+    .chart-placeholder .bar:nth-child(6) { --h: 1.3; }
+    .chart-placeholder .bar:nth-child(7) { --h: 0.7; }
+
+    .activity-list {
+      background: #222837;
+      border-radius: 24px;
+      padding: 1.2rem 1.5rem;
+      border: 1px solid #2d3445;
+    }
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.9rem 0;
+      border-bottom: 1px solid #2e3548;
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-item i { width: 2rem; color: #6c8cff; }
+    .activity-item .activity-text { flex: 1; }
+    .activity-item .activity-time { color: #7d8aa5; font-size: 0.8rem; }
+
+    /* FOOTER */
+    .footer {
+      background: #181c26;
+      border-top: 1px solid #2a2f3d;
+      padding: 0.9rem 2rem;
+      flex-shrink: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      color: #8a98b5;
+      font-size: 0.85rem;
+      min-height: 56px;
+    }
+    .footer a { color: #8a98b5; text-decoration: none; margin: 0 0.5rem; }
+    .footer a:hover { color: #bcc9e5; }
+
+    /* ----- SHARED TRAY STYLES ----- */
+    .tray {
+      position: fixed;
+      top: 0;
+      right: -420px;
+      width: 400px;
+      max-width: 92vw;
+      height: 100vh;
+      background: #151a24;
+      border-left: 1px solid #2e3548;
+      box-shadow: -8px 0 30px rgba(0,0,0,0.6);
+      z-index: 1200;
+      transition: right 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem 1.2rem;
+      overflow: hidden;
+    }
+    .tray.open {
+      right: 0;
+    }
+    .tray-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #2a2f3d;
+      margin-bottom: 1.2rem;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .tray-header .tray-title {
+      font-weight: 500;
+      color: #e8effa;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .tray-header .tray-title i { color: #6c8cff; }
+    .tray-header .tray-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .tray-header .tray-actions .clear-read-btn {
+      background: #2a3245;
+      border: none;
+      color: #b6c4dc;
+      padding: 0.3rem 0.8rem;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .tray-header .tray-actions .clear-read-btn:hover {
+      background: #3d4660;
+      color: #eef3ff;
+    }
+    .tray-close {
+      background: transparent;
+      border: none;
+      color: #9aabca;
+      font-size: 1.6rem;
+      cursor: pointer;
+      padding: 0 0.2rem;
+    }
+    .tray-close:hover { color: #d6e2ff; }
+    .tray-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      padding-right: 0.3rem;
+    }
+    .tray-list::-webkit-scrollbar { width: 4px; }
+    .tray-list::-webkit-scrollbar-track { background: #151a24; }
+    .tray-list::-webkit-scrollbar-thumb { background: #3d455a; border-radius: 20px; }
+    .tray-empty {
+      color: #6b7b9a;
+      text-align: center;
+      padding: 2rem 0;
+      font-size: 0.9rem;
+    }
+
+    /* message item */
+    .msg-item {
+      background: #1e2533;
+      padding: 0.9rem 1rem;
+      border-radius: 18px;
+      border-left: 4px solid #4a8af4;
+      display: flex;
+      gap: 0.8rem;
+      align-items: flex-start;
+    }
+    .msg-item .msg-avatar {
+      background: #2d3548;
+      border-radius: 40px;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #a8b9db;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .msg-item .msg-body { flex: 1; }
+    .msg-item .msg-body .msg-name { font-weight: 500; color: #d6e2ff; font-size: 0.9rem; }
+    .msg-item .msg-body .msg-text { font-size: 0.85rem; color: #bcc9e0; margin-top: 0.15rem; }
+    .msg-item .msg-body .msg-time { font-size: 0.7rem; color: #6b7b9a; margin-top: 0.2rem; }
+    .msg-item.unread { border-left-color: #e85a6f; background: #202838; }
+    .msg-item.unread .msg-name { color: #f0f4fe; }
+
+    /* notification item */
+    .notif-item {
+      background: #1e2533;
+      padding: 0.9rem 1rem;
+      border-radius: 18px;
+      border-left: 4px solid #f5b86e;
+      display: flex;
+      gap: 0.8rem;
+      align-items: flex-start;
+    }
+    .notif-item .notif-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 40px;
+      background: #2d3548;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #f5b86e;
+      flex-shrink: 0;
+    }
+    .notif-item .notif-body { flex: 1; }
+    .notif-item .notif-body .notif-title { font-weight: 500; color: #d6e2ff; font-size: 0.9rem; }
+    .notif-item .notif-body .notif-desc { font-size: 0.85rem; color: #bcc9e0; margin-top: 0.15rem; }
+    .notif-item .notif-body .notif-time { font-size: 0.7rem; color: #6b7b9a; margin-top: 0.2rem; }
+    .notif-item.unread { border-left-color: #e85a6f; background: #202838; }
+    .notif-item.unread .notif-title { color: #f0f4fe; }
+
+    .tray-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1199;
+    }
+    .tray-overlay.show { display: block; }
+
+    /* mobile */
+    @media screen and (max-width: 820px) {
+      .dashboard { grid-template-columns: 1fr !important; }
+      .sidebar {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 260px;
+        height: 100vh;
+        z-index: 999;
+        background: #0f1119;
+        border-right: 1px solid #2a2e3a;
+        box-shadow: 4px 0 20px rgba(0,0,0,0.6);
+        padding: 1.5rem 0.8rem;
+      }
+      .sidebar.open { display: flex; }
+      .dashboard.collapsed .sidebar { padding: 1.5rem 0.8rem; }
+      .dashboard.collapsed .sidebar-brand span,
+      .dashboard.collapsed .sidebar-nav a span,
+      .dashboard.collapsed .sidebar-shutdown button span,
+      .dashboard.collapsed .sidebar-collapse-toggle span,
+      .dashboard.collapsed .sidebar-nav .nav-label {
+        display: inline !important;
+        opacity: 1 !important;
+        width: auto !important;
+        height: auto !important;
+      }
+      .header-left .menu-toggle { display: block; }
+      .header { padding: 0.8rem 1.2rem; }
+      .content-scroll { padding: 1.2rem; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .tray { width: 340px; }
+    }
+    @media screen and (max-width: 480px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .header-right .profile span { display: none; }
+      .footer { flex-direction: column; align-items: center; text-align: center; }
+      .tray { width: 100vw; max-width: 100vw; }
+    }
+    .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 998; }
+    .overlay.show { display: block; }
+  </style>
+</head>
+<body>
+<div class="dashboard" id="dashboardGrid">
+  <div id="overlay" class="overlay" onclick="closeSidebar()"></div>
+  <div id="trayOverlay" class="tray-overlay" onclick="closeAllTrays()"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><i class="fas fa-cubes"></i><span>DimCore</span></div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Main</div>
+      <a href="#" class="active"><i class="fas fa-chart-pie"></i><span> Dashboard</span></a>
+      <a href="#"><i class="fas fa-users"></i><span> Users</span></a>
+      <a href="#"><i class="fas fa-folder"></i><span> Projects</span></a>
+      <div class="nav-label">Management</div>
+      <a href="#"><i class="fas fa-cog"></i><span> Settings</span></a>
+      <a href="#"><i class="fas fa-file-alt"></i><span> Reports</span></a>
+      <a href="#"><i class="fas fa-calendar"></i><span> Calendar</span></a>
+    </nav>
+    <button class="sidebar-collapse-toggle" id="collapseToggle"><i class="fas fa-chevron-left"></i><span> Collapse</span></button>
+    <div class="sidebar-shutdown">
+      <button id="shutdownBtn"><i class="fas fa-power-off"></i><span> Shutdown</span></button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <header class="header">
+      <div class="header-left">
+        <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+        <h2><i class="fas fa-tachometer-alt" style="color:#6c8cff; margin-right: 0.4rem;"></i>Dashboard</h2>
+      </div>
+      <div class="header-right">
+        <div class="icon-wrap" id="messageTrayIcon">
+          <i class="fas fa-envelope"></i>
+          <span class="badge badge-blue" id="msgBadge">4</span>
+        </div>
+        <div class="icon-wrap" id="notificationTrayIcon">
+          <i class="fas fa-bell"></i>
+          <span class="badge" id="notifBadge">3</span>
+        </div>
+        <div class="profile"><i class="fas fa-user-circle"></i><span>Admin</span></div>
+      </div>
+    </header>
+
+    <main class="content-scroll">
+      <section class="stats-grid">
+        <div class="stat-card"><div class="stat-title">Revenue</div><div class="stat-value">$12.4k</div><div class="stat-change"><i class="fas fa-arrow-up"></i> +8.2%</div></div>
+        <div class="stat-card"><div class="stat-title">Orders</div><div class="stat-value">356</div><div class="stat-change"><i class="fas fa-arrow-up"></i> +12%</div></div>
+        <div class="stat-card"><div class="stat-title">Visitors</div><div class="stat-value">2.1k</div><div class="stat-change"><i class="fas fa-arrow-down" style="color:#f28b82;"></i> -3.4%</div></div>
+        <div class="stat-card"><div class="stat-title">Conversion</div><div class="stat-value">7.8%</div><div class="stat-change"><i class="fas fa-arrow-up"></i> +1.2%</div></div>
+      </section>
+      <div class="chart-placeholder">
+        <div style="display: flex; justify-content: space-between;"><span>Weekly activity</span><span style="color:#8f9bb5;"><i class="far fa-calendar-alt"></i> Apr 20–26</span></div>
+        <div class="chart-bar"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
+      </div>
+      <div class="activity-list">
+        <h4 style="margin-bottom: 0.5rem; font-weight: 500;"><i class="fas fa-stream" style="margin-right: 0.5rem;"></i>Recent activity</h4>
+        <div class="activity-item"><i class="fas fa-user-plus"></i><span class="activity-text">New user <strong>Maria</strong> registered</span><span class="activity-time">2 min ago</span></div>
+        <div class="activity-item"><i class="fas fa-shopping-cart"></i><span class="activity-text">Order #1024 shipped</span><span class="activity-time">1 hour ago</span></div>
+        <div class="activity-item"><i class="fas fa-exclamation-triangle" style="color:#f5b86e;"></i><span class="activity-text">Server CPU warning</span><span class="activity-time">3 hours ago</span></div>
+        <div class="activity-item"><i class="fas fa-check-circle" style="color:#7be0b0;"></i><span class="activity-text">Backup completed</span><span class="activity-time">6 hours ago</span></div>
+      </div>
+      <div style="height: 2rem;"></div>
+    </main>
+
+    <footer class="footer">
+      <span>© 2026 DimCore · ASP.NET Core MVC</span>
+      <span><a href="#"><i class="fab fa-github"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fas fa-envelope"></i></a><span style="margin-left: 0.8rem;">v2.4.0</span></span>
+    </footer>
+  </div>
+</div>
+
+<!-- MESSAGE TRAY -->
+<div class="tray" id="messageTray">
+  <div class="tray-header">
+    <div class="tray-title"><i class="fas fa-envelope"></i> Messages <span id="msgCount" style="font-size:0.8rem; color:#8f9bb5; font-weight:400;">(4)</span></div>
+    <div class="tray-actions">
+      <button class="clear-read-btn" id="clearMsgRead"><i class="fas fa-check-double"></i> Clear read</button>
+      <button class="tray-close" id="closeMsgTray"><i class="fas fa-times"></i></button>
+    </div>
+  </div>
+  <div class="tray-list" id="msgList">
+    <div class="msg-item unread" data-read="false"><div class="msg-avatar">JD</div><div class="msg-body"><div class="msg-name">John Doe</div><div class="msg-text">Hey, can you review the pull request?</div><div class="msg-time">2 min ago</div></div></div>
+    <div class="msg-item" data-read="true"><div class="msg-avatar">SM</div><div class="msg-body"><div class="msg-name">Sarah Miller</div><div class="msg-text">Meeting at 3pm about the Q2 roadmap.</div><div class="msg-time">1 hour ago</div></div></div>
+    <div class="msg-item unread" data-read="false"><div class="msg-avatar">AK</div><div class="msg-body"><div class="msg-name">Alex Kim</div><div class="msg-text">New deployment is ready on staging.</div><div class="msg-time">3 hours ago</div></div></div>
+    <div class="msg-item" data-read="true"><div class="msg-avatar">LC</div><div class="msg-body"><div class="msg-name">Lisa Chen</div><div class="msg-text">Updated the design files in Figma.</div><div class="msg-time">Yesterday</div></div></div>
+    <div class="msg-item" data-read="true"><div class="msg-avatar">TR</div><div class="msg-body"><div class="msg-name">Tom Rivers</div><div class="msg-text">Could you check the analytics dashboard?</div><div class="msg-time">Yesterday</div></div></div>
+  </div>
+</div>
+
+<!-- NOTIFICATION TRAY -->
+<div class="tray" id="notificationTray">
+  <div class="tray-header">
+    <div class="tray-title"><i class="fas fa-bell"></i> Notifications <span id="notifCount" style="font-size:0.8rem; color:#8f9bb5; font-weight:400;">(3)</span></div>
+    <div class="tray-actions">
+      <button class="clear-read-btn" id="clearNotifRead"><i class="fas fa-check-double"></i> Clear read</button>
+      <button class="tray-close" id="closeNotifTray"><i class="fas fa-times"></i></button>
+    </div>
+  </div>
+  <div class="tray-list" id="notifList">
+    <div class="notif-item unread" data-read="false"><div class="notif-icon"><i class="fas fa-user-plus"></i></div><div class="notif-body"><div class="notif-title">New user registered</div><div class="notif-desc">Maria Johnson signed up with email</div><div class="notif-time">5 min ago</div></div></div>
+    <div class="notif-item unread" data-read="false"><div class="notif-icon"><i class="fas fa-exclamation-triangle" style="color:#f5b86e;"></i></div><div class="notif-body"><div class="notif-title">High CPU usage</div><div class="notif-desc">Server load at 87% for 10 minutes</div><div class="notif-time">1 hour ago</div></div></div>
+    <div class="notif-item" data-read="true"><div class="notif-icon"><i class="fas fa-check-circle" style="color:#7be0b0;"></i></div><div class="notif-body"><div class="notif-title">Deployment successful</div><div class="notif-desc">v2.3.1 deployed to production</div><div class="notif-time">3 hours ago</div></div></div>
+    <div class="notif-item" data-read="true"><div class="notif-icon"><i class="fas fa-credit-card"></i></div><div class="notif-body"><div class="notif-title">Payment received</div><div class="notif-desc">Invoice #1042 paid by Acme Corp</div><div class="notif-time">Yesterday</div></div></div>
+    <div class="notif-item" data-read="true"><div class="notif-icon"><i class="fas fa-code-branch"></i></div><div class="notif-body"><div class="notif-title">Pull request merged</div><div class="notif-desc">Feature/auth updated in main branch</div><div class="notif-time">Yesterday</div></div></div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const menuToggle = document.getElementById('menuToggle');
+    const dashboardGrid = document.getElementById('dashboardGrid');
+    const collapseToggle = document.getElementById('collapseToggle');
+
+    // ----- SIDEBAR COLLAPSE -----
+    let isCollapsed = false;
+    function toggleCollapse() {
+      isCollapsed = !isCollapsed;
+      dashboardGrid.classList.toggle('collapsed', isCollapsed);
+      const icon = collapseToggle.querySelector('i');
+      const span = collapseToggle.querySelector('span');
+      if (isCollapsed) { icon.className = 'fas fa-chevron-right'; if(span) span.textContent = ' Expand'; }
+      else { icon.className = 'fas fa-chevron-left'; if(span) span.textContent = ' Collapse'; }
+      if (window.innerWidth <= 820) closeSidebar();
+    }
+    collapseToggle.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (window.innerWidth <= 820) {
+        if (sidebar.classList.contains('open')) closeSidebar();
+        else openSidebar();
+        return;
+      }
+      toggleCollapse();
+    });
+
+    // ----- MOBILE SIDEBAR -----
+    function openSidebar() { sidebar.classList.add('open'); overlay.classList.add('show'); document.body.style.overflow = 'hidden'; }
+    window.closeSidebar = function() { sidebar.classList.remove('open'); overlay.classList.remove('show'); document.body.style.overflow = ''; }
+    if (menuToggle) {
+      menuToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (sidebar.classList.contains('open')) closeSidebar();
+        else openSidebar();
+      });
+    }
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeSidebar(); closeAllTrays(); } });
+
+    // ----- TRAY HELPERS -----
+    const msgTray = document.getElementById('messageTray');
+    const notifTray = document.getElementById('notificationTray');
+    const trayOverlay = document.getElementById('trayOverlay');
+    const msgIcon = document.getElementById('messageTrayIcon');
+    const notifIcon = document.getElementById('notificationTrayIcon');
+    const closeMsg = document.getElementById('closeMsgTray');
+    const closeNotif = document.getElementById('closeNotifTray');
+    const msgBadge = document.getElementById('msgBadge');
+    const notifBadge = document.getElementById('notifBadge');
+    const msgCount = document.getElementById('msgCount');
+    const notifCount = document.getElementById('notifCount');
+
+    function updateCounts() {
+      const msgItems = document.querySelectorAll('#msgList .msg-item');
+      const unreadMsg = document.querySelectorAll('#msgList .msg-item.unread');
+      const notifItems = document.querySelectorAll('#notifList .notif-item');
+      const unreadNotif = document.querySelectorAll('#notifList .notif-item.unread');
+
+      const totalMsg = msgItems.length;
+      const totalNotif = notifItems.length;
+      const unreadMsgCount = unreadMsg.length;
+      const unreadNotifCount = unreadNotif.length;
+
+      msgBadge.textContent = unreadMsgCount;
+      msgBadge.style.display = unreadMsgCount > 0 ? 'block' : 'none';
+      notifBadge.textContent = unreadNotifCount;
+      notifBadge.style.display = unreadNotifCount > 0 ? 'block' : 'none';
+
+      msgCount.textContent = `(${totalMsg})`;
+      notifCount.textContent = `(${totalNotif})`;
+    }
+
+    function clearReadItems(containerId) {
+      const container = document.getElementById(containerId);
+      const items = container.querySelectorAll('[data-read="true"]');
+      items.forEach(el => el.remove());
+      // also remove the unread class from any that might be stale
+      updateCounts();
+      // if tray is empty, show empty message
+      if (container.children.length === 0) {
+        container.innerHTML = '<div class="tray-empty">✨ All caught up! No items.</div>';
+      }
+      updateCounts();
+    }
+
+    // ----- CLEAR READ BUTTONS -----
+    document.getElementById('clearMsgRead').addEventListener('click', function() {
+      clearReadItems('msgList');
+    });
+    document.getElementById('clearNotifRead').addEventListener('click', function() {
+      clearReadItems('notifList');
+    });
+
+    // mark as read when clicking on an item (toggle for demo)
+    document.getElementById('msgList').addEventListener('click', function(e) {
+      const item = e.target.closest('.msg-item');
+      if (item) {
+        const isUnread = item.classList.contains('unread');
+        if (isUnread) {
+          item.classList.remove('unread');
+          item.dataset.read = 'true';
+          updateCounts();
+        }
+      }
+    });
+    document.getElementById('notifList').addEventListener('click', function(e) {
+      const item = e.target.closest('.notif-item');
+      if (item) {
+        const isUnread = item.classList.contains('unread');
+        if (isUnread) {
+          item.classList.remove('unread');
+          item.dataset.read = 'true';
+          updateCounts();
+        }
+      }
+    });
+
+    function closeAllTrays() {
+      msgTray.classList.remove('open');
+      notifTray.classList.remove('open');
+      trayOverlay.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+    window.closeAllTrays = closeAllTrays;
+
+    function openTray(tray) {
+      if (tray === msgTray) notifTray.classList.remove('open');
+      else msgTray.classList.remove('open');
+      tray.classList.add('open');
+      trayOverlay.classList.add('show');
+      document.body.style.overflow = 'hidden';
+      // when opening, update counts (badge may have been cleared)
+      updateCounts();
+    }
+
+    msgIcon.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (msgTray.classList.contains('open')) closeAllTrays();
+      else openTray(msgTray);
+    });
+    notifIcon.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (notifTray.classList.contains('open')) closeAllTrays();
+      else openTray(notifTray);
+    });
+    closeMsg.addEventListener('click', closeAllTrays);
+    closeNotif.addEventListener('click', closeAllTrays);
+    trayOverlay.addEventListener('click', closeAllTrays);
+
+    // ----- SHUTDOWN -----
+    document.getElementById('shutdownBtn')?.addEventListener('click', function() {
+      if (confirm('⚠️ Shutdown system? (simulated)')) alert('🛑 Shutting down ... (demo)');
+    });
+
+    // resize handler
+    window.addEventListener('resize', function() {
+      if (window.innerWidth > 820 && sidebar.classList.contains('open')) closeSidebar();
+      if (window.innerWidth > 820) {
+        if (isCollapsed) dashboardGrid.classList.add('collapsed');
+        else dashboardGrid.classList.remove('collapsed');
+      } else {
+        dashboardGrid.classList.remove('collapsed');
+        const icon = collapseToggle.querySelector('i');
+        const span = collapseToggle.querySelector('span');
+        if (icon) icon.className = 'fas fa-chevron-left';
+        if (span) span.textContent = ' Collapse';
+        isCollapsed = false;
+      }
+    });
+
+    // init counts
+    updateCounts();
+    dashboardGrid.classList.remove('collapsed');
+    const icon = collapseToggle.querySelector('i');
+    const span = collapseToggle.querySelector('span');
+    if (icon) icon.className = 'fas fa-chevron-left';
+    if (span) span.textContent = ' Collapse';
+    isCollapsed = false;
+    if (window.innerWidth <= 820) dashboardGrid.classList.remove('collapsed');
+  })();
+</script>
+</body>
+</html>

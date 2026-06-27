@@ -1,0 +1,19 @@
+{
+  "version": "3.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "font-awesome@7.0.1",
+      "destination": "wwwroot/lib/font-awesome/"
+    },
+    {
+      "library": "tom-select@2.4.3",
+      "destination": "wwwroot/lib/tom-select/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "@fontsource/roboto-mono@5.2.9",
+      "destination": "wwwroot/lib/fontsource/roboto-mono/"
+    }
+  ]
+}

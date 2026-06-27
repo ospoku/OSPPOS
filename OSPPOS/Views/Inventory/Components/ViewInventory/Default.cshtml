@@ -557,7 +557,7 @@
 @inject Microsoft.AspNetCore.DataProtection.IDataProtectionProvider DataProtectionProvider
 
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/dashboard3.cshtml";
     ViewData["Title"] = "Stock Levels";
 
     var outOfStock = Model.Products.Count(p => p.CurrentStock == 0);
