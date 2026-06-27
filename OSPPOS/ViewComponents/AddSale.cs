@@ -10,28 +10,42 @@ namespace OSPPOS.ViewComponents
 {
     public class AddSale(XContext ctx) : ViewComponent
     {
+
+
         public async Task<IViewComponentResult> InvokeAsync()
         {
+            var customers = await ctx.Customers
+                .Where(c => c.IsActive && c.AllowCredit)
+                .OrderBy(c => c.Name)
+                .ToListAsync();
+
+            var creditCustomers = customers.Select(c => new CreditInfoVM
+            {
+                CustomerId = c.CustomerId,
+                CreditLimit = c.CreditLimit,
+           
+                CurrentDebt = c.TotalDebt
+            }).ToList();
+
+            var products = await ctx.Products
+                .Include(p => p.Category)
+                .Where(p => p.IsActive && p.CurrentStock > 0)
+                .OrderBy(p => p.Category.Name)
+                .ThenBy(p => p.Name)
+                .ToListAsync();
+
             AddSaleVM addSaleVM = new()
             {
-
-                Customers = new SelectList(ctx.Customers.Where(c => c.IsActive && c.AllowCredit)
-            .OrderBy(c => c.Name),nameof(Customer.CustomerId),nameof(Customer.Name)),
-         
-
-                Products = await ctx.Products
-            .Include(p => p.Category)
-            .Where(p => p.IsActive && p.CurrentStock > 0)
-            .OrderBy(p => p.Category.Name)
-            .ThenBy(p => p.Name)
-            .ToListAsync()
+                Customers = new SelectList(customers, nameof(Customer.CustomerId), nameof(Customer.Name)),
+                CreditInfo = creditCustomers,
+                Products = products
             };
 
             return View(addSaleVM);
         }
-
-       
     }
 }
+
+  
 
     

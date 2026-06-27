@@ -1,0 +1,272 @@
+﻿<!DOCTYPE html >
+<html lang="en" class="h-full" >
+<head >
+<meta charset="UTF-8" >
+<meta name="viewport" content="width=device-width, initial-scale=1.0" >
+<title > Admin Dashboard</title >
+<script src="https://cdn.tailwindcss.com" > </script >
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" >
+<style >
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+body {
+    font-family: 'Inter', system_ui, sans-serif;
+}
+
+.sidebar {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.main-content {
+    overflow-y: auto;
+}
+
+/* Collapsed State (Desktop) */
+.sidebar-collapsed {
+    width: 68px !important;
+}
+
+    .sidebar-collapsed .nav-text {
+        display: none;
+    }
+
+    .sidebar-collapsed .badge {
+        display: none !important;
+    }
+
+    .sidebar-collapsed .nav-link {
+        justify-content: center;
+    }
+
+.logo-text {
+    transition: opacity 0.3s ease;
+}
+
+.nav-link {
+    transition: all 0.2s ease;
+}
+
+    .nav-link:hover, .nav-link.active {
+        background-color: #374151;
+        color: #60a5fa;
+    }
+
+/* Mobile Sidebar */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        top: 64px;
+        left: 0;
+        height: calc(100vh - 64px);
+        z-index: 50;
+        transform: translateX(-100%);
+        box-shadow: 10px 0 15px -3px rgb(0 0 0 / 0.3);
+    }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+}
+
+.main-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.main-content::-webkit-scrollbar-thumb {
+    background-color: #4b5563;
+    border-radius: 20px;
+}
+
+</style >
+</head >
+<body class="h-full bg-gray-950 text-gray-200" >
+<!-- Top Navbar -->
+<header class="h-16 bg-gray-900 border-b border-gray-800 fixed w-full z-50 flex items-center px-4 md:px-6" >
+<div class="flex items-center justify-between w-full max-w-screen-2xl mx-auto" >
+<div class="flex items-center gap-x-3" >
+<button onclick="toggleMobileSidebar()" class="md:hidden p-3 hover:bg-gray-800 rounded-2xl" >
+<i id="mobileToggleIcon" class="fa-solid fa-bars text-2xl" > </i >
+</button >
+
+<button onclick="toggleSidebar()" class="hidden md:block p-3 hover:bg-gray-800 rounded-2xl" >
+<i id="toggleIcon" class="fa-solid fa-bars text-2xl" > </i >
+</button >
+
+<div class="flex items-center gap-x-3" >
+<div class="w-8 h-8 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-bold text-xl" > A</div >
+<span id="logoText" class="logo-text font-semibold text-xl md:text-2xl tracking-tight" > AdminPro</span >
+</div >
+</div >
+
+<div class="hidden md:block flex-1 max-w-md mx-8" >
+<div class="relative" >
+<input type="text" id="searchInput" class="w-full bg-gray-800 border border-gray-700 rounded-2xl py-3 pl-11 pr-4 text-sm focus:outline-none focus:border-blue-500" placeholder="Search anything..." >
+<i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-gray-500" > </i >
+</div >
+</div >
+
+<div class="flex items-center gap-x-4 md:gap-x-6" >
+<button onclick="toggleNotifications()" class="relative p-2 hover:bg-gray-800 rounded-2xl" >
+<i class="fa-solid fa-bell text-xl" > </i >
+<span class="absolute top-1 right-1 w-4 h-4 bg-red-500 text-[10px] rounded-full flex items-center justify-center" > 12</span >
+</button >
+<div onclick="toggleUserMenu()" class="flex items-center gap-x-3 cursor-pointer" >
+<div class="hidden sm:block text-right" >
+<div class="text-sm font-semibold" > Alex Rivera</div >
+</div >
+<img src="https://picsum.photos/id/64/128/128" class="w-8 h-8 md:w-9 md:h-9 rounded-2xl ring-2 ring-blue-500/30" >
+</div >
+</div >
+</div >
+</header >
+
+<div class="flex h-screen pt-16" >
+<!-- Sidebar -->
+<aside id="sidebar" class="sidebar w-72 bg-gray-900 border-r border-gray-800 flex-shrink-0 overflow-hidden md:relative" >
+<div class="pt-6 h-full flex flex-col" >
+<nav class="flex-1 px-3 space-y-1" >
+<a href="#" onclick="setActive(this)" class="nav-link active flex items-center gap-x-3 px-5 py-3.5 rounded-2xl text-sm font-medium" title="Dashboard" >
+<i class="fa-solid fa-gauge-high w-5" > </i >
+<span class="nav-text" > Dashboard</span >
+</a >
+<a href="#" onclick="setActive(this)" class="nav-link flex items-center gap-x-3 px-5 py-3.5 rounded-2xl text-sm font-medium" title="Users" >
+<i class="fa-solid fa-users w-5" > </i >
+<span class="nav-text" > Users</span >
+</a >
+<a href="#" onclick="setActive(this)" class="nav-link flex items-center gap-x-3 px-5 py-3.5 rounded-2xl text-sm font-medium" title="Products" >
+<i class="fa-solid fa-box w-5" > </i >
+<span class="nav-text" > Products</span >
+</a >
+<a href="#" onclick="setActive(this)" class="nav-link flex items-center gap-x-3 px-5 py-3.5 rounded-2xl text-sm font-medium" title="Orders" >
+<i class="fa-solid fa-cart-shopping w-5" > </i >
+<span class="nav-text" > Orders</span >
+<span class="ml-auto badge bg-green-500 text-green-950 text-xs px-2 py-0.5 rounded-full font-bold" > 48</span >
+</a >
+<a href="#" onclick="setActive(this)" class="nav-link flex items-center gap-x-3 px-5 py-3.5 rounded-2xl text-sm font-medium" title="Analytics" >
+<i class="fa-solid fa-chart-pie w-5" > </i >
+<span class="nav-text" > Analytics</span >
+</a >
+<a href="#" onclick="setActive(this)" class="nav-link flex items-center gap-x-3 px-5 py-3.5 rounded-2xl text-sm font-medium" title="Finance" >
+<i class="fa-solid fa-file-invoice-dollar w-5" > </i >
+<span class="nav-text" > Finance</span >
+</a >
+
+<div class="h-px bg-gray-800 my-6 mx-4" > </div >
+
+<a href="#" onclick="setActive(this)" class="nav-link flex items-center gap-x-3 px-5 py-3.5 rounded-2xl text-sm font-medium" title="Settings" >
+<i class="fa-solid fa-gear w-5" > </i >
+<span class="nav-text" > Settings</span >
+</a >
+</nav >
+</div >
+</aside >
+<!-- Main Area -->
+<div id="mainArea" class="flex-1 flex flex-col min-w-0 overflow-hidden" >
+<main class="main-content bg-gray-950 p-4 md:p-8 flex-1 overflow-auto" >
+<div class="max-w-screen-2xl mx-auto" >
+<h1 class="text-3xl md:text-4xl font-bold tracking-tight" > Dashboard</h1 >
+<p class="text-gray-500" > Welcome back, Alex. Fully responsive now.</p >
+
+<div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6" >
+<div class="bg-gray-900 border border-gray-800 rounded-3xl p-6" >
+<p class="text-gray-400" > Total Revenue</p >
+<p class="text-3xl md:text-4xl font-bold mt-2" > $248, 591</p >
+</div >
+<div class="bg-gray-900 border border-gray-800 rounded-3xl p-6" >
+<p class="text-gray-400" > Active Users</p >
+<p class="text-3xl md:text-4xl font-bold mt-2" > 12, 459</p >
+</div >
+<div class="bg-gray-900 border border-gray-800 rounded-3xl p-6" >
+<p class="text-gray-400" > Orders Today</p >
+<p class="text-3xl md:text-4xl font-bold mt-2" > 284</p >
+</div >
+<div class="bg-gray-900 border border-gray-800 rounded-3xl p-6" >
+<p class="text-gray-400" > Conversion Rate</p >
+<p class="text-3xl md:text-4xl font-bold mt-2" > 3.84%</p >
+</div >
+</div >
+</div >
+</main >
+<!-- Footer -->
+<footer class="h-16 bg-gray-900 border-t border-gray-800 flex items-center px-4 md:px-8 text-sm text-gray-500 shrink-0" >
+<div class="max-w-screen-2xl mx-auto w-full flex items-center justify-between" >
+<div > © 2026 AdminPro</div >
+<div class="hidden md:flex gap-x-6" >
+<a href="#" class="hover:text-gray-300" > Documentation</a >
+<a href="#" class="hover:text-gray-300" > Support</a >
+</div >
+</div >
+</footer >
+</div >
+</div >
+
+<script >
+let isCollapsed = false;
+let isMobileOpen = false;
+
+function toggleSidebar() {
+    isCollapsed = !isCollapsed;
+    const sidebar = document.getElementById('sidebar');
+    const logoText = document.getElementById('logoText');
+    const toggleIcon = document.getElementById('toggleIcon');
+    if (isCollapsed)
+
+{
+    sidebar .classList.add('sidebar-collapsed');
+    logoText .style.opacity = '0';
+    toggleIcon .classList.replace('fa-bars', 'fa-bars-staggered');
+}
+
+else {
+    sidebar .classList.remove('sidebar-collapsed');
+    logoText .style.opacity = '1';
+    toggleIcon .classList.replace('fa-bars-staggered', 'fa-bars');
+}
+
+}
+
+function toggleMobileSidebar() {
+    isMobileOpen = !isMobileOpen;
+    const sidebar = document.getElementById('sidebar');
+    sidebar .classList.toggle('open', isMobileOpen);
+}
+
+function setActive(el) {
+    document .querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+    el .classList.add('active');
+    // Close mobile menu after click if (window.innerWidth < 768)
+
+{
+    document .getElementById('sidebar').classList.remove('open');
+}
+
+}
+
+function toggleNotifications() {
+    alert("Notifications");
+}
+
+function toggleUserMenu() {
+    alert("User menu");
+}
+
+// Close mobile sidebar when clicking outside
+document.addEventListener('click', (e) => {
+            if (window.innerWidth < 768) {
+                const sidebar = document.getElementById('sidebar');
+                if (!e.target.closest('#sidebar') && !e.target.closest('button[onclick="toggleMobileSidebar()"]')) {
+                    sidebar.classList.remove('open');
+                }
+            }
+        });
+
+// Keyboard shortcut
+document.addEventListener('keydown', (e) => {
+            if (window.innerWidth >= 768 && (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
+                e.preventDefault();
+                toggleSidebar();
+            }
+        });
+</script >
+</body >
+</html >
