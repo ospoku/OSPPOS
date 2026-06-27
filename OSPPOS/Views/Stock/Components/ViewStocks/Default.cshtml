@@ -11,7 +11,7 @@
 @inject Microsoft.AspNetCore.DataProtection.IDataProtectionProvider DataProtectionProvider
 
 @{
-    Layout = "~/Views/Shared/deepseek_html_20260627_94ce72.cshtml";
+    Layout = "~/Views/Shared/DimLayout.cshtml";
     // Optional: create protector in view (same purpose string)
     var protector = DataProtectionProvider.CreateProtector("IdProtector");
     var stocks = Model.ToList();
