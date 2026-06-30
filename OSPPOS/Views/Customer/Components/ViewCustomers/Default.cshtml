@@ -20,112 +20,101 @@
   
 }
 
-<div class="card border-1 border-primary-subtle bg-transparent table-responsive rounded-5  mb-4">
-    <div class="card-header border-0 py-3"><i class="fas fa-fw fa-users"></i>
-        <h6 class="m-0 font-weight-bold d-inline">Customers</h6>
-        
-          
-        <button id="btnAddCustomer" class="btn btn-sm rounded-5  btn-outline-primary fa-pull-right" onclick="document.getElementById('AddCustomerDialog').showModal()"><i class="fa fa-fw fa-plus-circle"></i>Add Customer</button>
-        </div>
-        <div class="card-body bg-transparent border-0">
-         
-            <table class="table bg-transparent table-responsive dataTables_wrapper">
-                <thead>
-                    <tr><th>SN</th>
-                        <th>Name</th>
-                        <th>Phone</th>
-                        <th>Email</th>
-                        <th>Address</th>
-                        <th>Tax Number</th>
-                        <th>IsActive</th>
-                    <th>Allow Credit</th>
-                    <th>Credit Limit</th>
-                    <th>Sales Order</th>
-                    <th>Payments</th>
-            <th>Total Debt</th>
-                  
-                   
-                    <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                      @foreach (var customer in Model)
-                {
-                    <tr>
-                        <td></td>
-<td>@customer.Name</td>
-                        <td class="ellipsed-text"> @customer.Phone</td>
-                        
-                            <td class="ellipsed-text">@customer.Email</td>
-                        <td class ="ellipsed-text">
-                            @customer.Address</td>
-                        <td>@customer.TaxNumber</td>
-                        <td>@customer.IsActive</td>
-                        <td>@customer.AllowCredit</td>
-                        <td>@customer.CreditLimit</td>
-                        <td>@foreach (var order in @customer.SaleOrders.ToList())
-                            {
-                                <ul>
-                                    <li>
-                                        @order.ToString()
-                                    </li>
-                                </ul>
-                            }
-                        </td>
-                        <td>
-                            @foreach (var order in @customer.Payments.ToList())
-                            {
-                                <ul>
-                                    <li>
-                                        @order.ToString()
-                                    </li>
-                                </ul>
-                            }
-                        </td>
-                        <td>@customer.TotalDebt</td>
-                       
-                        <td>
 
-                                <div class="btn-group" role="group">
-                                    <button id="btnGroupDrop1" type="button" class="btn btn-sm btn-rounded btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Select Action
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                    @if(customer.CanEdit)
+<div class="tab-content tab-content-dim" id="myTabContent">
+    <!-- TAB 1: USERS -->
+    <div class="tab-pane fade show active tab-pane-dim" id="users" role="tabpanel">
+        <div class="tab-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-semibold mb-0"><i class="bi bi-people me-2"></i>User Management</h6>
+                <button class="btn btn-primary btn-sm" id="openFormBtn2" onclick="document.getElementById('AddCustomerDialog').showModal()">
+                    <i class="bi bi-plus-circle me-1"></i>Add User
+                </button>
+            </div>
+            <!-- DATATABLES -->
+            <div class="table-container">
+                <table id="userTable" class="table table-striped">
+                    <thead>
+                        <tr>
+                            
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Address</th>
+                            <th>Tax Number</th>
+                            <th>IsActive</th>
+                            <th>Allow Credit</th>
+                            <th>Credit Limit</th>
+                            <th>Sales Order</th>
+                            <th>Payments</th>
+                            <th>Total Debt</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                                     @foreach (var customer in Model)
+                {
+                        <tr>
+                            @* <td><div class="d-flex align-items-center gap-2"><span class="table-avatar">JD</span><span class="fw-medium">John Doe</span></div></td> *@
+                           
+                       
+                            
+                            <td>@customer.Name</td>
+                            <td class="ellipsed-text"> @customer.Phone</td>
+
+                            <td class="ellipsed-text">@customer.Email</td>
+                            <td class="ellipsed-text">
+                                @customer.Address
+                            </td>
+                            <td>@customer.TaxNumber</td>
+                            <td ><span class="status-badge status-active">@customer.IsActive</span></td>
+                            <td>@customer.AllowCredit</td>
+                                <td>@customer.CreditLimit</td>
+                                <td>@customer.SaleOrders.Count()</td>
+                                <td>@customer.Payments.Count()</td>
+                                <td>@customer.TotalDebt</td>
+                            <td class="text-end">
+                                <button class="table-action-btn text-primary" title="Edit"><i class="bi bi-pencil"></i></button>
+                                <button class="table-action-btn text-danger" title="Delete"><i class="bi bi-trash"></i></button>
+                                    @if (customer.CanEdit)
                                     {
 
-                                        <button  onclick="openDialogFromData(this)" data-url="EditCustomer" data-user-id="@protector.Protect(customer.PublicId.ToString())" data-dialog-id="EditCustomerDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-edit mr-3 text-warning"></i>Edit</button>
-                                        }
+                                        <button onclick="openDialogFromData(this)" data-url="EditCustomer" data-user-id="@protector.Protect(customer.PublicId.ToString())" data-dialog-id="EditCustomerDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-edit mr-3 text-warning"></i>Edit</button>
+                                    }
 
-                                    
 
-                                       @if(customer.CanPrint)
-                                       {
+
+                                    @if (customer.CanPrint)
+                                    {
 
                                         <button type="button" class="dropdown-item-custom" onclick="printcustomerIframe('@protector.Protect(customer.PublicId.ToString())')">
                                             <i style="width:15px; height:15px" class="fa fa-print mr-3 text-primary"></i>Print
                                         </button>
-                                       }
- 
-                                             
-                                                <button type="button" onclick="de" class="dropdown-item-custom"><i style="width:15px; height:15px" class="fa fa-trash mr-3 text-danger"></i>Delete</button>
-                                          
-                                  </div>
-                        </div>
+                                    }
 
-                        </td>
-                    </tr>
-             }
-                </tbody>
-         
 
-        </table>
-       </div>
-      
+                                    <button type="button" onclick="de" class="dropdown-item-custom"><i style="width:15px; height:15px" class="fa fa-trash mr-3 text-danger"></i>Delete</button>
 
-    <div class="card-footer">
+                            </td>
+                        </tr>
+                        }
+                  
+                           
+                 
+               
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-</div>
+
+  </div>
+
+    @await Component.InvokeAsync(nameof(AddCustomer))
+
+    <dialog id="EditCustomerDialog">
+        <div id="EditCustomerDialogContent"></div>
+    </dialog>
 
 <iframe id="printFrame" style="display:none;"></iframe>
 
@@ -142,5 +131,3 @@
 </script>
 
 
-@await Component.InvokeAsync(nameof(AddCustomer))
-<dialog id="EditCustomerDialog"><div id="EditCustomerDialogContent"></div></dialog>

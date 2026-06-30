@@ -1,7 +1,8 @@
-﻿@model OSPPOS.ViewModels.AddCustomerVM
+﻿ @model OSPPOS.ViewModels.AddCustomerVM
 
-<dialog id="AddCustomerDialog" class="col-md-4 border-0 rounded p-0">
-    <div class="modal-header">
+<dialog id="AddCustomerDialog" class="modal-dialog-centered">
+ <div class="modal-content">
+     <div class="modal-header">
         <h6 class="m-0 font-weight-bold d-inline">
             <i class="fas fa-fw fa-user"></i> Add Customer
         </h6>
@@ -11,12 +12,12 @@
             Close
         </button>
     </div>
-
+    <div class="modal-body">
     @using (Html.BeginForm("AddCustomer", "Customer", FormMethod.Post, new { id = "addCustomerForm" }))
     {
         @Html.AntiForgeryToken()
 
-        <div class="modal-body">
+        <div>
             <div asp-validation-summary="ModelOnly" class="alert alert-danger small py-2"></div>
 
             <!-- Name -->
@@ -95,10 +96,13 @@
             </div>
         </div>
 
-        <div class="modal-footer">
+        <div>
             <button type="submit" class="btn btn-primary btn-block">Save</button>
         </div>
     }
+   
+    </div>
+</div>
 </dialog>
 
 <script>
@@ -108,4 +112,6 @@
     }
 
  
-</script>
+</script> 
+
+               

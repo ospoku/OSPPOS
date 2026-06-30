@@ -1409,7 +1409,7 @@
 =======
 </html> *@
 
-<!DOCTYPE html>
+@* <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
@@ -1880,8 +1880,8 @@
     <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 @* 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> *@
-    <script>
+  @*   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> *@
+@*     <script>
         let sidebarCollapsed = false;
 
         function toggleSidebar() {
@@ -1917,7 +1917,198 @@
                 toggleSidebar();
             }
         });
+<<<<<<< HEAD
 >>>>>>> fixing dashboard
+=======
+    </script> *@
+@*</body>
+</html>*@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard · Dim Theme</title>
+    <!-- Bootstrap 5 + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Font (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  
+    <link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    
+    <link href="~/lib/datatables.net-bs5/datatables.bootstrap5.css" rel="stylesheet" />
+    <link href="~/icons/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="~/icons/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+ <link href="~/css/defaultStyle.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="app-wrapper">
+
+        <!-- STICKY HEADER -->
+        <header class="sticky-header d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+                <button class="toggle-sidebar-btn" id="sidebarToggle" aria-label="Toggle sidebar">
+                    <i class="bi bi-list"></i>
+                </button>
+                <span class="fw-semibold fs-5 text-dim-light">
+                    <i class="bi bi-grid-1x2-fill me-2 text-primary"></i>Admin
+                </span>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <!-- Messages -->
+                <button class="btn btn-dim btn-sm rounded-circle position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#messagesCanvas" aria-controls="messagesCanvas">
+                    <i class="bi bi-envelope fs-5"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">3</span>
+                </button>
+                <!-- Notifications -->
+                <button class="btn btn-dim btn-sm rounded-circle position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationsCanvas" aria-controls="notificationsCanvas">
+                    <i class="bi bi-bell fs-5"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning" style="font-size: 0.6rem;">5</span>
+                </button>
+                <!-- Shutdown dialog trigger -->
+                <button class="btn btn-outline-danger btn-sm px-3" id="shutdownBtn">
+                    <i class="bi bi-power me-1"></i>Shutdown
+                </button>
+            </div>
+        </header>
+
+        <!-- MAIN ROW: SIDEBAR + CONTENT -->
+        <div class="main-row">
+            <!-- STICKY SIDEBAR (collapsible) -->
+            <nav class="sidebar" id="sidebar">
+                <div class="sidebar-heading">MAIN</div>
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a href="#" class="sidebar-link active"><i class="bi bi-speedometer2"></i><span>Dashboard</span></a></li>
+                    <li class="nav-item"><a asp-action="ViewProducts" asp-controller="Product" class="sidebar-link"><i class="bi bi-people"></i><span>Products</span> <span class="badge bg-primary rounded-pill ms-auto">12</span></a></li>
+                    <li class="nav-item"><a asp-action="ViewStocks" asp-controller="Stock" class="sidebar-link"><i class="bi bi-bar-chart"></i><span>Stocks</span> <span class="badge bg-primary rounded-pill ms-auto">12</span></a></li>
+                    <li class="nav-item"><a asp-action="ViewInventory" asp-controller="Inventory" class="sidebar-link"><i class="bi bi-calendar"></i><span>Inventory</span></a></li>
+                    <li class="nav-item"><a asp-action="ViewSales" asp-controller="Sale" class="sidebar-link"><i class="bi bi-calendar"></i><span>Sales</span> <span class="badge bg-primary rounded-pill ms-auto">12</span></a></li>
+                </ul>
+                <div class="sidebar-heading mt-3">CONTACTS</div>
+                <ul class="nav flex-column">
+                    
+                    <li class="nav-item"><a asp-action="ViewCustomers" asp-controller="Customer" class="sidebar-link"><i class="bi bi-people"></i><span>Customers</span> <span class="badge bg-primary rounded-pill ms-auto">12</span></a></li>
+                    <li class="nav-item"><a asp-action="ViewSuppliers" asp-controller="Supplier" class="sidebar-link"><i class="bi bi-truck"></i><span>Suppliers</span> <span class="badge bg-primary rounded-pill ms-auto">12</span></a></li>
+                
+                </ul>
+                <div class="sidebar-heading mt-3">SYSTEM</div>
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a asp-action="SystemSetup"  asp-controller="Settings" class="sidebar-link"><i class="bi bi-gear"></i><span>Settings</span></a></li>
+                    <li class="nav-item"><a href="#" class="sidebar-link"><i class="bi bi-shield-lock"></i><span>Security</span></a></li>
+                    <li class="nav-item"><a href="#" class="sidebar-link"><i class="bi bi-question-circle"></i><span>Help</span></a></li>
+                </ul>
+                <div class="sidebar-heading mt-3">EXTRAS</div>
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a href="#" class="sidebar-link"><i class="bi bi-box-arrow-right"></i><span>Logout</span></a></li>
+                </ul>
+            </nav>
+
+            <!-- CONTENT AREA (scrollable) -->
+            <main class="content-area">
+    
+          
+
+           @RenderBody()
+            </main>
+        </div>
+
+        <!-- STICKY FOOTER -->
+        <footer class="sticky-footer d-flex justify-content-between align-items-center flex-wrap">
+            <span>© 2026 Admin Panel · Dim Theme</span>
+            <span class="d-flex gap-3">
+                <a href="#" class="text-dim-muted text-decoration-none"><i class="bi bi-github"></i></a>
+                <a href="#" class="text-dim-muted text-decoration-none"><i class="bi bi-slack"></i></a>
+                <span class="text-dim-muted">v2.4.1</span>
+            </span>
+        </footer>
+    </div>
+
+    <!-- ========== OFF CANVAS: NOTIFICATIONS ========== -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="notificationsCanvas" aria-labelledby="notifLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="notifLabel"><i class="bi bi-bell-fill me-2"></i>Notifications</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="notif-item"><i class="bi bi-check-circle text-success me-2"></i> Order #293 shipped</div>
+            <div class="notif-item"><i class="bi bi-star text-warning me-2"></i> New review on product X</div>
+            <div class="notif-item"><i class="bi bi-exclamation-triangle text-danger me-2"></i> CPU usage 85%</div>
+            <div class="notif-item"><i class="bi bi-info-circle text-info me-2"></i> Weekly report ready</div>
+            <div class="notif-item"><i class="bi bi-person-plus text-primary me-2"></i> 2 new users signed up</div>
+        </div>
+    </div>
+
+    <!-- ========== OFF CANVAS: MESSAGES ========== -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="messagesCanvas" aria-labelledby="msgLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="msgLabel"><i class="bi bi-envelope-fill me-2"></i>Messages</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="msg-item"><strong>Sarah K.</strong> <span class="text-dim-muted small">· 2h</span><br><span class="small">Can you review the latest design?</span></div>
+            <div class="msg-item"><strong>Mike R.</strong> <span class="text-dim-muted small">· 5h</span><br><span class="small">Server credentials updated.</span></div>
+            <div class="msg-item"><strong>Alice W.</strong> <span class="text-dim-muted small">· 1d</span><br><span class="small">Meeting rescheduled to 3pm.</span></div>
+        </div>
+    </div>
+  
+
+
+
+    <!-- Bootstrap JS bundle -->
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/lib/datatables/js/jquery.datatables.min.js"></script>
+ 
+    <script src="~/lib/datatables.net-bs5/datatables.bootstrap5.min.js"></script>
+  
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", required: false)
+    <script>
+        (function() {
+          // ----- SIDEBAR COLLAPSE -----
+          const sidebar = document.getElementById('sidebar');
+          const toggleBtn = document.getElementById('sidebarToggle');
+          toggleBtn.addEventListener('click', function() {
+            sidebar.classList.toggle('collapsed');
+          });
+
+         
+          // ----- optional: close offcanvas with escape (bootstrap handles) -----
+
+          // set active link (just UI)
+          document.querySelectorAll('.sidebar-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+              document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+              this.classList.add('active');
+            });
+          });
+        })();
+
+            $(document).ready(function() {
+          $('#userTable').DataTable({
+            pageLength: 5,
+            lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+            order: [[4, 'desc']],
+            columnDefs: [
+              { orderable: false, targets: 5 }
+            ],
+            language: {
+              search: "Search:",
+              lengthMenu: "Show _MENU_ entries",
+              info: "Showing _START_ to _END_ of _TOTAL_ users",
+              infoEmpty: "No users found",
+              infoFiltered: "(filtered from _MAX_ total users)",
+              zeroRecords: "No matching users found"
+            },
+            dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+                 '<"row"<"col-sm-12"tr>>' +
+                 '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>'
+          });
+        });
+>>>>>>> fixed layout
     </script>
 </body>
 </html>
