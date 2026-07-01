@@ -155,9 +155,14 @@
 
   
 @model OSPPOS.ViewModels.AddProductVM
+@* 
+<dialog id="AddProductDialog">
+    <div class="tab-content tab-content-dim" id="myTabContent">
+        <!-- TAB 1: USERS -->
+        <div class="tab-pane fade show active tab-pane-dim" id="users" role="tabpanel">
+            <div class="tab-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
 
-<dialog id="AddProductDialog" class="border-0 rounded p-0">
-    <div class="modal-header">
         <h6 class="m-0 font-weight-bold d-inline">
             <i class="fas fa-fw fa-file-alt"></i>Add Product
         </h6>
@@ -274,7 +279,12 @@
             <button  class="btn btn-outline-primary rounded-5">Save</button>
         </div>
     }
-</dialog>
+    </div>
+    </div>
+    </div>
+
+    
+</dialog> *@
 
 <script>
     function calcMargin() {
@@ -295,8 +305,864 @@
     {
             <text>
             document.addEventListener("DOMContentLoaded", function () {
-                document.getElementById("AddProductDialog").showModal();
-            });
+                document.getElementById("AddProductDialog").showModal()};
+            );
             </text>
     }
 </script>
+
+
+    <style>
+   /*      body {
+            background: #f0f2f5;
+            padding: 40px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .open-dialog-btn {
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 50px;
+            background: #0d6efd;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+            .open-dialog-btn:hover {
+                background: #0b5ed7;
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+            } */
+
+        /* Dialog styling */
+        #AddProductDialog {
+            max-width: 900px;
+            width: 100%;
+            border: none;
+            border-radius: 12px;
+            padding: 0;
+            background: #fff;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideDown 0.3s ease;
+        }
+
+        @@keyframes slideDown {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+
+        #AddProductDialog::backdrop {
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+        }
+
+        /* Modal header */
+        .modal-header-custom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+            border-radius: 12px 12px 0 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+            .modal-header-custom h6 {
+                color: #333;
+                font-weight: 600;
+                margin: 0;
+            }
+
+                .modal-header-custom h6 i {
+                    color: #0d6efd;
+                    margin-right: 8px;
+                }
+
+        /* Modal body */
+        .modal-body-custom {
+            padding: 1.5rem;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        /* Modal footer */
+        .modal-footer-custom {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e9ecef;
+            border-radius: 0 0 12px 12px;
+            background: #f8f9fa;
+        }
+
+        /* Floating label styles */
+        .did-floating-label-content {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .did-floating-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+            .did-floating-input:focus {
+                border-color: #0d6efd;
+                outline: 0;
+                background: white;
+                box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+            }
+
+        .did-floating-label {
+            position: absolute;
+            top: -10px;
+            left: 12px;
+            background: #fff;
+            padding: 0 6px;
+            font-size: 0.8rem;
+            color: #6c757d;
+            pointer-events: none;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        /* Card styles */
+        .card-custom {
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            background: white;
+            transition: box-shadow 0.3s ease;
+        }
+
+            .card-custom:hover {
+                box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            }
+
+        .card-header-custom {
+            padding: 0.75rem 1rem;
+            background: transparent;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+            .card-header-custom h6 {
+                font-weight: 600;
+                color: #495057;
+                margin: 0;
+            }
+
+        .card-body-custom {
+            padding: 1rem;
+        }
+
+        /* Button styles */
+        .btn-close-custom {
+            border: 1.5px solid #dc3545;
+            background: transparent;
+            color: #dc3545;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+            .btn-close-custom:hover {
+                background: #dc3545;
+                color: white;
+            }
+
+        .btn-save-custom {
+            border: 1.5px solid #0d6efd;
+            background: transparent;
+            color: #0d6efd;
+            padding: 10px 35px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+            .btn-save-custom:hover {
+                background: #0d6efd;
+                color: white;
+                box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+            }
+
+        /* Margin display */
+        .margin-display {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        /* Checkbox style */
+        .form-check-input:checked {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+
+        /* Scrollbar styling */
+        .modal-body-custom::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-body-custom::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .modal-body-custom::-webkit-scrollbar-thumb {
+            background: #c1c7cd;
+            border-radius: 10px;
+        }
+
+            .modal-body-custom::-webkit-scrollbar-thumb:hover {
+                background: #a8b0b8;
+            }
+
+        /* Dialog open state */
+        dialog[open] {
+            display: block;
+        }
+    </style>
+
+
+    <dialog id="AddProductDialog">
+        <div class="modal-header-custom">
+            <h6><i class="fas fa-fw fa-file-alt"></i>Add Product</h6>
+            <button type="button" class="btn-close-custom" onclick="document.getElementById('AddProductDialog').close()">
+                <i class="bi bi-x-lg me-1"></i>Close
+            </button>
+        </div>
+
+        <form id="addProductForm">
+            <div class="modal-body-custom">
+                <div class="alert alert-danger small py-2" style="display: none;">Validation summary goes here</div>
+
+                <div class="row g-3">
+                    <div class="col-lg-8">
+                        <div class="card-custom shadow-sm mb-3">
+                            <div class="card-header-custom">
+                                <h6><i class="bi bi-box me-2"></i>Product Details</h6>
+                            </div>
+                            <div class="card-body-custom">
+                                <div class="row g-3">
+                                    <div class="did-floating-label-content col-md-8">
+                                        <input type="text" class="did-floating-input" placeholder="" value="Premium Coffee Beans" />
+                                        <label class="did-floating-label">Product Name <span class="text-danger">*</span></label>
+                                    </div>
+                                    <div class="did-floating-label-content col-md-4">
+                                        <input type="text" class="did-floating-input" placeholder="" value="COF-001" />
+                                        <label class="did-floating-label">SKU / Code</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-select">
+                                            <option value="">Select Category</option>
+                                            <option selected>Beverages</option>
+                                            <option>Food</option>
+                                            <option>Electronics</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-select">
+                                            <option value="">Select Supplier</option>
+                                            <option selected>Supplier A</option>
+                                            <option>Supplier B</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-select">
+                                            <option value="">Select Unit</option>
+                                            <option selected>KG</option>
+                                            <option>Liters</option>
+                                            <option>Pieces</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label fw-semibold">Description</label>
+                                        <textarea class="form-control" rows="2" placeholder="Optional notes about this product">Premium Arabica coffee beans, medium roast.</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="card-custom shadow-sm mb-3">
+                            <div class="card-header-custom">
+                                <h6><i class="bi bi-currency-dollar me-2"></i>Pricing</h6>
+                            </div>
+                            <div class="card-body-custom">
+                                <div class="did-floating-label-content mb-3">
+                                    <input type="number" step="0.01" min="0" class="did-floating-input" id="costPrice" value="25.00" oninput="calcMargin()" />
+                                    <label class="did-floating-label">Cost Price (GHS) <span class="text-danger">*</span></label>
+                                </div>
+                                <div class="did-floating-label-content mb-3">
+                                    <input type="number" step="0.01" min="0" class="did-floating-input" id="sellPrice" value="45.00" oninput="calcMargin()" />
+                                    <label class="did-floating-label">Selling Price (GHS) <span class="text-danger">*</span></label>
+                                </div>
+                                <div class="did-floating-label-content mb-3">
+                                    <input type="number" step="0.01" min="0" class="did-floating-input" value="35.00" />
+                                    <label class="did-floating-label">Wholesale Price (GHS)</label>
+                                </div>
+                                <div class="margin-display">
+                                    Margin: <strong id="marginDisplay">44.4%</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-custom shadow-sm">
+                            <div class="card-header-custom">
+                                <h6><i class="bi bi-box-seam me-2"></i>Stock Settings</h6>
+                            </div>
+                            <div class="card-body-custom">
+                                <div class="did-floating-label-content mb-3">
+                                    <input type="number" min="0" class="did-floating-input" value="50" />
+                                    <label class="did-floating-label">Opening Stock</label>
+                                </div>
+                                <div class="did-floating-label-content mb-3">
+                                    <input type="number" min="0" class="did-floating-input" value="10" />
+                                    <label class="did-floating-label">Reorder Level</label>
+                                    <div class="form-text small text-muted">Alert when stock drops to this level.</div>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input type="checkbox" class="form-check-input" id="isActive" checked />
+                                    <label class="form-check-label" for="isActive">Active product</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer-custom">
+                <button type="submit" class="btn-save-custom">
+                    <i class="bi bi-check-circle me-2"></i>Save Product
+                </button>
+            </div>
+        </form>
+    </dialog>
+
+    <script>
+        function calcMargin() {
+            const cost = parseFloat(document.getElementById('costPrice').value) || 0;
+            const sell = parseFloat(document.getElementById('sellPrice').value) || 0;
+            const el = document.getElementById('marginDisplay');
+            if (sell > 0 && cost > 0) {
+                const m = ((sell - cost) / sell * 100).toFixed(1);
+                el.textContent = m + '%';
+                el.style.color = m > 20 ? '#198754' : m > 10 ? '#fd7e14' : '#dc3545';
+            } else {
+                el.textContent = '—';
+                el.style.color = '';
+            }
+        }
+
+        // Trigger initial calculation
+        document.addEventListener('DOMContentLoaded', function() {
+            calcMargin();
+        });
+    </script>
+    <style>
+        /* Dark Theme Dialog */
+        #AddProductDialog {
+            max-width: 950px;
+            width: 100%;
+            border: 1px solid #2d323a;
+            border-radius: 12px;
+            padding: 0;
+            background: #23272e;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            animation: slideDown 0.3s ease;
+            color: #e4e6eb;
+        }
+
+@@keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        #AddProductDialog::backdrop {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+        }
+
+        /* Modal Header - Dark Theme */
+        .modal-header-custom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #2d323a;
+            border-radius: 12px 12px 0 0;
+            background: #1e2229;
+        }
+
+        .modal-header-custom h6 {
+            color: #e4e6eb;
+            font-weight: 600;
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .modal-header-custom h6 i {
+            color: #667eea;
+            margin-right: 10px;
+        }
+
+        /* Close Button - Dark Theme */
+        .btn-close-custom {
+            border: 1px solid #dc3545;
+            background: transparent;
+            color: #dc3545;
+            padding: 5px 18px;
+            border-radius: 50px;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .btn-close-custom:hover {
+            background: #dc3545;
+            color: white;
+            box-shadow: 0 0 20px rgba(220, 53, 69, 0.3);
+        }
+
+        .btn-close-custom i {
+            margin-right: 5px;
+        }
+
+        /* Modal Body - Dark Theme */
+        .modal-body-custom {
+            padding: 1.5rem;
+            max-height: 70vh;
+            overflow-y: auto;
+            background: #23272e;
+        }
+
+        /* Scrollbar - Dark Theme */
+        .modal-body-custom::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-body-custom::-webkit-scrollbar-track {
+            background: #1a1d23;
+            border-radius: 10px;
+        }
+
+        .modal-body-custom::-webkit-scrollbar-thumb {
+            background: #3d424a;
+            border-radius: 10px;
+        }
+
+        .modal-body-custom::-webkit-scrollbar-thumb:hover {
+            background: #4d525a;
+        }
+
+        /* Cards - Dark Theme */
+        .card-custom {
+            border: 1px solid #2d323a;
+            border-radius: 10px;
+            background: #1e2229;
+            transition: all 0.3s ease;
+        }
+
+        .card-custom:hover {
+            border-color: #3d424a;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header-custom {
+            padding: 0.75rem 1rem;
+            background: transparent;
+            border-bottom: 1px solid #2d323a;
+        }
+
+        .card-header-custom h6 {
+            font-weight: 600;
+            color: #e4e6eb;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .card-header-custom h6 i {
+            color: #667eea;
+            margin-right: 8px;
+        }
+
+        .card-body-custom {
+            padding: 1rem;
+        }
+
+        /* Floating Labels - Dark Theme */
+        .did-floating-label-content {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .did-floating-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1.5px solid #2d323a;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: #1a1d23;
+            color: #e4e6eb;
+        }
+
+        .did-floating-input:focus {
+            border-color: #667eea;
+            outline: 0;
+            background: #1e2229;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+        }
+
+        .did-floating-input::placeholder {
+            color: #6c757d;
+        }
+
+        .did-floating-label {
+            position: absolute;
+            top: -10px;
+            left: 12px;
+            background: #1e2229;
+            padding: 0 6px;
+            font-size: 0.8rem;
+            color: #8c929a;
+            pointer-events: none;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        /* Form Select - Dark Theme */
+        .form-select-dark {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1.5px solid #2d323a;
+            border-radius: 8px;
+            background: #1a1d23;
+            color: #e4e6eb;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .form-select-dark:focus {
+            border-color: #667eea;
+            outline: 0;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+            background: #1e2229;
+        }
+
+        .form-select-dark option {
+            background: #1a1d23;
+            color: #e4e6eb;
+        }
+
+        /* Textarea - Dark Theme */
+        .form-control-dark {
+            background: #1a1d23;
+            border: 1.5px solid #2d323a;
+            color: #e4e6eb;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control-dark:focus {
+            border-color: #667eea;
+            outline: 0;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+            background: #1e2229;
+            color: #e4e6eb;
+        }
+
+        .form-control-dark::placeholder {
+            color: #6c757d;
+        }
+
+        .form-label-dark {
+            color: #8c929a;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        /* Margin Display - Dark Theme */
+        .margin-display {
+            background: #1a1d23;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #2d323a;
+            color: #e4e6eb;
+        }
+
+        .margin-display strong {
+            color: #667eea;
+        }
+
+        /* Checkbox - Dark Theme */
+        .form-check-input-dark {
+            background-color: #1a1d23;
+            border: 1.5px solid #2d323a;
+            cursor: pointer;
+        }
+
+        .form-check-input-dark:checked {
+            background-color: #667eea;
+            border-color: #667eea;
+        }
+
+        .form-check-label-dark {
+            color: #e4e6eb;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        /* Modal Footer - Dark Theme */
+        .modal-footer-custom {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #2d323a;
+            border-radius: 0 0 12px 12px;
+            background: #1e2229;
+        }
+
+        /* Save Button - Dark Theme */
+        .btn-save-custom {
+            border: 1.5px solid #667eea;
+            background: transparent;
+            color: #667eea;
+            padding: 10px 35px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-save-custom:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            border-color: transparent;
+            transform: translateY(-2px);
+        }
+
+        .btn-save-custom i {
+            margin-right: 8px;
+        }
+
+        /* Validation Alert - Dark Theme */
+        .alert-dark {
+            background: #2d1f1f;
+            border: 1px solid #dc3545;
+            color: #ff6b6b;
+        }
+
+        /* Form Text - Dark Theme */
+        .form-text-dark {
+            color: #6c757d;
+            font-size: 0.8rem;
+        }
+
+        /* Utility classes */
+        .text-danger-dark {
+            color: #ff6b6b !important;
+        }
+
+        .bg-dark-card {
+            background: #1a1d23;
+        }
+
+        /* Responsive adjustments */
+@@media (max-width: 768px) {
+            #AddProductDialog {
+                max-width: 95%;
+                margin: 10px;
+            }
+
+            .modal-body-custom {
+                max-height: 60vh;
+            }
+        }
+
+        /* Dialog open state */
+        dialog[open] {
+            display: block;
+        }
+</style>
+
+    <button class="open-dialog-btn" onclick="document.getElementById('AddProductDialog').showModal()">
+        <i class="fas fa-plus-circle"></i>Open Add Product Dialog
+    </button>
+
+    <dialog id="AddProductDialog">
+        <div class="modal-header-custom">
+            <h6><i class="fas fa-fw fa-file-alt"></i>Add Product</h6>
+            <button type="button" class="btn-close-custom" onclick="document.getElementById('AddProductDialog').close()">
+                <i class="fas fa-times"></i>Close
+            </button>
+        </div>
+
+        <form id="addProductForm">
+            <div class="modal-body-custom">
+                <div class="alert alert-danger small py-2 alert-dark" style="display: none;">Validation summary goes here</div>
+
+                <div class="row g-3">
+                    <!-- Left Column -->
+                    <div class="col-lg-8">
+                        <div class="card-custom shadow-sm mb-3">
+                            <div class="card-header-custom">
+                                <h6><i class="fas fa-box"></i>Product Details</h6>
+                            </div>
+                            <div class="card-body-custom">
+                                <div class="row g-3">
+                                    <div class="did-floating-label-content col-md-8">
+                                        <input type="text" class="did-floating-input" placeholder="" value="Premium Coffee Beans" />
+                                        <label class="did-floating-label">Product Name <span class="text-danger-dark">*</span></label>
+                                    </div>
+                                    <div class="did-floating-label-content col-md-4">
+                                        <input type="text" class="did-floating-input" placeholder="" value="COF-001" />
+                                        <label class="did-floating-label">SKU / Code</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-select-dark">
+                                            <option value="">Select Category</option>
+                                            <option selected>Beverages</option>
+                                            <option>Food</option>
+                                            <option>Electronics</option>
+                                            <option>Clothing</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-select-dark">
+                                            <option value="">Select Supplier</option>
+                                            <option selected>Supplier A</option>
+                                            <option>Supplier B</option>
+                                            <option>Supplier C</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-select-dark">
+                                            <option value="">Select Unit</option>
+                                            <option selected>KG</option>
+                                            <option>Liters</option>
+                                            <option>Pieces</option>
+                                            <option>Box</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label-dark">Description</label>
+                                        <textarea class="form-control-dark" rows="2" placeholder="Optional notes about this product">Premium Arabica coffee beans, medium roast.</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="col-lg-4">
+                        <div class="card-custom shadow-sm mb-3">
+                            <div class="card-header-custom">
+                                <h6><i class="fas fa-tag"></i>Pricing</h6>
+                            </div>
+                            <div class="card-body-custom">
+                                <div class="did-floating-label-content mb-3">
+                                    <input type="number" step="0.01" min="0" class="did-floating-input" id="costPrice" value="25.00" oninput="calcMargin()" />
+                                    <label class="did-floating-label">Cost Price (GHS) <span class="text-danger-dark">*</span></label>
+                                </div>
+                                <div class="did-floating-label-content mb-3">
+                                    <input type="number" step="0.01" min="0" class="did-floating-input" id="sellPrice" value="45.00" oninput="calcMargin()" />
+                                    <label class="did-floating-label">Selling Price (GHS) <span class="text-danger-dark">*</span></label>
+                                </div>
+                                <div class="did-floating-label-content mb-3">
+                                    <input type="number" step="0.01" min="0" class="did-floating-input" value="35.00" />
+                                    <label class="did-floating-label">Wholesale Price (GHS)</label>
+                                </div>
+                                <div class="margin-display">
+                                    Margin: <strong id="marginDisplay">44.4%</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-custom shadow-sm">
+                            <div class="card-header-custom">
+                                <h6><i class="fas fa-warehouse"></i>Stock Settings</h6>
+                            </div>
+                            <div class="card-body-custom">
+                                <div class="did-floating-label-content mb-3">
+                                    <input type="number" min="0" class="did-floating-input" value="50" />
+                                    <label class="did-floating-label">Opening Stock</label>
+                                </div>
+                                <div class="did-floating-label-content mb-3">
+                                    <input type="number" min="0" class="did-floating-input" value="10" />
+                                    <label class="did-floating-label">Reorder Level</label>
+                                    <div class="form-text-dark">Alert when stock drops to this level.</div>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input type="checkbox" class="form-check-input-dark" id="isActive" checked />
+                                    <label class="form-check-label-dark" for="isActive">Active product</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer-custom">
+                <button type="submit" class="btn-save-custom">
+                    <i class="fas fa-check-circle"></i>Save Product
+                </button>
+            </div>
+        </form>
+    </dialog>
+
+    <script>
+        function calcMargin() {
+            const cost = parseFloat(document.getElementById('costPrice').value) || 0;
+            const sell = parseFloat(document.getElementById('sellPrice').value) || 0;
+            const el = document.getElementById('marginDisplay');
+            if (sell > 0 && cost > 0) {
+                const m = ((sell - cost) / sell * 100).toFixed(1);
+                el.textContent = m + '%';
+                el.style.color = m > 20 ? '#51cf66' : m > 10 ? '#ffd43b' : '#ff6b6b';
+            } else {
+                el.textContent = '—';
+                el.style.color = '#e4e6eb';
+            }
+        }
+
+        // Trigger initial calculation
+        document.addEventListener('DOMContentLoaded', function() {
+            calcMargin();
+        });
+
+        // Close dialog on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const dialog = document.getElementById('AddProductDialog');
+                if (dialog.open) {
+                    dialog.close();
+                }
+            }
+        });
+    </script>

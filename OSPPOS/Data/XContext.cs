@@ -18,8 +18,8 @@ namespace OSPPOS.Data
  public DbSet<Invoice> Invoices { get; set; }
       public DbSet<StockMovement> StockMovements { get; set; }
       public DbSet<PaymentMethod> PaymentMethods { get; set; }
-        
-    public DbSet<PaymentStatus> PaymentStatuses { get; set; }
+        public DbSet<StockLedger> StockLedgers { get; set; }   
+        public DbSet<PaymentStatus> PaymentStatuses { get; set; }
        public DbSet<SaleType> SaleTypes { get; set; } 
        public DbSet<Unit> Units { get; set; }
         
