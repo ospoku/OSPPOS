@@ -24,7 +24,7 @@ namespace OSPPOS.ViewComponents
                 CustomerId = c.CustomerId,
                 CreditLimit = c.CreditLimit,
            
-                CurrentDebt = c.TotalDebt
+         
             }).ToList();
 
             var products = await ctx.Products
@@ -34,7 +34,7 @@ namespace OSPPOS.ViewComponents
                 .ThenBy(p => p.Name)
                 .ToListAsync();
 
-            AddSaleVM addSaleVM = new()
+            AddSaleOrderVM addSaleVM = new()
             {
                 Customers = new SelectList(customers, nameof(Customer.CustomerId), nameof(Customer.Name)),
                 CreditInfo = creditCustomers,

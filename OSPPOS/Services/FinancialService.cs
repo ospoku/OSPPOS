@@ -10,7 +10,7 @@ namespace OSPPOS.Services
         public async Task<decimal> GetCustomerCredit(int CustomerId)
         {
 
-            return await ctx.SaleOrders.Where(c => c.CustomerId == CustomerId).SumAsync(c => c.TotalAmount - c.Payments.Sum(p => p.Amount));
+            return await ctx.Invoices.Where(c => c.CustomerId == CustomerId).SumAsync(c => c.TotalAmount - c.Payments.Sum(p => p.Amount));
         }
     }
 }

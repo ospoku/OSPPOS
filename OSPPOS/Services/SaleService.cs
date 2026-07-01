@@ -10,48 +10,34 @@ using System;
 using System.Security.Claims;
 namespace OSPPOS.Services
 {
-    public class SaleService(XContext ctx) : ISaleService
+    public class SaleOrderService(XContext ctx) : ISaleOrderService
         {
-        public async Task<(bool Success, string Error, SaleOrder? Order)> AddSaleAsync(AddSaleVM addSaleVM, string userId)
+        public async Task<(bool Success, string Error, SaleOrder? Order)> AddSaleAsync(AddSaleOrderVM addSaleOrderVM, string userId)
         {
             try
             {
-                var productIds = addSaleVM.Items.Select(i => i.ProductId).ToList();
+                var productIds = addSaleOrderVM.Items.Select(i => i.ProductId).ToList();
 
                 var products = await ctx.Products
                     .Where(p => productIds.Contains(p.ProductId))
                     .ToDictionaryAsync(p => p.ProductId);
-                if (addSaleVM.CustomerId == null && string.IsNullOrWhiteSpace(addSaleVM.WalkInCustomerName))
-                {
-                    addSaleVM.WalkInCustomerName = null!;
-                    return (false, "Customer is required", null);
-
-                }
+         
 
                 var order = new SaleOrder
                 {
                     OrderNumber = await GenerateOrderNumberAsync(),
 
-                    CustomerId = addSaleVM.CustomerId,
-                    WalkInCustomerName = addSaleVM.WalkInCustomerName,
-                    Notes = addSaleVM.Notes,
-                    Discount = addSaleVM.Discount,
-                    DiscountPercent = addSaleVM.DiscountPercent,
-                    DueDate = addSaleVM.DueDate,
+                    CustomerId = addSaleOrderVM.CustomerId,
+                  
+                    Notes = addSaleOrderVM.Notes,
+              
+                    DueDate = addSaleOrderVM.DueDate,
                     CreatedBy = userId,
                 };
 
-                if (addSaleVM.CustomerId != null)
-                {
-                    order.CustomerId = addSaleVM.CustomerId;
-                    order.WalkInCustomerName = null;
-                }
-                else
-                {
-                    order.CustomerId = null;
-                    order.WalkInCustomerName = addSaleVM.WalkInCustomerName;
-                }
-                foreach (var item in addSaleVM.Items)
+           
+      
+                foreach (var item in addSaleOrderVM.Items)
                 {
                     if (!products.TryGetValue(item.ProductId, out var product))
                     {
@@ -83,15 +69,7 @@ namespace OSPPOS.Services
 
                 ctx.SaleOrders.Add(order);
 
-                if (addSaleVM.InitialPayment > 0)
-                {
-                    ctx.Payments.Add(new Payment
-                    {
-                        Amount = addSaleVM.InitialPayment,
-                        Reference = addSaleVM.PaymentReference,
-                        Order = order
-                    });
-                }
+          
                 foreach (var entry in ctx.ChangeTracker.Entries())
                 {
                     if (entry.Entity.GetType().GetProperty("CreatedBy") != null)
@@ -123,7 +101,7 @@ namespace OSPPOS.Services
 
         public async Task<(bool, string)> RecordPaymentAsync(RecordPaymentVM  recordPaymentVM, string userId)
             {
-                var order = await ctx.SaleOrders
+                var order = await ctx.Invoices
                     .Include(o => o.Payments)
                     .FirstOrDefaultAsync(o => o.Id == recordPaymentVM.SaleOrderId);
 
@@ -157,7 +135,7 @@ namespace OSPPOS.Services
                 await ctx.SaleOrders
                     .Include(o => o.Items).ThenInclude(i => i.Product)
                     .Include(o => o.Customer)
-                    .Include(o => o.Payments)
+                  
                    
                     .FirstOrDefaultAsync(o => o.Id == id);
 
@@ -167,7 +145,7 @@ namespace OSPPOS.Services
                 var q = ctx.SaleOrders
                     .Include(o => o.Customer)
                     .Include(o => o.Items)
-                    .Include(o => o.Payments)
+                
                     .AsQueryable();
 
                 if (from.HasValue) q = q.Where(o => o.OrderDate >= from.Value);

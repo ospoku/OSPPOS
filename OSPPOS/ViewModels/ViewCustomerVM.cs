@@ -21,11 +21,9 @@ namespace OSPPOS.ViewModels
         public bool IsActive { get; set; } = true;
         public ICollection<SaleOrder> SaleOrders { get; set; } = [];
         public ICollection<Payment> Payments { get; set; } = [];
-
+        public ICollection <Invoice> Invoices { get; set; } = [];
         // Computed
-        public decimal TotalDebt => SaleOrders
-            .Where(o => o.PaymentState != PaymentState.Unpaid)
-            .Sum(o => o.AmountDue);
+  
     }
 
 

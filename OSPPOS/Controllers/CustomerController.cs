@@ -97,7 +97,7 @@ namespace OSPPOS.Controllers
             {
                 var c = await ctx.Customers
                     .Include(x => x.SaleOrders).ThenInclude(o => o.Items).ThenInclude(i => i.Product)
-                    .Include(x => x.SaleOrders).ThenInclude(o => o.Payments)
+                    .Include(x => x.SaleOrders)
                     .FirstOrDefaultAsync(x => x.CustomerId == id);
                 if (c is null) return NotFound();
                 return View(c);

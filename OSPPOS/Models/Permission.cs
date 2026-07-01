@@ -9,7 +9,7 @@ namespace OSPPOS.Models
     {
         [Key]
         public int PermissionId { get; set; }
-        public Guid PublicId { get; set; } = Guid.NewGuid();
+    
      
         public string Module { get; set; }
        

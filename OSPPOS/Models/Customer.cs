@@ -24,9 +24,7 @@ namespace OSPPOS.Models
         public ICollection<Payment> Payments { get; set; } = [];
 
         // Computed
-        public decimal TotalDebt => SaleOrders
-            .Where(o => o.PaymentState != PaymentState.Unpaid)
-            .Sum(o => o.AmountDue);
+  
     }
 
 

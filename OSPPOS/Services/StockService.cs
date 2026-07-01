@@ -23,7 +23,7 @@ namespace OSPPOS.Services
                 ReceivedDate = vm.ReceivedDate,
                 SupplierInvoiceRef = vm.SupplierInvoiceRef,
                 Notes = vm.Notes,
-                ReceivedById = userId
+         
             };
 
             foreach (var item in vm.Items.Where(i => i.Quantity > 0))
@@ -55,7 +55,7 @@ namespace OSPPOS.Services
             var query = ctx.StockBatches
                 .Include(b => b.Supplier)
                 .Include(b => b.Items).ThenInclude(i => i.Product)
-                .Include(b => b.ReceivedBy)
+             
                 .AsQueryable();
 
             if (from.HasValue) query = query.Where(b => b.ReceivedDate >= from.Value);
@@ -68,7 +68,7 @@ namespace OSPPOS.Services
             await ctx.StockBatches
                 .Include(b => b.Supplier)
                 .Include(b => b.Items).ThenInclude(i => i.Product)
-                .Include(b => b.ReceivedBy)
+             
                 .FirstOrDefaultAsync(b => b.Id == id);
 
         public async Task<string> GenerateGRNNumberAsync()

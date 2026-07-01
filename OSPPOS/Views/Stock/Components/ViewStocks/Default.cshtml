@@ -16,19 +16,19 @@
     var protector = DataProtectionProvider.CreateProtector("IdProtector");
     var stocks = Model.ToList();
 }
-
-<div class="card rounded-5 table-responsive shadow mb-4">
-    <div class="card-header py-3">
-        <i class="fas fa-fw fa-file-alt"></i>
-        <h6 class="m-0 font-weight-bold text-primary d-inline">Stocks</h6>
-        <button id="btnAddStock" class="btn btn-sm btn-rounded rounded-5 btn-outline-primary fa-pull-right"
-                onclick="document.getElementById('AddStockBatchDialog').showModal()">
-            <i class="fa fa-fw fa-plus-circle"></i>Add Stock
-        </button>
-    </div>
-
-    <div class="card-body">
-        <table class="table dataTables_wrapper">
+<div class="tab-content tab-content-dim" id="myTabContent">
+    <!-- TAB 1: USERS -->
+    <div class="tab-pane fade show active tab-pane-dim" id="users" role="tabpanel">
+        <div class="tab-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-semibold mb-0"><i class="bi bi-people me-2"></i>Stocks</h6>
+                <button class="btn btn-primary btn-sm" id="openFormBtn2" onclick="document.getElementById('AddStockDialog').showModal()">
+                    <i class="bi bi-plus-circle me-1"></i>Add Stock
+                </button>
+            </div>
+            <!-- DATATABLES -->
+            <div class="table-container">
+        <table class="table darkTable">
             <thead>
                 <tr>
                     <th>SN</th>
@@ -132,10 +132,10 @@
             </tbody>
         </table>
     </div>
-
-    <div class="card-footer"></div>
+    
 </div>
-
+</div>
+</div>
 <iframe id="printFrame" style="display:none;"></iframe>
 
 <script type="text/javascript">

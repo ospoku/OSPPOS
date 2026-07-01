@@ -20,8 +20,7 @@ namespace OSPPOS.Models
         public DateTime ReceivedDate { get; set; } = DateTime.UtcNow;
         public string? SupplierInvoiceRef { get; set; }
         public string? Notes { get; set; }
-        public string ReceivedById { get; set; } = string.Empty;
-        public AppUser? ReceivedBy { get; set; }
+    
 
         public decimal TotalCost => Items.Sum(i => i.TotalCost);
 

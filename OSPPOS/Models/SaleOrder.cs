@@ -13,40 +13,18 @@ namespace OSPPOS.Models
 
         public string OrderNumber { get; set; } = string.Empty;
 
-        public int? CustomerId { get; set; }
-        public Customer? Customer { get; set; } = null!;
-        public string? WalkInCustomerName { get; set; }
+        public int CustomerId { get; set; }
+        public Customer Customer { get; set; } = null!;
+        
 
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;
         public DateTime? DueDate { get; set; }   // optional (only if you care about deadlines)
 
         public string? Notes { get; set; }
 
-        public decimal Discount { get; set; } = 0;
-        public decimal DiscountPercent { get; set; } = 0;
-
         public ICollection<SaleOrderItem> Items { get; set; } = [];
-        public ICollection<Payment> Payments { get; set; } = [];
-
-        // 🔥 COMPUTED VALUES (single source of truth)
-        public decimal SubTotal => Items.Sum(i => i.LineTotal);
-
-        public decimal DiscountAmount =>
-            DiscountPercent > 0 ? SubTotal * DiscountPercent / 100 : Discount;
-
-        public decimal TotalAmount => SubTotal - DiscountAmount;
-
-        public decimal AmountPaid => Payments.Sum(p => p.Amount);
-
-        public decimal AmountDue => TotalAmount - AmountPaid;
-
-        public PaymentState PaymentState =>
-            AmountPaid >= TotalAmount ? PaymentState.Paid :
-            AmountPaid > 0 ? PaymentState.Partial :
-            PaymentState.Unpaid;
-
-        public string CustomerDisplay =>
-            Customer?.Name ?? WalkInCustomerName ?? "Walk-in";
+        
+     
     }
 }
 

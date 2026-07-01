@@ -397,7 +397,7 @@ using System.Security.Claims;
 namespace OSPPOS.Controllers;
 
 [Authorize]
-public class SaleController(ISaleService sales, XContext ctx, INotyfService notyf) : Controller
+public class SaleOrderController(ISaleOrderService sales, XContext ctx, INotyfService notyf) : Controller
 {
     // GET /Sale
     public async Task<IActionResult> Index(DateTime? from, DateTime? to,
@@ -415,11 +415,11 @@ public class SaleController(ISaleService sales, XContext ctx, INotyfService noty
 
     // POST /Sale/AddSale
     [HttpPost, ValidateAntiForgeryToken]
-    public async Task <IActionResult> AddSale(AddSaleVM addSaleVM)
+    public async Task <IActionResult> AddSale(AddSaleOrderVM addSaleOrderVM)
     {
 
         var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var result = await sales.AddSaleAsync(addSaleVM, user);
+        var result = await sales.AddSaleAsync(addSaleOrderVM, user);
 
         if (!result.Success)
         {
@@ -459,7 +459,7 @@ public class SaleController(ISaleService sales, XContext ctx, INotyfService noty
         var order = await sales.GetOrderAsync(id);
         if (order is null) return NotFound();
         ViewBag.Order = order;
-        return View(new RecordPaymentVM { SaleOrderId = id, Amount = order.AmountDue });
+        return View(new RecordPaymentVM { SaleOrderId = id});
     }
 
     // POST /Sale/RecordPayment

@@ -15,7 +15,7 @@ namespace OSPPOS.Data
      
         public DbSet<Message> Messages { get; set; }
       
- 
+ public DbSet<Invoice> Invoices { get; set; }
       public DbSet<StockMovement> StockMovements { get; set; }
       public DbSet<PaymentMethod> PaymentMethods { get; set; }
         

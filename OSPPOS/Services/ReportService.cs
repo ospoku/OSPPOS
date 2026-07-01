@@ -23,7 +23,7 @@ namespace OSPPOS.Services
             var orders = await ctx.SaleOrders
                 .Include(o => o.Customer)
                 .Include(o => o.Items)
-                .Include(o => o.Payments)
+              
                 .Where(o => o.OrderDate >= from && o.OrderDate <= to.AddDays(1))
                 .OrderByDescending(o => o.OrderDate)
                 .ToListAsync();
@@ -50,7 +50,7 @@ namespace OSPPOS.Services
         public async Task<DebtorReportVm> GetDebtorReportAsync()
         {
             var customers = await ctx.Customers
-                .Include(c => c.SaleOrders).ThenInclude(o => o.Payments)
+                .Include(c => c.SaleOrders)
                 .Where(c => c.SaleOrders.Any())
                 .ToListAsync();
 
@@ -105,7 +105,7 @@ namespace OSPPOS.Services
             var allOrders = await ctx.SaleOrders
                 .Include(o => o.Customer)
                 .Include(o => o.Items)
-                .Include(o => o.Payments)
+            
                 .ToListAsync();
 
             var todayOrders = allOrders.Where(o => o.OrderDate.Date == today).ToList();
@@ -118,10 +118,10 @@ namespace OSPPOS.Services
 
             return new DashboardVM
             {
-                TodaySales = todayOrders.Sum(o => o.TotalAmount),
+                //TodaySales = todayOrders.Sum(o => o.TotalAmount),
                 TodayTransactions = todayOrders.Count,
-                MonthSales = monthOrders.Sum(o => o.TotalAmount),
-                TotalOutstanding = allOrders.Sum(o => o.AmountDue),
+                //MonthSales = monthOrders.Sum(o => o.TotalAmount),
+                //TotalOutstanding = allOrders.Sum(o => o.AmountDue),
                 LowStockCount = lowStockItems.Count,
                 LowStockItems = lowStockItems,
                 RecentSales = recentOrders
@@ -154,11 +154,11 @@ namespace OSPPOS.Services
             {
                 ws.Cell(row, 1).Value = o.OrderNumber;
                 ws.Cell(row, 2).Value = o.OrderDate.ToString("dd/MM/yyyy HH:mm");
-                ws.Cell(row, 3).Value = o.CustomerDisplay;
+                //ws.Cell(row, 3).Value = o.CustomerDisplay;
                 
-                ws.Cell(row, 5).Value = (double)o.TotalAmount;
-                ws.Cell(row, 6).Value = (double)o.AmountPaid;
-                ws.Cell(row, 7).Value = (double)o.AmountDue;
+                //ws.Cell(row, 5).Value = (double)o.TotalAmount;
+                //ws.Cell(row, 6).Value = (double)o.AmountPaid;
+                //ws.Cell(row, 7).Value = (double)o.AmountDue;
                
                 ws.Cell(row, 5).Style.NumberFormat.Format = "#,##0.00";
                 ws.Cell(row, 6).Style.NumberFormat.Format = "#,##0.00";
@@ -168,9 +168,9 @@ namespace OSPPOS.Services
 
             // Totals
             ws.Cell(row, 4).Value = "TOTAL";
-            ws.Cell(row, 5).Value = (double)report.TotalRevenue;
-            ws.Cell(row, 6).Value = (double)report.TotalReceived;
-            ws.Cell(row, 7).Value = (double)report.TotalOutstanding;
+            //ws.Cell(row, 5).Value = (double)report.TotalRevenue;
+            //ws.Cell(row, 6).Value = (double)report.TotalReceived;
+            //ws.Cell(row, 7).Value = (double)report.TotalOutstanding;
             for (int c = 4; c <= 7; c++)
             {
                 ws.Cell(row, c).Style.Font.Bold = true;

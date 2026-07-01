@@ -1,8 +1,7 @@
 ﻿ @model OSPPOS.ViewModels.AddCustomerVM
 
-<dialog id="AddCustomerDialog" class="modal-dialog-centered">
- <div class="modal-content">
-     <div class="modal-header">
+<dialog id="AddCustomerDialog">
+
         <h6 class="m-0 font-weight-bold d-inline">
             <i class="fas fa-fw fa-user"></i> Add Customer
         </h6>
@@ -11,7 +10,7 @@
                 onclick="document.getElementById('AddCustomerDialog').close()">
             Close
         </button>
-    </div>
+   
     <div class="modal-body">
     @using (Html.BeginForm("AddCustomer", "Customer", FormMethod.Post, new { id = "addCustomerForm" }))
     {
@@ -102,7 +101,6 @@
     }
    
     </div>
-</div>
 </dialog>
 
 <script>

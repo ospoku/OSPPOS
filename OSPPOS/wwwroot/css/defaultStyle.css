@@ -568,3 +568,150 @@ body {
     padding: 1.5rem;
 }
 
+/* ============================================================ */
+/* ★ DIALOG STYLES — BULLETPROOF CENTERING ★                   */
+/* ============================================================ */
+dialog {
+    /* === CENTERING (WORKS 100%) === */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* === RESET DEFAULTS === */
+    margin: 0;
+    border: none;
+    padding: 0;
+    /* === DARK THEME === */
+    background: #1a222c;
+    color: #e9edf2;
+    /* === SIZING === */
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow: auto;
+    /* === VISUAL === */
+    border-radius: 16px;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.6);
+    /* === ANIMATION (optional) === */
+    animation: dialogFadeIn 0.2s ease;
+}
+
+@keyframes dialogFadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* Backdrop */
+dialog::backdrop {
+    background: rgba(0,0,0,0.1);
+    backdrop-filter: blur(4px);
+    animation: backdropFadeIn 0.2s ease;
+}
+
+@keyframes backdropFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Dialog content styling */
+dialog .dialog-content {
+    padding: 2rem 2.5rem;
+    min-width: 350px;
+    max-width: 500px;
+}
+
+    dialog .dialog-content h2 {
+        color: #e9edf2;
+        margin: 0 0 1rem 0;
+    }
+
+    dialog .dialog-content p {
+        color: #cbd5e1;
+        line-height: 1.6;
+        margin: 0 0 1rem 0;
+    }
+
+    dialog .dialog-content ul {
+        color: #cbd5e1;
+        line-height: 1.8;
+        padding-left: 1.5rem;
+        margin: 0 0 1.5rem 0;
+    }
+
+    dialog .dialog-content code {
+        background: #0b0e14;
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        color: #60a5fa;
+    }
+
+dialog .dialog-footer {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    border-top: 1px solid #2d3a47;
+    padding-top: 1rem;
+    margin-top: 0.5rem;
+}
+
+dialog .btn-close-dialog {
+    padding: 0.5rem 1.5rem;
+    background: #374151;
+    color: #e9edf2;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.15s;
+}
+
+    dialog .btn-close-dialog:hover {
+        background: #4b5563;
+    }
+
+dialog .btn-confirm-dialog {
+    padding: 0.5rem 1.5rem;
+    background: #3a6b9b;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.15s;
+}
+
+    dialog .btn-confirm-dialog:hover {
+        background: #4a7bab;
+    }
+
+/* ── Scrollbar styling ── */
+.sidebar::-webkit-scrollbar,
+.content-area::-webkit-scrollbar,
+dialog::-webkit-scrollbar {
+    width: 5px;
+}
+
+.sidebar::-webkit-scrollbar-track,
+.content-area::-webkit-scrollbar-track,
+dialog::-webkit-scrollbar-track {
+    background: #131a22;
+}
+
+.sidebar::-webkit-scrollbar-thumb,
+.content-area::-webkit-scrollbar-thumb,
+dialog::-webkit-scrollbar-thumb {
+    background: #3a4a5a;
+    border-radius: 8px;
+}

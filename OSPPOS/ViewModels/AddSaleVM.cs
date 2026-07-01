@@ -8,10 +8,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace OSPPOS.ViewModels
 {
-    public class AddSaleVM
+    public class AddSaleOrderVM
     {
-        public int? CustomerId { get; set; }
-        public string? WalkInCustomerName { get; set; }
+        public int CustomerId { get; set; }
+        
     
        
         public DateTime? DueDate { get; set; }
@@ -20,8 +20,6 @@ namespace OSPPOS.ViewModels
         public decimal Discount { get; set; } = 0;
         public List<SaleItemVm> Items { get; set; } = [];
 
-        public decimal CashReceived { get; set; } = 0;
-        public int PaymentMethodId { get; set; } 
         public string? PaymentReference { get; set; }
         public int PaymentStatusId {  get; set; }
  public SelectList Customers { get; set; }

@@ -51,7 +51,7 @@ public class StockController(IStockService stock, XContext ctx) : Controller
             ReceivedDate = vm.ReceivedDate,
             SupplierInvoiceRef = vm.SupplierInvoiceRef,
             Notes = vm.Notes,
-            ReceivedById = User.FindFirstValue(ClaimTypes.NameIdentifier)!
+           
         };
 
         foreach (var item in vm.Items)

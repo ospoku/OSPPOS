@@ -19,18 +19,22 @@
     var protector = DataProtectionProvider.CreateProtector("IdProtector");
   
 }
-<div class="card shadow mb-4 rounded-5">
-    <div class=" card-header rounded-top-5 px-3 py-3"><i class="fas fa-fw fa-tags"></i>
-        <h6 class="m-0 font-weight-bold text-primary d-inline">Products</h6>
-        <button id="btnAddMemo" class="btn btn-sm btn-rounded rounded-5 btn-outline-primary fa-pull-right" onclick="document.getElementById('AddProductDialog').showModal()"><i class="fa fa-fw fa-plus-circle"></i>Add Product</button>
-        </div>
-        <div class="card-body">
-         <h5 class="card-title">xxxxxxxxxx</h5>
-         <p class="card-text text-muted">xxxxxxxxxxxxx</p>
-         <div class="table-responsive">
-            <table class="table dataTables_wrapper" id="tblProducts">
+<div class="tab-content tab-content-dim" id="myTabContent">
+    <!-- TAB 1: USERS -->
+    <div class="tab-pane fade show active tab-pane-dim" id="users" role="tabpanel">
+        <div class="tab-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-semibold mb-0"><i class="bi bi-tags me-2"></i>Products</h6>
+                <button class="btn btn-primary btn-sm" id="openFormBtn2" onclick="document.getElementById('AddProductDialog').showModal()">
+                    <i class="bi bi-plus-circle me-1"></i>Add User
+                </button>
+            </div>
+            <!-- DATATABLES -->
+            <div class="table-container">
+            <table class="table darkTable" id="userTable">
                 <thead>
-                    <tr><th>SN</th>
+                    <tr>
+                    <th>SN</th>
                     <th>SKU</th>
                     <th>Product</th>
                     <th>Category</th>
@@ -50,7 +54,8 @@
                   
   @foreach (var p in Model)
                 {
-                    <tr class="@(p.IsLowStock ? "table-warning" : "")">
+                            <tr class="@(p.IsLowStock ? "table-warning" : "")">
+                              
                         <td></td>
                         <td class="text-muted small">@(p.SKU ?? "—")</td>
                         <td class="ellipsed-text">
@@ -123,16 +128,117 @@
                 </tbody>
             </table>
        </div>
-     </div>
+    
 
     
     <div class="card-footer rounded-bottom-5 border-0 text-muted small">
         <span>@Model.Count().ToString() product(s) &nbsp;|&nbsp;</span>
         Stock cost value: <strong>GHS @Model.Sum(p => p.CurrentStock * p.CostPrice).ToString("N2")</strong> &nbsp;|&nbsp;
-        Retail value: <strong>GHS @Model.Sum(p => p.CurrentStock * p.SellingPrice).ToString("N2")</strong> 
-        
+        Retail value: <strong>GHS @Model.Sum(p => p.CurrentStock * p.SellingPrice).ToString("N2")</strong>
+            </div>
 </div>
 </div>
+</div>
+@* <div class="tab-content tab-content-dim" id="myTabContent">
+    <!-- TAB 1: USERS -->
+    <div class="tab-pane fade show active tab-pane-dim" id="users" role="tabpanel">
+        <div class="tab-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-semibold mb-0"><i class="bi bi-people me-2"></i>User Management</h6>
+                <button class="btn btn-primary btn-sm" id="openFormBtn2" onclick="document.getElementById('AddCustomerDialog').showModal()">
+                    <i class="bi bi-plus-circle me-1"></i>Add User
+                </button>
+            </div>
+            <!-- DATATABLES -->
+            <div class="table-container"> *@
+@* <div class="tab-content tab-content-dim" id="myTabContent">
+    <!-- TAB 1: USERS -->
+    <div class="tab-pane fade show active tab-pane-dim" id="users" role="tabpanel">
+        <div class="tab-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-semibold mb-0"><i class="bi bi-people me-2"></i>User Management</h6>
+                <button class="btn btn-primary btn-sm" id="openFormBtn2" onclick="document.getElementById('AddCustomerDialog').showModal()">
+                    <i class="bi bi-plus-circle me-1"></i>Add User
+                </button>
+            </div>
+            <!-- DATATABLES -->
+            <div class="table-container">
+                <table id="userTable" class="table table-striped">
+                    <thead>
+                        <tr>
+
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Address</th>
+                            <th>Tax Number</th>
+                            <th>IsActive</th>
+                            <th>Allow Credit</th>
+                            <th>Credit Limit</th>
+                            <th>Sales Order</th>
+                            <th>Payments</th>
+                            <th>Total Debt</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var customer in Model)
+                        {
+                            <tr>
+                                @* <td><div class="d-flex align-items-center gap-2"><span class="table-avatar">JD</span><span class="fw-medium">John Doe</span></div></td> *@
+
+
+
+                               @*  <td class="ellipsed-text">@customer.Name</td>
+                                <td class="ellipsed-text"> @customer.Phone</td>
+
+                                <td class="ellipsed-text">@customer.Email</td>
+                                <td class="ellipsed-text">
+                                    @customer.Address
+                                </td>
+                                <td>@customer.TaxNumber</td>
+                                <td><span class="status-badge status-active">@customer.IsActive</span></td>
+                                <td>@customer.AllowCredit</td>
+                                <td>@customer.CreditLimit</td>
+                                <td>@customer.SaleOrders.Count()</td>
+                                <td>@customer.Payments.Count()</td>
+                                <td>@customer.TotalDebt</td>
+                                <td class="text-end">
+                                    <button class="table-action-btn text-primary" title="Edit"><i class="bi bi-pencil"></i></button>
+                                    <button class="table-action-btn text-danger" title="Delete"><i class="bi bi-trash"></i></button>
+                                    @if (customer.CanEdit)
+                                    {
+
+                                        <button onclick="openDialogFromData(this)" data-url="EditCustomer" data-user-id="@protector.Protect(customer.PublicId.ToString())" data-dialog-id="EditCustomerDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-edit mr-3 text-warning"></i>Edit</button>
+                                    }
+
+
+
+                                    @if (customer.CanPrint)
+                                    {
+
+                                        <button type="button" class="dropdown-item-custom" onclick="printcustomerIframe('@protector.Protect(customer.PublicId.ToString())')">
+                                            <i style="width:15px; height:15px" class="fa fa-print mr-3 text-primary"></i>Print
+                                        </button>
+                                    }
+
+
+                                    <button type="button" onclick="de" class="dropdown-item-custom"><i style="width:15px; height:15px" class="fa fa-trash mr-3 text-danger"></i>Delete</button>
+
+                                </td>
+                            </tr>
+                        }
+
+
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>  *@
 <iframe id="printFrame" style="display:none;"></iframe>
 
 <script type="text/javascript">

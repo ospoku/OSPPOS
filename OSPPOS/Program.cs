@@ -28,7 +28,7 @@ builder.Services.AddScoped<AssignmentService>();
 
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IStockService, StockService>();
-builder.Services.AddScoped<ISaleService, SaleService>();
+builder.Services.AddScoped<ISaleOrderService, SaleOrderService>();
 builder.Services.AddScoped<EmailService>();
 
 builder.Services.AddAuthentication(options =>

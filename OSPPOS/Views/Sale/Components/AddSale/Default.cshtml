@@ -1,5 +1,5 @@
 ﻿@using OSPPOS.Models
-@model OSPPOS.ViewModels.AddSaleVM;
+@model OSPPOS.ViewModels.AddSaleOrderVM;
 
 <dialog id="AddSaleDialog">
 
@@ -245,7 +245,7 @@
 
                                     <!-- Floating label + input -->
                                     <div class="did-floating-label-content">
-                                        <input type="number" asp-for="@Model.CashReceived"
+                                        <input type="number" asp-for="@Model.CreditInfo"
                                                class="did-floating-input text-end" name="CashReceived"
                                                id="tenderedField"
                                                placeholder=" " min="0" step="0.01" value="0" oninput="calcChange()" />
