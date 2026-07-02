@@ -1,6 +1,4 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
-using AspNetCoreHero.ToastNotification.Notyf;
-using DocumentFormat.OpenXml.InkML;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
@@ -8,10 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using OSPPOS.Data;
 using OSPPOS.Models;
 using OSPPOS.Services;
-using OSPPOS.ViewComponents;
 using OSPPOS.ViewModels;
-using System;
-using System.Diagnostics.Metrics;
 
 namespace OSPPOS.Controllers
 {

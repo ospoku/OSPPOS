@@ -1,13 +1,15 @@
-@model OSPPOS.ViewModels.AddStockBatchVM
-@* 
-<dialog id="AddStockBatchDialog" class="col-md-8 border-0 rounded p-0">
-    <div class="modal-header">
-        <h6 class="m-0 font-weight-bold d-inline">
+﻿@model OSPPOS.ViewModels.AddStockBatchVM
+
+
+
+
+<dialog id="AddStockBatchDialog" class="border-0 rounded p-0" style="max-width: 950px; width: 100%;">
+    <div class="modal-header-custom">
+        <h6>
             <i class="fas fa-fw fa-truck"></i> Receive Stock (GRN)
         </h6>
-        <button type="button" class="btn btn-sm btn-outline-danger"
-                onclick="document.getElementById('AddStockBatchDialog').close()">
-            Close
+        <button type="button" class="btn-close-custom" onclick="document.getElementById('AddStockBatchDialog').close()">
+            <i class="fas fa-times"></i> Close
         </button>
     </div>
 
@@ -15,230 +17,54 @@
     {
         @Html.AntiForgeryToken()
 
-        <div class="modal-body">
-            <div asp-validation-summary="ModelOnly" class="alert alert-danger small py-2"></div>
-
-            <!-- Batch Header -->
-            <div class="card shadow-sm mb-3">
-                <div class="card-header bg-white border-0">
-                    <h6 class="mb-0 fw-semibold">Delivery Details</h6>
-                </div>
-                <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <select asp-for="SupplierId" asp-items="Model.SupplierList" class="dmx-choices">
-                                <option value="">Select Supplier</option>
-                            </select>
-                            <span asp-validation-for="SupplierId" class="text-danger small"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="did-floating-label-content">
-                                <input asp-for="ReceivedDate" type="date" class="did-floating-input" />
-                                <label class="did-floating-label">Received Date</label>
-                                <span asp-validation-for="ReceivedDate" class="text-danger small"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="did-floating-label-content">
-                                <input asp-for="SupplierInvoiceRef" type="text" class="did-floating-input" placeholder=" " />
-                                <label class="did-floating-label">Supplier Invoice Ref</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="did-floating-label-content">
-                                <input asp-for="Notes" type="text" class="did-floating-input" placeholder=" " />
-                                <label class="did-floating-label">Notes</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Line Items -->
-            <div class="card shadow-sm">
-                <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 fw-semibold">Products Received</h6>
-                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="addLine()">
-                        <i class="fas fa-plus"></i> Add Line
-                    </button>
-                </div>
-                <div class="card-body p-3">
-                    <table class="table table-sm mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Product</th>
-                                <th>Qty</th>
-                                <th>Unit Cost (GHS)</th>
-                                <th>Total</th>
-                                <th>Expiry</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody id="lineItems">
-                            @for (int i = 0; i < Model.Items.Count; i++)
-                            {
-                                <tr>
-                                    <td>
-                                        <select name="Items[@i].ProductId" class="dmx-choices form-select form-select-sm">
-                                            <option value="">Select Product</option>
-                                            @foreach (var item in Model.ProductList)
-                                            {
-                                                 <option value="@item.Value @(item.Value == Model.Items[i].ProductId.ToString() ? "selected" : "")">
-                                                    @item.Text 
-                                                </option> 
-                                            }
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input name="Items[@i].Quantity" type="number" min="1"
-                                               value="@Model.Items[i].Quantity"
-                                               class="form-control form-control-sm" oninput="calcTotal(this)" />
-                                    </td>
-                                    <td>
-                                        <input name="Items[@i].UnitCost" type="number" step="0.01" min="0"
-                                               value="@Model.Items[i].UnitCost"
-                                               class="form-control form-control-sm" oninput="calcTotal(this)" />
-                                    </td>
-                                    <td>
-                                        <span class="line-total fw-semibold">0.00</span>
-                                    </td>
-                                    <td>
-                                        <input name="Items[@i].ExpiryDate" type="date"
-                                               value="@Model.Items[i].ExpiryDate?.ToString("yyyy-MM-dd")"
-                                               class="form-control form-control-sm" />
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-outline-danger"
-                                                onclick="removeLine(this)">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                        <tfoot>
-                            <tr class="table-light">
-                                <td colspan="3" class="text-end fw-semibold">Batch Total:</td>
-                                <td><span id="batchTotal" class="fw-bold">0.00</span></td>
-                                <td colspan="2"></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Save GRN</button>
-        </div>
-    }
-</dialog>
-
-<script>
-    let lineIndex = @Model.Items.Count;
-
-    const productOptions = `<option value="">Select Product</option>
-        @foreach (var item in Model.ProductList)
-        {
-            <text><option value="@item.Value">@item.Text</option></text>
-        }`;
-
-    function addLine() {
-        const row = `
-            <tr>
-                <td><select name="Items[${lineIndex}].ProductId" class="dmx-choices form-select form-select-sm">${productOptions}</select></td>
-                <td><input name="Items[${lineIndex}].Quantity" type="number" min="1" value="0" class="form-control form-control-sm" oninput="calcTotal(this)" /></td>
-                <td><input name="Items[${lineIndex}].UnitCost" type="number" step="0.01" min="0" value="0.00" class="form-control form-control-sm" oninput="calcTotal(this)" /></td>
-                <td><span class="line-total fw-semibold">0.00</span></td>
-                <td><input name="Items[${lineIndex}].ExpiryDate" type="date" class="form-control form-control-sm" /></td>
-                <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="removeLine(this)"><i class="fas fa-times"></i></button></td>
-            </tr>`;
-        document.getElementById('lineItems').insertAdjacentHTML('beforeend', row);
-        lineIndex++;
-        updateBatchTotal();
-    }
-
-    function removeLine(btn) {
-        btn.closest('tr').remove();
-        updateBatchTotal();
-    }
-
-    function calcTotal(input) {
-        const row = input.closest('tr');
-        const qty = parseFloat(row.querySelector('input[name*="Quantity"]').value) || 0;
-        const cost = parseFloat(row.querySelector('input[name*="UnitCost"]').value) || 0;
-        row.querySelector('.line-total').textContent = (qty * cost).toFixed(2);
-        updateBatchTotal();
-    }
-
-    function updateBatchTotal() {
-        const totals = [...document.querySelectorAll('.line-total')]
-            .reduce((sum, el) => sum + parseFloat(el.textContent || 0), 0);
-        document.getElementById('batchTotal').textContent = totals.toFixed(2);
-    }
-
-</script> *@
-<dialog id="AddStockBatchDialog" class="col-md-8 border-0 rounded p-0">
-    <div class="modal-header">
-        <h6 class="m-0 font-weight-bold d-inline">
-            <i class="fas fa-fw fa-truck"></i> Receive Stock (GRN)
-        </h6>
-        <button type="button" class="btn btn-sm btn-outline-danger"
-                onclick="document.getElementById('AddStockBatchDialog').close()">
-            Close
-        </button>
-    </div>
-
-    @using (Html.BeginForm("AddStockBatch", "Stock", FormMethod.Post, new { id = "addStockBatchForm" }))
-    {
-        @Html.AntiForgeryToken()
-
-        <div class="modal-body">
+        <div class="modal-body-custom">
 
             <!-- Validation errors -->
-            <div id="grn-errors" class="alert alert-danger small py-2" style="display:none">
+            <div id="grn-errors" class="alert alert-danger small py-2 alert-dark" style="display:none">
                 <ul id="grn-error-list" class="mb-0"></ul>
             </div>
 
             <!-- Delivery Details -->
-            <div class="card shadow-sm mb-3">
-                <div class="card-header bg-white border-0">
-                    <h6 class="mb-0 fw-semibold">Delivery details</h6>
+            <div class="card-custom shadow-sm mb-3">
+                <div class="card-header-custom">
+                    <h6><i class="fas fa-truck"></i> Delivery Details</h6>
                 </div>
-                <div class="card-body">
+                <div class="card-body-custom">
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label small">Supplier <span class="text-danger">*</span></label>
-                            <select id="grnSupplier" asp-for="SupplierId" asp-items="Model.SupplierList" class="dmx-choices form-select form-select-sm">
+                            <label class="form-label-dark">Supplier <span class="text-danger-dark">*</span></label>
+                            <select id="grnSupplier" asp-for="SupplierId" asp-items="Model.SupplierList" 
+                                    class="choices-select form-select-dark" 
+                                    data-placeholder="Select supplier">
                                 <option value="">Select supplier</option>
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label small">Received date <span class="text-danger">*</span></label>
-                            <input asp-for="ReceivedDate" type="date" class="form-control form-control-sm" />
+                            <label class="form-label-dark">Received date <span class="text-danger-dark">*</span></label>
+                            <input asp-for="ReceivedDate" type="date" class="form-control form-control-dark" />
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label small">Supplier invoice ref</label>
-                            <input asp-for="SupplierInvoiceRef" type="text" class="form-control form-control-sm" placeholder="e.g. INV-00123" />
+                            <label class="form-label-dark">Supplier invoice ref</label>
+                            <input asp-for="SupplierInvoiceRef" type="text" class="form-control form-control-dark" placeholder="e.g. INV-00123" />
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label small">Notes</label>
-                            <input asp-for="Notes" type="text" class="form-control form-control-sm" placeholder="Optional notes" />
+                            <label class="form-label-dark">Notes</label>
+                            <input asp-for="Notes" type="text" class="form-control form-control-dark" placeholder="Optional notes" />
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Line Items -->
-            <div class="card shadow-sm">
-                <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 fw-semibold">Products received</h6>
-                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="addLine()">
+            <div class="card-custom shadow-sm">
+                <div class="card-header-custom d-flex justify-content-between align-items-center">
+                    <h6><i class="fas fa-boxes"></i> Products Received</h6>
+                    <button type="button" class="btn btn-sm btn-outline-primary-custom" onclick="addLine()">
                         <i class="fas fa-plus me-1"></i> Add line
                     </button>
                 </div>
                 <div class="table-responsive p-3">
-                    <table class="table table-sm table-hover align-middle mb-0" style="table-layout:fixed;min-width:600px">
+                    <table class="table table-sm table-hover align-middle mb-0" style="table-layout:fixed;min-width:600px;color: #e4e6eb;">
                         <colgroup>
                             <col style="width:35%">
                             <col style="width:10%">
@@ -248,7 +74,7 @@
                             <col style="width:6%">
                             <col style="width:6%">
                         </colgroup>
-                        <thead class="bg-white">
+                        <thead style="background: #1a1d23; color: #8c929a;">
                             <tr>
                                 <th class="small">Product</th>
                                 <th class="small">Qty</th>
@@ -265,7 +91,7 @@
                                 <tr id="emptyRow">
                                     <td colspan="7" class="text-center text-muted py-4 small">
                                         <i class="fas fa-box-open d-block mb-1" style="font-size:1.4rem"></i>
-                                        No products added yet � click "Add line" to start
+                                        No products added yet — click "Add line" to start
                                     </td>
                                 </tr>
                             }
@@ -275,11 +101,11 @@
                                 {
                                     <tr>
                                         <td>
-                                            <select name="Items[@i].ProductId" class="form-select form-select-sm dmx-choices">
+                                            <select name="Items[@i].ProductId" class="form-select form-select-dark choices-select">
                                                 <option value="">Select product</option>
                                                 @foreach (var item in Model.ProductList)
                                                 {
-                                                    <option value="@item.Value@(item.Value == Model.Items[i].ProductId.ToString() ? "selected" : "")">
+                                                    <option value=" Model.Items[i].ProductId.ToString() ? "selected" >
                                                         @item.Text
                                                     </option>
                                                 }
@@ -288,13 +114,13 @@
                                         <td>
                                             <input name="Items[@i].Quantity" type="number" min="1"
                                                    value="@Model.Items[i].Quantity"
-                                                   class="form-control form-control-sm text-end"
+                                                   class="form-control form-control-dark text-end"
                                                    oninput="calcTotal(this)" />
                                         </td>
                                         <td>
                                             <input name="Items[@i].UnitCost" type="number" step="0.01" min="0"
                                                    value="@Model.Items[i].UnitCost"
-                                                   class="form-control form-control-sm text-end"
+                                                   class="form-control form-control-dark text-end"
                                                    oninput="calcTotal(this)" />
                                         </td>
                                         <td class="text-end fw-semibold">
@@ -303,13 +129,14 @@
                                         <td>
                                             <input name="Items[@i].ExpiryDate" type="date"
                                                    value="@Model.Items[i].ExpiryDate?.ToString("yyyy-MM-dd")"
-                                                   class="form-control form-control-sm" />
+                                                   class="form-control form-control-dark" />
                                         </td>
                                         <td class="text-center">
-                                            <input name="Items[@i].IsActive" type="checkbox" class="form-check-input" checked />
+                                            <input name="Items[@i].IsActive" type="checkbox" 
+                                                   class="form-check-input form-check-input-dark" checked />
                                         </td>
                                         <td class="text-center">
-                                            <button type="button" class="btn btn-sm btn-outline-danger px-2"
+                                            <button type="button" class="btn btn-sm btn-outline-danger-custom px-2"
                                                     onclick="removeLine(this)" aria-label="Remove line">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
@@ -319,10 +146,10 @@
                             }
                         </tbody>
                         <tfoot>
-                            <tr class="table-light">
-                                <td colspan="3" class="text-end small fw-semibold">Batch total</td>
+                            <tr style="background: #1a1d23;">
+                                <td colspan="3" class="text-end small fw-semibold" style="color: #8c929a;">Batch total</td>
                                 <td class="text-end">
-                                    <span id="batchTotal" class="fw-bold">GHS 0.00</span>
+                                    <span id="batchTotal" class="fw-bold" style="color: #667eea;">GHS 0.00</span>
                                 </td>
                                 <td colspan="3"></td>
                             </tr>
@@ -332,20 +159,134 @@
             </div>
         </div>
 
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary btn-sm"
-                    onclick="document.getElementById('AddStockBatchDialog').close()">
+        <div class="modal-footer-custom">
+            <button type="button" class="btn btn-secondary-custom" onclick="document.getElementById('AddStockBatchDialog').close()">
                 Cancel
             </button>
-            <button type="button" class="btn btn-primary btn-sm" onclick="validateAndSaveGRN()">
+            <button type="button" class="btn-save-custom" onclick="validateAndSaveGRN()">
                 <i class="fas fa-save me-1"></i> Save GRN
             </button>
         </div>
     }
 </dialog>
 
+@* <style>
+    /* Additional dark theme styles for the stock dialog */
+    .btn-outline-primary-custom {
+        border: 1px solid #667eea;
+        background: transparent;
+        color: #667eea;
+        padding: 5px 15px;
+        border-radius: 50px;
+        font-size: 13px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+
+    .btn-outline-primary-custom:hover {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+        border-color: transparent;
+    }
+
+    .btn-outline-danger-custom {
+        border: 1px solid #dc3545;
+        background: transparent;
+        color: #dc3545;
+        padding: 3px 10px;
+        border-radius: 50px;
+        font-size: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-danger-custom:hover {
+        background: #dc3545;
+        color: white;
+        box-shadow: 0 0 20px rgba(220, 53, 69, 0.3);
+    }
+
+    .btn-secondary-custom {
+        border: 1px solid #2d323a;
+        background: transparent;
+        color: #8c929a;
+        padding: 10px 25px;
+        border-radius: 50px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+
+    .btn-secondary-custom:hover {
+        background: #2d323a;
+        color: #e4e6eb;
+    }
+
+    /* Table dark theme */
+    .table-dark-custom {
+        color: #e4e6eb;
+    }
+
+    .table-dark-custom thead th {
+        border-bottom: 1px solid #2d323a;
+        color: #8c929a;
+    }
+
+    .table-dark-custom tbody td {
+        border-bottom: 1px solid #2d323a;
+    }
+
+    .table-dark-custom tfoot td {
+        border-top: 1px solid #2d323a;
+    }
+
+    /* Choices.js dark theme overrides for this dialog */
+    .choices-dark-grn .choices__inner {
+        background-color: #1a1d23 !important;
+        border: 1.5px solid #2d323a !important;
+        border-radius: 8px !important;
+        color: #e4e6eb !important;
+        padding: 0.375rem 1rem !important;
+        min-height: 38px !important;
+    }
+
+    .choices-dark-grn .choices__list--dropdown {
+        background-color: #1a1d23 !important;
+        border: 1.5px solid #2d323a !important;
+        color: #e4e6eb !important;
+        border-radius: 8px !important;
+        margin-top: 4px !important;
+    }
+
+    .choices-dark-grn .choices__list--dropdown .choices__item--selectable.is-highlighted {
+        background-color: #667eea !important;
+        color: white !important;
+    }
+
+    .choices-dark-grn .choices__input {
+        background-color: #1a1d23 !important;
+        color: #e4e6eb !important;
+    }
+
+    .choices-dark-grn .choices__placeholder {
+        color: #6c757d !important;
+    }
+
+    .choices-dark-grn .choices__item {
+        color: #e4e6eb !important;
+    }
+
+    .choices-dark-grn .choices__list--dropdown .choices__item--selectable {
+        padding: 8px 12px !important;
+    }
+
+    .choices-dark-grn .choices__list--dropdown .choices__item {
+        color: #e4e6eb !important;
+    }
+</style> *@
+
 <script>
-    let grnLineIndex = @Model.Items.Count;
+    let grnLineIndex = @Model.Items.Count();
 
     const grnProductOptions = [
         '<option value="">Select product</option>',
@@ -362,29 +303,29 @@
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>
-                <select name="Items[${grnLineIndex}].ProductId" class="form-select form-select-sm dmx-choices">
+                <select name="Items[${grnLineIndex}].ProductId" class="form-select form-select-dark choices-select">
                     ${grnProductOptions}
                 </select>
             </td>
             <td>
                 <input name="Items[${grnLineIndex}].Quantity" type="number" min="1" value="1"
-                       class="form-control form-control-sm text-end" oninput="calcTotal(this)" />
+                       class="form-control form-control-dark text-end" oninput="calcTotal(this)" />
             </td>
             <td>
                 <input name="Items[${grnLineIndex}].UnitCost" type="number" step="0.01" min="0" value="0.00"
-                       class="form-control form-control-sm text-end" oninput="calcTotal(this)" />
+                       class="form-control form-control-dark text-end" oninput="calcTotal(this)" />
             </td>
             <td class="text-end fw-semibold">
                 <span class="line-total">0.00</span>
             </td>
             <td>
-                <input name="Items[${grnLineIndex}].ExpiryDate" type="date" class="form-control form-control-sm" />
+                <input name="Items[${grnLineIndex}].ExpiryDate" type="date" class="form-control form-control-dark" />
             </td>
             <td class="text-center">
-                <input name="Items[${grnLineIndex}].IsActive" type="checkbox" class="form-check-input" checked />
+                <input name="Items[${grnLineIndex}].IsActive" type="checkbox" class="form-check-input form-check-input-dark" checked />
             </td>
             <td class="text-center">
-                <button type="button" class="btn btn-sm btn-outline-danger px-2"
+                <button type="button" class="btn btn-sm btn-outline-danger-custom px-2"
                         onclick="removeLine(this)" aria-label="Remove line">
                     <i class="fas fa-trash-alt"></i>
                 </button>
@@ -392,6 +333,10 @@
 
         document.getElementById('lineItems').appendChild(row);
         grnLineIndex++;
+
+        // Initialize Choices.js for the new select
+        initializeChoices(row.querySelector('.choices-select'));
+
         updateBatchTotal();
     }
 
@@ -407,7 +352,7 @@
             tr.innerHTML = `
                 <td colspan="7" class="text-center text-muted py-4 small">
                     <i class="fas fa-box-open d-block mb-1" style="font-size:1.4rem"></i>
-                    No products added yet � click "Add line" to start
+                    No products added yet — click "Add line" to start
                 </td>`;
             tbody.appendChild(tr);
         }
@@ -459,8 +404,58 @@
         document.getElementById('addStockBatchForm').submit();
     }
 
-    // Recalculate totals on load for repopulated lines
+    // Initialize Choices.js for all selects
+    function initializeChoices(element) {
+        if (typeof Choices !== 'undefined') {
+            new Choices(element, {
+                searchEnabled: true,
+                searchPlaceholderValue: 'Search...',
+                placeholder: true,
+                placeholderValue: element.dataset.placeholder || 'Select option...',
+                shouldSort: false,
+                itemSelectText: '',
+                noResultsText: 'No options found',
+                noChoicesText: 'No options available',
+                classNames: {
+                    containerOuter: 'choices choices-dark-grn',
+                    containerInner: 'choices__inner choices__inner-dark',
+                    input: 'choices__input choices__input-dark',
+                    inputCloned: 'choices__input--cloned',
+                    list: 'choices__list',
+                    listItems: 'choices__list--multiple',
+                    listSingle: 'choices__list--single',
+                    listDropdown: 'choices__list--dropdown',
+                    item: 'choices__item',
+                    itemSelectable: 'choices__item--selectable',
+                    itemDisabled: 'choices__item--disabled',
+                    itemChoice: 'choices__item--choice',
+                    placeholder: 'choices__placeholder',
+                    group: 'choices__group',
+                    groupHeading: 'choices__heading',
+                    button: 'choices__button',
+                    activeState: 'is-active',
+                    focusState: 'is-focused',
+                    openState: 'is-open',
+                    disabledState: 'is-disabled',
+                    highlightedState: 'is-highlighted',
+                    selectedState: 'is-selected',
+                    flippedState: 'is-flipped',
+                    loadingState: 'is-loading',
+                    noResults: 'has-no-results',
+                    noChoices: 'has-no-choices'
+                }
+            });
+        }
+    }
+
+    // Initialize on DOM load
     document.addEventListener('DOMContentLoaded', function () {
+        // Initialize all Choices selects
+        document.querySelectorAll('.choices-select').forEach(select => {
+            initializeChoices(select);
+        });
+
+        // Recalculate totals on load for repopulated lines
         document.querySelectorAll('#lineItems tr:not(#emptyRow)').forEach(row => {
             const qty = parseFloat(row.querySelector('input[name*="Quantity"]')?.value) || 0;
             const cost = parseFloat(row.querySelector('input[name*="UnitCost"]')?.value) || 0;
@@ -469,4 +464,235 @@
         });
         updateBatchTotal();
     });
+      // Store Choices instances for cleanup
+        let choicesInstances = [];
+
+        function initializeChoices(selectElement) {
+            if (!selectElement) return;
+
+            // If already a Choices instance, destroy it first
+            if (selectElement._choicesInstance) {
+                selectElement._choicesInstance.destroy();
+            }
+
+            const choices = new Choices(selectElement, {
+                searchEnabled: true,
+                searchPlaceholderValue: 'Search products...',
+                placeholder: true,
+                placeholderValue: selectElement.dataset.placeholder || 'Select option...',
+                shouldSort: false,
+                itemSelectText: '',
+                noResultsText: 'No products found',
+                noChoicesText: 'No products available',
+                searchResultLimit: 20,
+                position: 'bottom',
+                classNames: {
+                    containerOuter: 'choices',
+                    containerInner: 'choices__inner',
+                    input: 'choices__input',
+                    inputCloned: 'choices__input--cloned',
+                    list: 'choices__list',
+                    listItems: 'choices__list--multiple',
+                    listSingle: 'choices__list--single',
+                    listDropdown: 'choices__list--dropdown',
+                    item: 'choices__item',
+                    itemSelectable: 'choices__item--selectable',
+                    itemDisabled: 'choices__item--disabled',
+                    itemChoice: 'choices__item--choice',
+                    placeholder: 'choices__placeholder',
+                    group: 'choices__group',
+                    groupHeading: 'choices__heading',
+                    button: 'choices__button',
+                    activeState: 'is-active',
+                    focusState: 'is-focused',
+                    openState: 'is-open',
+                    disabledState: 'is-disabled',
+                    highlightedState: 'is-highlighted',
+                    selectedState: 'is-selected',
+                    flippedState: 'is-flipped',
+                    loadingState: 'is-loading',
+                    noResults: 'has-no-results',
+                    noChoices: 'has-no-choices'
+                }
+            });
+
+            // Store reference on the element
+            selectElement._choicesInstance = choices;
+            choicesInstances.push(choices);
+
+            return choices;
+        }
+
+        let grnLineIndex = 2; // Start after sample rows
+
+        const grnProductOptions = [
+            '<option value="">Select product</option>',
+            '<option value="1">Premium Coffee Beans</option>',
+            '<option value="2">Organic Green Tea</option>',
+            '<option value="3">Dark Chocolate Bar</option>',
+            '<option value="4">Almond Milk</option>',
+            '<option value="5">Vanilla Extract</option>',
+            '<option value="6">Coconut Oil</option>',
+            '<option value="7">Honey</option>',
+            '<option value="8">Cinnamon Sticks</option>',
+        ].join('');
+
+        function addLine() {
+            const empty = document.getElementById('emptyRow');
+            if (empty) empty.remove();
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>
+                    <select class="form-select form-select-dark choices-select" data-placeholder="Search products...">
+                        ${grnProductOptions}
+                    </select>
+                </td>
+                <td>
+                    <input type="number" min="1" value="1" class="form-control form-control-dark text-end" oninput="calcTotal(this)" />
+                </td>
+                <td>
+                    <input type="number" step="0.01" min="0" value="0.00" class="form-control form-control-dark text-end" oninput="calcTotal(this)" />
+                </td>
+                <td class="text-end fw-semibold">
+                    <span class="line-total">0.00</span>
+                </td>
+                <td>
+                    <input type="date" class="form-control form-control-dark" />
+                </td>
+                <td class="text-center">
+                    <input type="checkbox" class="form-check-input form-check-input-dark" checked />
+                </td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-sm btn-outline-danger-custom px-2" onclick="removeLine(this)">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </td>`;
+
+            document.getElementById('lineItems').appendChild(row);
+            grnLineIndex++;
+
+            // Initialize Choices for the new select
+            const newSelect = row.querySelector('.choices-select');
+            if (typeof Choices !== 'undefined') {
+                initializeChoices(newSelect);
+            }
+
+            updateBatchTotal();
+        }
+
+        function removeLine(btn) {
+            const row = btn.closest('tr');
+            const select = row.querySelector('.choices-select');
+
+            // Clean up Choices instance
+            if (select && select._choicesInstance) {
+                select._choicesInstance.destroy();
+                delete select._choicesInstance;
+            }
+
+            row.remove();
+
+            const tbody = document.getElementById('lineItems');
+            const remaining = tbody.querySelectorAll('tr');
+
+            if (!remaining.length) {
+                const tr = document.createElement('tr');
+                tr.id = 'emptyRow';
+                tr.innerHTML = `
+                    <td colspan="7" class="text-center text-muted py-4 small">
+                        <i class="fas fa-box-open d-block mb-1" style="font-size:1.4rem"></i>
+                        No products added yet — click "Add line" to start
+                    </td>`;
+                tbody.appendChild(tr);
+            }
+
+            updateBatchTotal();
+        }
+
+        function calcTotal(input) {
+            const row = input.closest('tr');
+            const qty = parseFloat(row.querySelector('input[type="number"]').value) || 0;
+            const cost = parseFloat(row.querySelectorAll('input[type="number"]')[1].value) || 0;
+            row.querySelector('.line-total').textContent = (qty * cost).toFixed(2);
+            updateBatchTotal();
+        }
+
+        function updateBatchTotal() {
+            const totals = document.querySelectorAll('.line-total');
+            let sum = 0;
+            totals.forEach(el => {
+                sum += parseFloat(el.textContent || 0);
+            });
+            document.getElementById('batchTotal').textContent = 'GHS ' + sum.toFixed(2);
+        }
+
+        function validateAndSaveGRN() {
+            const errors = [];
+
+            const supplier = document.getElementById('grnSupplier');
+            const supplierValue = supplier ? supplier.value : '';
+            if (!supplierValue) errors.push('Please select a supplier.');
+
+            const rows = document.querySelectorAll('#lineItems tr');
+            const visibleRows = Array.from(rows).filter(r => r.id !== 'emptyRow');
+
+            if (!visibleRows.length) errors.push('Please add at least one product.');
+
+            visibleRows.forEach((row, i) => {
+                const select = row.querySelector('.choices-select');
+                const product = select ? select.value : '';
+                const qtyInput = row.querySelector('input[type="number"]');
+                const costInput = row.querySelectorAll('input[type="number"]')[1];
+                const qty = qtyInput ? parseFloat(qtyInput.value) || 0 : 0;
+                const cost = costInput ? parseFloat(costInput.value) || 0 : 0;
+
+                if (!product) errors.push(`Line ${i + 1}: please select a product.`);
+                if (qty < 1) errors.push(`Line ${i + 1}: quantity must be at least 1.`);
+                if (cost <= 0) errors.push(`Line ${i + 1}: unit cost must be greater than 0.`);
+            });
+
+            if (errors.length > 0) {
+                const list = document.getElementById('grn-error-list');
+                list.innerHTML = errors.map(e => `<li>${e}</li>`).join('');
+                document.getElementById('grn-errors').style.display = 'block';
+                return;
+            }
+
+            document.getElementById('grn-errors').style.display = 'none';
+            alert('✅ GRN saved successfully! (Demo)');
+            document.getElementById('AddStockBatchDialog').close();
+        }
+
+        // Initialize Choices.js on DOM load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize all select elements with class 'choices-select'
+            document.querySelectorAll('.choices-select').forEach(select => {
+                initializeChoices(select);
+            });
+
+            // Recalculate totals
+            updateBatchTotal();
+
+            // Handle dialog open/close for cleanup
+            const dialog = document.getElementById('AddStockBatchDialog');
+            dialog.addEventListener('close', function() {
+                // Destroy all Choices instances when dialog closes
+                choicesInstances.forEach(instance => {
+                    try { instance.destroy(); } catch (e) {}
+                });
+                choicesInstances = [];
+            });
+        });
+
+        // Reinitialize Choices when dialog opens (for dynamic content)
+        document.getElementById('AddStockBatchDialog').addEventListener('click', function(e) {
+            // This ensures any dynamically added selects get initialized
+            setTimeout(function() {
+                document.querySelectorAll('.choices-select:not(.choices-initialized)').forEach(select => {
+                    initializeChoices(select);
+                    select.classList.add('choices-initialized');
+                });
+            }, 100);
+        });
 </script>

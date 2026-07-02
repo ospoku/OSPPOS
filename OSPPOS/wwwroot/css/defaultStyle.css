@@ -715,3 +715,80 @@ dialog::-webkit-scrollbar-thumb {
     background: #3a4a5a;
     border-radius: 8px;
 }
+/* ----- CHOICES.JS CUSTOMIZATION (Searchable Select) ----- */
+.choices {
+    margin-bottom: 0;
+}
+
+.choices__inner {
+    background: #131a22 !important;
+    border: 1px solid #2d3a47 !important;
+    border-radius: 10px !important;
+    padding: 0.3rem 0.5rem !important;
+    min-height: 48px !important;
+}
+
+.choices__input {
+    background: #131a22 !important;
+    color: #e9edf2 !important;
+    font-size: 0.9rem !important;
+    padding: 0.4rem 0.5rem !important;
+}
+
+    .choices__input::placeholder {
+        color: #6b7f93 !important;
+    }
+
+.choices__list--dropdown {
+    background: #1a222c !important;
+    border: 1px solid #2d3a47 !important;
+    border-radius: 10px !important;
+    margin-top: 5px !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5) !important;
+}
+
+    .choices__list--dropdown .choices__item--selectable {
+        color: #cbd5e1 !important;
+        padding: 0.6rem 1rem !important;
+    }
+
+        .choices__list--dropdown .choices__item--selectable.is-highlighted {
+            background: #2a3746 !important;
+            color: white !important;
+        }
+
+        .choices__list--dropdown .choices__item--selectable.is-selected {
+            background: #3a6b9b !important;
+            color: white !important;
+        }
+
+    .choices__list--dropdown .choices__placeholder {
+        color: #6b7f93 !important;
+    }
+
+.choices__list--single .choices__item {
+    color: #e9edf2 !important;
+}
+
+.choices__list--multiple .choices__item {
+    background: #3a6b9b !important;
+    border: 1px solid #4a7bab !important;
+    border-radius: 6px !important;
+    color: white !important;
+}
+
+.choices__list--multiple .choices__button {
+    border-left: 1px solid #4a7bab !important;
+    color: white !important;
+}
+
+.is-focused .choices__inner {
+    border-color: #4a6b8a !important;
+    box-shadow: 0 0 0 3px rgba(74, 107, 138, 0.25) !important;
+}
+
+.choices__heading {
+    color: #6b7f93 !important;
+    border-bottom: 1px solid #2d3a47 !important;
+}
+
