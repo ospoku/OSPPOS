@@ -93,11 +93,11 @@ namespace OSPPOS.Controllers
 
             return RedirectToAction("Login");
         }
-        public async Task<IActionResult> ForgetPassword() =>  View();
+        public Task<IActionResult> ForgetPassword() => Task.FromResult<IActionResult>(View());
         [HttpGet]
-        public async Task<IActionResult>UserProfile()
+        public Task<IActionResult>UserProfile()
         {
-            return ViewComponent(nameof(UserProfile));
+            return Task.FromResult<IActionResult>(ViewComponent(nameof(UserProfile)));
         }
         [HttpGet]
         public async Task<IActionResult> EditProfile()
