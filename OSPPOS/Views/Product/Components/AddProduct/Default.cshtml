@@ -29,46 +29,44 @@
                                         <label class="did-floating-label">SKU / Code</label>
                                     </div>
                                     <div class="col-md-4">
-                                        <select class="form-select-dark form-select">
+                                        <select class="choices-select">
                                             <option value="">Select Category</option>
                                             <option selected>Beverages</option>
                                             <option>Food</option>
                                             <option>Electronics</option>
-                                            <option>Clothing</option>
+                                        <option>Clothing</option>
+                                        <option>Food</option>
+                                        <option>Electronics</option>
+                                        <option>Clothing</option>
+                                        <option>Food</option>
+                                        <option>Electronics</option>
+                                        <option>Clothing</option>
+                                        <option>Food</option>
+                                        <option>Electronics</option>
+                                        <option>Clothing</option>
                                         </select>
                                     </div>
                                     <div class="col-md-4">
-                                        <select class="choices-select form-select-dark">
+                                    <select class="choices-select">
                                             <option value="">Select Supplier</option>
                                             <option selected>Supplier A</option>
                                             <option>Supplier B</option>
-                                            <option>Supplier C</option>
+                                        <option>Supplier C</option>
+                                        <option value="">Select Supplier</option>
+                                        <option selected>Supplier A</option>
+                                        <option>Supplier B</option>
+                                        <option>Supplier C</option>
                                         </select>
                                     </div>
                                     <div class="col-md-4">
-                                        <select class="form-select-dark">
+                                        <select class="choices-select">
                                             <option value="">Select Unit</option>
                                             <option selected>KG</option>
                                             <option>Liters</option>
                                             <option>Pieces</option>
                                             <option>Box</option>
                                         </select>
-                                    <div class="mb-3">
                                 
-                                        <select class="choices-select form-select-dark" id="department" required>
-                                            <option value="">Select department...</option>
-                                            <option value="engineering">Engineering</option>
-                                            <option value="design">Design</option>
-                                            <option value="marketing">Marketing</option>
-                                            <option value="sales">Sales</option>
-                                            <option value="hr">Human Resources</option>
-                                            <option value="finance">Finance</option>
-                                            <option value="operations">Operations</option>
-                                            <option value="it">IT Support</option>
-                                            <option value="legal">Legal</option>
-                                            <option value="research">R&D</option>
-                                        </select>
-                                    </div>
                                     </div>
                                  
                                    
@@ -167,64 +165,7 @@
                 }
             }
         });
-      // Store Choices instances for cleanup
-    let choicesInstances = [];
 
-    function initializeChoices(selectElement) {
-        if (!selectElement) return;
-
-        // If already a Choices instance, destroy it first
-        if (selectElement._choicesInstance) {
-            selectElement._choicesInstance.destroy();
-        }
-
-        const choices = new Choices(selectElement, {
-            searchEnabled: true,
-            searchPlaceholderValue: 'Search products...',
-            placeholder: true,
-            placeholderValue: selectElement.dataset.placeholder || 'Select option...',
-            shouldSort: false,
-            itemSelectText: '',
-            noResultsText: 'No products found',
-            noChoicesText: 'No products available',
-            searchResultLimit: 20,
-            position: 'bottom',
-            classNames: {
-                containerOuter: 'choices',
-                containerInner: 'choices__inner',
-                input: 'choices__input',
-                inputCloned: 'choices__input--cloned',
-                list: 'choices__list',
-                listItems: 'choices__list--multiple',
-                listSingle: 'choices__list--single',
-                listDropdown: 'choices__list--dropdown',
-                item: 'choices__item',
-                itemSelectable: 'choices__item--selectable',
-                itemDisabled: 'choices__item--disabled',
-                itemChoice: 'choices__item--choice',
-                placeholder: 'choices__placeholder',
-                group: 'choices__group',
-                groupHeading: 'choices__heading',
-                button: 'choices__button',
-                activeState: 'is-active',
-                focusState: 'is-focused',
-                openState: 'is-open',
-                disabledState: 'is-disabled',
-                highlightedState: 'is-highlighted',
-                selectedState: 'is-selected',
-                flippedState: 'is-flipped',
-                loadingState: 'is-loading',
-                noResults: 'has-no-results',
-                noChoices: 'has-no-choices'
-            }
-        });
-
-        // Store reference on the element
-        selectElement._choicesInstance = choices;
-        choicesInstances.push(choices);
-
-        return choices;
-    }
 
     let grnLineIndex = 2; // Start after sample rows
 
@@ -275,11 +216,7 @@
         document.getElementById('lineItems').appendChild(row);
         grnLineIndex++;
 
-        // Initialize Choices for the new select
-        const newSelect = row.querySelector('.choices-select');
-        if (typeof Choices !== 'undefined') {
-            initializeChoices(newSelect);
-        }
+ 
 
         updateBatchTotal();
     }
@@ -367,37 +304,16 @@
         document.getElementById('AddStockBatchDialog').close();
     }
 
-    // Initialize Choices.js on DOM load
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialize all select elements with class 'choices-select'
-        document.querySelectorAll('.choices-select').forEach(select => {
-            initializeChoices(select);
-        });
+
 
         // Recalculate totals
         updateBatchTotal();
 
         // Handle dialog open/close for cleanup
-        const dialog = document.getElementById('AddStockBatchDialog');
-        dialog.addEventListener('close', function() {
-            // Destroy all Choices instances when dialog closes
-            choicesInstances.forEach(instance => {
-                try { instance.destroy(); } catch (e) {}
-            });
-            choicesInstances = [];
-        });
-    });
+      
+    
 
-    // Reinitialize Choices when dialog opens (for dynamic content)
-    document.getElementById('AddStockBatchDialog').addEventListener('click', function(e) {
-        // This ensures any dynamically added selects get initialized
-        setTimeout(function() {
-            document.querySelectorAll('.choices-select:not(.choices-initialized)').forEach(select => {
-                initializeChoices(select);
-                select.classList.add('choices-initialized');
-            });
-        }, 100);
-    });
+  
 </script>
 
 
