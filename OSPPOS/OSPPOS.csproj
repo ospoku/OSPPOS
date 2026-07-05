@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <Folder Include="Authorization\" />
-    <Folder Include="Views\Sale\Components\ViewSale\" />
+    <Folder Include="Views\SaleOrder\Components\ViewSale\" />
     <Folder Include="Views\Stock\Components\ViewStock\" />
     <Folder Include="wwwroot\icons\" />
   </ItemGroup>

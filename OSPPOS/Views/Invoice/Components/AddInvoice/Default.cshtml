@@ -1,171 +1,440 @@
-﻿
-    <dialog id="AddProductDialog">
-        <div class="modal-header-custom">
-            <h6><i class="fas fa-fw fa-file-alt"></i>Add Product</h6>
-            <button type="button" class="btn-close-custom" onclick="document.getElementById('AddProductDialog').close()">
-                <i class="fas fa-times"></i>Close
-            </button>
-        </div>
+﻿@using OSPPOS.Models
+@model OSPPOS.ViewModels.AddInvoiceVM;
 
-        <form id="addProductForm">
-            <div class="modal-body-custom">
-                <div class="alert alert-danger small py-2 alert-dark" style="display: none;">Validation summary goes here</div>
+<dialog id="AddSaleDialog">
 
-                <div class="row g-3">
-                    <!-- Left Column -->
-                    <div class="col-lg-8">
-                        <div class="card-custom shadow-sm mb-3">
-                            <div class="card-header-custom">
-                                <h6><i class="fas fa-box"></i>Product Details</h6>
-                            </div>
-                            <div class="card-body-custom">
-                                <div class="row g-3">
-                                    <div class="did-floating-label-content col-md-8">
-                                        <input type="text" class="did-floating-input" placeholder="" value="Premium Coffee Beans" />
-                                        <label class="did-floating-label">Product Name <span class="text-danger-dark">*</span></label>
-                                    </div>
-                                    <div class="did-floating-label-content col-md-4">
-                                        <input type="text" class="did-floating-input" placeholder="" value="COF-001" />
-                                        <label class="did-floating-label">SKU / Code</label>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <select class="form-select-dark form-select">
-                                            <option value="">Select Category</option>
-                                            <option selected>Beverages</option>
-                                            <option>Food</option>
-                                            <option>Electronics</option>
-                                            <option>Clothing</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <select class="form-select-dark form-select">
-                                            <option value="">Select Supplier</option>
-                                            <option selected>Supplier A</option>
-                                            <option>Supplier B</option>
-                                            <option>Supplier C</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <select class="form-select-dark">
-                                            <option value="">Select Unit</option>
-                                            <option selected>KG</option>
-                                            <option>Liters</option>
-                                            <option>Pieces</option>
-                                            <option>Box</option>
-                                        </select>
-                                    <div class="mb-3">
+
+    <div class="modal-header border-bottom px-3 py-2">
+        <h6 class="m-0 fw-semibold">
+            <i class="fas fa-cash-register me-2 text-success"></i>New Sale
+        </h6>
+        <button type="button"
+                class="btn btn-sm btn-outline-danger"
+                onclick="document.getElementById('AddSaleDialog').close()">
+            <i class="fas fa-times me-1"></i>Close
+        </button>
+    </div>
+
+    @using (Html.BeginForm("AddSale", "Sale", FormMethod.Post,
+        new { id = "addSaleForm" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <!-- Hidden fields posted to controller -->
+        <input type="hidden" name="IsCreditSale" id="isCreditSaleInput" value="false" />
+        <input type="hidden" name="CustomerId"   id="customerIdInput"   value="" />
+        <input type="hidden" name="Discount"      id="discountInput"     value="0" />
+        <input type="hidden" name="CashReceived"  id="cashReceivedInput" value="0" />
+
+        <div class="modal-body px-3 py-3">
+            <div class="row g-3">
+
+                <!-- ── LEFT: Customer + Products ── -->
+                <div class="col-lg-8">
+
+                    <!-- Customer row -->
+                    <div class="card border-0 bg-light rounded-3 mb-3">
+                        <div class="card-body py-2">
+                            <div class="row g-2 align-items-end">
+
+
+                                <!-- Walk-in name (cash) -->
                                 
-                                        <select class="form-select form-select-dark" id="department" required>
-                                            <option value="">Select department...</option>
-                                            <option value="engineering">Engineering</option>
-                                            <option value="design">Design</option>
-                                            <option value="marketing">Marketing</option>
-                                            <option value="sales">Sales</option>
-                                            <option value="hr">Human Resources</option>
-                                            <option value="finance">Finance</option>
-                                            <option value="operations">Operations</option>
-                                            <option value="it">IT Support</option>
-                                            <option value="legal">Legal</option>
-                                            <option value="research">R&D</option>
-                                        </select>
+                                <!-- Credit customer select -->
+                                <div class="col-sm-8" id="creditCustomerGroup">
+                                    <select id="customerSelect" 
+                                            class=" dmx-choices"
+                                            onchange="onCustomerChange(this)" asp-for="CustomerId" asp-items="Model.Customers">
+                                        <option value="">-- select customer --</option>
+                                     @*  @foreach (var c in Model.Customers.Where(c => c.IsActive && c.AllowCredit)
+                                            .OrderBy(c => c.Name))
+                                        {
+                                            <option value="@c.CustomerId"
+                                                    data-limit="@c.CreditLimit"
+                                                    data-debt="@c.TotalDebt"
+                                                    data-allow="@c.AllowCredit.ToString().ToLower()">
+                                                @c.Name
+                                                @(c.TotalDebt > 0
+                                                    ? $" — owes GHS {c.TotalDebt:N2}"
+                                                    : "")
+                                            </option>
+                                        }  *@
+                                    </select>
+
+                                    <!-- Credit info strip -->
+                                    <div id="creditInfo" class="mt-1 px-2 py-1 rounded small"
+                                         style="background:#fff8e1;display:block">
+                                        <span class="text-muted">Limit:</span>
+                                        <strong id="ciLimit">—</strong>
+                                        &nbsp;|&nbsp;
+                                        <span class="text-muted">Owes:</span>
+                                        <strong id="ciDebt" class="text-danger">—</strong>
+                                        &nbsp;|&nbsp;
+                                        <span class="text-muted">Available:</span>
+                                        <strong id="ciAvail">—</strong>
                                     </div>
-                                    </div>
-                                 
-                                   
-                                        
-                                        <textarea class="form-control-dark" placeholder="Description" style="height:367px">Premium Arabica coffee beans, medium roast.</textarea>
-                                  
+                                </div>
+
+                                <!-- Due date (credit only) -->
+                                <div class="col-sm-6" id="dueDateGroup" style="display:block">
+                                    <div class="input-group">
+                                        <div class="input-group-text">
+                                            <i class="fas fa-calendar-check"></i>
+                                        </div>
+                                        <div class="did-floating-label-content">
+                                    <input type="date" name="DueDate" id="dueDate" asp-for=@Model.DueDate
+                                           class="did-floating-input" asp-format="{0:dd/MMM/yyyy}" />  
+                                           <label class="did-floating-label" for="dueDate">Due Date</label>
+                                </div>
+                             </div>
+                                </div>
                             </div>
-                         
                         </div>
                     </div>
-                    </div>
-                    <!-- Right Column -->
-                    <div class="col-lg-4">
-                        <div class="card-custom shadow-sm mb-3">
-                            <div class="card-header-custom">
-                                <h6><i class="fas fa-tag"></i>Pricing</h6>
-                            </div>
-                            <div class="card-body-custom">
-                                <div class="did-floating-label-content mb-3">
-                                    <input type="number" step="0.01" min="0" class="did-floating-input" id="costPrice" value="25.00" oninput="calcMargin()" />
-                                    <label class="did-floating-label">Cost Price (GHS) <span class="text-danger-dark">*</span></label>
-                                </div>
-                                <div class="did-floating-label-content mb-3">
-                                    <input type="number" step="0.01" min="0" class="did-floating-input" id="sellPrice" value="45.00" oninput="calcMargin()" />
-                                    <label class="did-floating-label">Selling Price (GHS) <span class="text-danger-dark">*</span></label>
-                                </div>
-                                <div class="did-floating-label-content mb-3">
-                                    <input type="number" step="0.01" min="0" class="did-floating-input" value="35.00" />
-                                    <label class="did-floating-label">Wholesale Price (GHS)</label>
-                                </div>
-                                <div class="margin-display">
-                                    Margin: <strong id="marginDisplay">44.4%</strong>
-                                </div>
-                            </div>
+
+                    <!-- Product grid grouped by category -->
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0 py-2 d-flex
+                                    justify-content-between align-items-center">
+                            <span class="fw-semibold small">
+                                <i class="fas fa-boxes me-1 text-primary"></i>Products
+                            </span>
+                            <span class="text-muted" style="font-size:.75rem">
+                                Click qty to add · 0 = not ordered
+                            </span>
                         </div>
 
-                        <div class="card-custom shadow-sm">
-                            <div class="card-header-custom">
-                                <h6><i class="fas fa-warehouse"></i>Stock Settings</h6>
+                        <div class="card-body p-0" style="max-height:380px;overflow-y:auto">
+                            @{
+                                var grouped = Model.Products
+                                    .Where(p => p.IsActive && p.CurrentStock > 0)
+                                    .GroupBy(p => p.Category?.Name ?? "Other")
+                                    .OrderBy(g => g.Key);
+                                int itemIndex = 0;
+                            }
+
+                            @foreach (var group in grouped)
+                            {
+                                <!-- Category heading -->
+                                <div class="px-3 py-1 fw-semibold"
+                                     style="font-size:.72rem;text-transform:uppercase;
+                                            letter-spacing:.06em;background:#f8f9fa;
+                                            color:#6c757d;position:sticky;top:0;z-index:1">
+                                    <i class="fas fa-folder me-1"></i>@group.Key
+                                </div>
+
+                                @foreach (var p in group.OrderBy(p => p.Name))
+                                {
+                                    <div class="d-flex align-items-center px-3 py-2
+                                                border-bottom product-row"
+                                         style="font-size:.85rem"
+                                         data-product-id="@p.ProductId"
+                                         data-price="@p.SellingPrice"
+                                         data-stock="@p.CurrentStock"
+                                         data-name="@p.Name"
+                                         data-unit="@p.Unit">
+
+                                        <!-- Product name & price -->
+                                        <div class="flex-grow-1">
+                                            <div class="fw-semibold">@p.Name</div>
+                                            <div class="text-muted" style="font-size:.75rem">
+                                                @p.Unit &middot;
+                                                <span class="text-success fw-semibold">
+                                                    GHS @p.SellingPrice.ToString("N2")
+                                                </span>
+                                                &middot;
+                                                <span class="@(p.CurrentStock <= p.ReorderLevel
+                                                    ? "text-warning" : "text-muted")">
+                                                    @p.CurrentStock in stock
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Qty input -->
+                                        <div style="width:90px">
+                                            <input type="number"
+                                                   name="Items[@itemIndex].ProductId"
+                                                   value="@p.ProductId"
+                                                   style="display:none" />
+                                            <input type="number"
+                                                   name="Items[@itemIndex].Quantity"
+                                                   class="form-control form-control-sm text-center qty-input"
+                                                   min="0"
+                                                   max="@p.CurrentStock"
+                                                   value="0"
+                                                   placeholder="0"
+                                                   oninput="recalc()" />
+                                        </div>
+
+                                        <!-- Line total -->
+                                        <div class="text-end ms-2 fw-semibold"
+                                             style="width:90px;font-size:.82rem"
+                                             id="lt_@p.ProductId">
+                                            —
+                                        </div>
+
+                                    </div>
+                                    itemIndex++;
+                                }
+                            }
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ── RIGHT: Totals + Payment ── -->
+                <div class="col-lg-4">
+                    <div class="card border-1 table-responsive rounded-5 py-3 shadow-sm">
+                        <div class="card-header bg-white border-0 py-2">
+                            <h6 class="mb-0 fw-semibold small">Payment details</h6>
+                        </div>
+                        <div class="card-body">
+
+                            <!-- Running totals -->
+                            <div class="mb-3 p-2 rounded" style="background:#f8f9fa">
+                                <div class="d-flex justify-content-between small mb-1">
+                                    <span class="text-muted">Subtotal</span>
+                                    <span id="subtotalDisplay">GHS 0.00</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center small mb-1">
+                                    <span class="text-muted">Discount (GHS)</span>
+                                    <input type="number" name="Discount" id="discountField"
+                                           class="form-control form-control-sm text-end"
+                                           style="width:90px" min="0" step="0.01"
+                                           value="0" oninput="recalc()" />
+                                </div>
+                                <div class="d-flex justify-content-between fw-bold border-top pt-2 mt-1">
+                                    <span>Total</span>
+                                    <span id="totalDisplay" class="text-success fs-6">GHS 0.00</span>
+                                </div>
                             </div>
-                            <div class="card-body-custom">
-                                <div class="did-floating-label-content mb-3">
-                                    <input type="number" min="0" class="did-floating-input" value="50" />
-                                    <label class="did-floating-label">Opening Stock</label>
+
+                            <!-- Payment method (cash only) -->
+                            <div id="payMethodGroup" class="mb-3">
+                                <label class="form-label small fw-semibold">Payment method</label>
+                                <select name="PaymentMethod" id="payMethodSelect"
+                                        class="form-select form-select-sm">
+                                    <option value="0">Cash</option>
+                                    <option value="1">Mobile Money (MoMo)</option>
+                                    <option value="2">Bank transfer</option>
+                                    <option value="3">Cheque</option>
+                                </select>
+                            </div>
+
+                            <!-- Payment reference -->
+                            <div class="mb-3" id="referenceGroup" style="display:block">
+                                <label class="form-label small fw-semibold">
+                                    Reference
+                                    <span class="text-muted fw-normal">(MoMo ID / cheque #)</span>
+                                </label>
+                                <input type="text" name="PaymentReference"
+                                       class="form-control form-control-sm"
+                                       placeholder="Transaction reference…" />
+                            </div>
+
+                            <!-- Cash tendered + change (cash only) -->
+                            
+                            
+
+                                <div class="input-group mb-3" id="tenderedGroup">
+                      
+                                    <div class="input-group-text">
+                                    
+                                        <i class="fas fa-cedi-sign"></i> 
+                                    </div>
+
+                                    <!-- Floating label + input -->
+                                    <div class="did-floating-label-content">
+                                        <input type="number" asp-for="@Model.CreditInfo"
+                                               class="did-floating-input text-end" name="CashReceived"
+                                               id="tenderedField"
+                                               placeholder=" " min="0" step="0.01" value="0" oninput="calcChange()" />
+                                        <label class="did-floating-label" for="tenderedField">Amount Tendered</label>
+                                    </div>
                                 </div>
-                                <div class="did-floating-label-content mb-3">
-                                    <input type="number" min="0" class="did-floating-input" value="10" />
-                                    <label class="did-floating-label">Reorder Level</label>
-                                    <div class="form-text-dark">Alert when stock drops to this level.</div>
-                                </div>
-                                <div class="form-check mb-3">
-                                    <input type="checkbox" class="form-check-input-dark" id="isActive" checked />
-                                    <label class="form-check-label-dark" for="isActive">Active product</label>
+                                <div class="mt-2 p-2 rounded"
+                                     style="background:#f0fdf4;border:1px solid #bbf7d0;
+                                            font-size:.82rem">
+                                    <div class="d-flex justify-content-between">
+                                        <span class="text-muted">Tendered</span>
+                                        <span id="tenderedDisplay">GHS 0.00</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between fw-bold border-top pt-1 mt-1">
+                                        <span>Change</span>
+                                        <span id="changeDisplay" class="text-success">GHS 0.00</span>
+                                    </div>
                                 </div>
                             </div>
+
+                            <!-- Notes -->
+                            <div class="mb-3 px-3">
+                                <label class="form-label small fw-semibold">
+                                    Notes
+                                    <span class="text-muted fw-normal">(optional)</span>
+                                </label>
+                                <textarea name="Notes" class="form-control form-control-sm"
+                                          rows="2" placeholder="Any notes…"></textarea>
+                            </div>
+
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="modal-footer-custom">
-                <button type="submit" class="btn-save-custom">
-                    <i class="fas fa-check-circle"></i>Save Product
+            </div>
+    
+
+        <!-- Footer -->
+        <div class="modal-footer border-top px-3 py-2 d-flex justify-content-between align-items-center">
+            <span class="text-muted small">
+                <i class="fas fa-info-circle me-1"></i>
+                Stock will be deducted on confirmation
+            </span>
+            <div class="d-flex gap-2">
+                <button type="button"
+                        class="btn btn-outline-secondary btn-sm"
+                        onclick="document.getElementById('AddSaleDialog').close()">
+                    Cancel
+                </button>
+                <button  id="confirmBtn"
+                        class="btn btn-success btn-sm px-4" disabled>
+                    <i class="fas fa-check-circle me-1"></i>
+                    Confirm sale &mdash;
+                    <span id="btnTotal">GHS 0.00</span>
                 </button>
             </div>
-        </form>
-</dialog>
+        </div>
+    }
 
-    <script>
-        
-        function calcMargin() {
-            const cost = parseFloat(document.getElementById('costPrice').value) || 0;
-            const sell = parseFloat(document.getElementById('sellPrice').value) || 0;
-            const el = document.getElementById('marginDisplay');
-            if (sell > 0 && cost > 0) {
-                const m = ((sell - cost) / sell * 100).toFixed(1);
-                el.textContent = m + '%';
-                el.style.color = m > 20 ? '#51cf66' : m > 10 ? '#ffd43b' : '#ff6b6b';
-            } else {
-                el.textContent = '—';
-                el.style.color = '#e4e6eb';
-            }
-        }
 
-        // Trigger initial calculation
-        document.addEventListener('DOMContentLoaded', function() {
-            calcMargin();
-        });
 
-        // Close dialog on escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                const dialog = document.getElementById('AddProductDialog');
-                if (dialog.open) {
-                    dialog.close();
-                }
-            }
-        });
+<style>
+    #AddSaleDialog { max-width: 900px; width: 95vw; }
+    #AddSaleDialog::backdrop { background: rgba(0,0,0,.45); }
+    .product-row:hover { background: #f0f7ff; }
+    .product-row:last-child { border-bottom: none !important; }
+    .sale-type-btn { transition: border-color .15s, color .15s; }
+</style>
 
-    </script>
+<script>
+// ── Sale type ─────────────────────────────────────────────────────────────────
+function setSaleType(type) {
+    const isCredit = type === 'credit';
+    document.getElementById('isCreditSaleInput').value = isCredit;
+
+    // Toggle buttons
+    document.getElementById('btnCash').style.borderColor   = isCredit ? 'transparent' : '';
+    document.getElementById('btnCredit').style.borderColor = isCredit ? 'currentColor' : 'transparent';
+    document.getElementById('btnCash').className   = 'sale-type-btn flex-fill text-center ' + (isCredit ? 'text-muted' : 'text-success');
+    document.getElementById('btnCredit').className = 'sale-type-btn flex-fill text-center ' + (isCredit ? 'text-warning' : 'text-muted');
+
+    // Show/hide panels
+    document.getElementById('walkInGroup').style.display        = isCredit ? 'none' : '';
+    document.getElementById('creditCustomerGroup').style.display = isCredit ? ''     : 'none';
+    document.getElementById('dueDateGroup').style.display        = isCredit ? ''     : 'none';
+    document.getElementById('tenderedGroup').style.display       = isCredit ? 'none' : '';
+    document.getElementById('payMethodGroup').style.display      = isCredit ? 'none' : '';
+
+    checkConfirmBtn();
+}
+
+// ── Customer change ───────────────────────────────────────────────────────────
+function onCustomerChange(sel) {
+    document.getElementById('customerIdInput').value = sel.value;
+    const opt  = sel.options[sel.selectedIndex];
+    const info = document.getElementById('creditInfo');
+
+    if (sel.value) {
+        const limit = parseFloat(opt.dataset.limit) || 0;
+        const debt  = parseFloat(opt.dataset.debt)  || 0;
+        const avail = limit - debt;
+        document.getElementById('ciLimit').textContent = 'GHS ' + limit.toFixed(2);
+        document.getElementById('ciDebt').textContent  = 'GHS ' + debt.toFixed(2);
+        document.getElementById('ciAvail').textContent = 'GHS ' + avail.toFixed(2);
+        document.getElementById('ciAvail').style.color = avail <= 0 ? '#dc3545' : '#198754';
+        info.style.display = '';
+    } else {
+        info.style.display = 'none';
+    }
+    checkConfirmBtn();
+}
+
+// ── Payment method → show reference field ────────────────────────────────────
+document.getElementById('payMethodSelect')?.addEventListener('change', function () {
+    const needsRef = this.value !== '0'; // not cash
+    document.getElementById('referenceGroup').style.display  = needsRef ? '' : 'none';
+    document.getElementById('tenderedGroup').style.display   = this.value === '0' ? '' : 'none';
+});
+
+// ── Recalculate totals ────────────────────────────────────────────────────────
+function recalc() {
+    let subtotal = 0;
+
+    // Sum all qty inputs × price
+    document.querySelectorAll('.product-row').forEach(row => {
+        const qty   = parseInt(row.querySelector('.qty-input').value) || 0;
+        const price = parseFloat(row.dataset.price) || 0;
+        const id    = row.dataset.productId;
+        const line  = qty * price;
+        subtotal   += line;
+
+        const ltEl = document.getElementById('lt_' + id);
+        if (ltEl) ltEl.textContent = qty > 0 ? 'GHS ' + line.toFixed(2) : '—';
+    });
+
+    const discount = parseFloat(document.getElementById('discountField').value) || 0;
+    const total    = Math.max(0, subtotal - discount);
+
+    document.getElementById('subtotalDisplay').textContent = 'GHS ' + subtotal.toFixed(2);
+    document.getElementById('totalDisplay').textContent    = 'GHS ' + total.toFixed(2);
+    document.getElementById('btnTotal').textContent        = 'GHS ' + total.toFixed(2);
+    document.getElementById('discountInput').value         = discount;
+
+    calcChange();
+    checkConfirmBtn();
+}
+
+// ── Change calculator ─────────────────────────────────────────────────────────
+function calcChange() {
+    const total    = parseFloat(document.getElementById('totalDisplay')
+                        .textContent.replace('GHS ', '')) || 0;
+    const tendered = parseFloat(document.getElementById('tenderedField').value) || 0;
+    const change   = Math.max(0, tendered - total);
+
+    document.getElementById('tenderedDisplay').textContent = 'GHS ' + tendered.toFixed(2);
+    document.getElementById('changeDisplay').textContent   = 'GHS ' + change.toFixed(2);
+    document.getElementById('changeDisplay').style.color   = change >= 0 ? '#198754' : '#dc3545';
+    document.getElementById('cashReceivedInput').value     = tendered;
+}
+
+// ── Confirm button ────────────────────────────────────────────────────────────
+function checkConfirmBtn() {
+    const hasItems = [...document.querySelectorAll('.qty-input')]
+                        .some(i => parseInt(i.value) > 0);
+    const isCredit    = document.getElementById('isCreditSaleInput').value === 'true';
+    const hasCustomer = document.getElementById('customerIdInput').value !== '';
+    const customerOk  = !isCredit || hasCustomer;
+
+    document.getElementById('confirmBtn').disabled = !(hasItems && customerOk);
+}
+
+// ── Form validation on submit ─────────────────────────────────────────────────
+document.getElementById('addSaleForm').addEventListener('submit', function (e) {
+    const hasItems = [...document.querySelectorAll('.qty-input')]
+                        .some(i => parseInt(i.value) > 0);
+    if (!hasItems) {
+        e.preventDefault();
+        alert('Please enter a quantity for at least one product.');
+    }
+});
+</script>
+
+   
+   
+      
+    
+    </dialog>
+    
+          
+
+
+  

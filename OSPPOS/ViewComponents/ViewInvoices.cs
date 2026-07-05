@@ -8,21 +8,7 @@ namespace OSPPOS.ViewComponents
 
     public class ViewInvoices(XContext ctx) : ViewComponent
     {
-        //        public IViewComponentResult Invoke()
-        //        {
-        //            var products = ctx.Products
-        //                .Include(p => p.Category)
-        //                .Include(p => p.Supplier)
-        //                .OrderBy(p => p.Category.Name)
-        //                .ThenBy(p => p.Name)
-        //                .Select(p => new ViewProductsVM {Category=p.Category.Name,ReorderLevel=p.ReorderLevel,IsActive=p.IsActive, WholesalePrice=p.WholesalePrice,Unit=p.Unit.Name, Name=p.Name,TotalProducts }).ToList();
-
-
-
-        //            return View(products);
-        //        }
-        //    }
-        //}
+   
         public IViewComponentResult Invoke()
         {
             var productList = ctx.Products

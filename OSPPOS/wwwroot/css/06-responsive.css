@@ -1,0 +1,69 @@
+﻿/* ========================================
+   RESPONSIVE STYLES
+   ======================================== */
+
+@media (max-width: 768px) {
+    /* ----- SIDEBAR ----- */
+    .sidebar {
+        width: 72px;
+        min-width: 72px;
+    }
+
+        .sidebar .sidebar-link span,
+        .sidebar .sidebar-heading,
+        .sidebar .nav-label {
+            display: none;
+        }
+
+        .sidebar .sidebar-link i {
+            margin-right: 0;
+            font-size: 1.4rem;
+        }
+
+        .sidebar .sidebar-link {
+            justify-content: center;
+            padding: 0.7rem 0;
+        }
+
+        .sidebar .nav-item .badge {
+            display: none;
+        }
+
+    /* ----- CONTENT ----- */
+    .content-area {
+        padding: 1rem;
+    }
+
+    /* ----- DIALOG ----- */
+    dialog {
+        width: min(95vw, 400px);
+        min-width: 280px;
+        max-height: min(90vh, 600px);
+        border-radius: 12px;
+    }
+
+    .modal-body-custom {
+        max-height: 50vh;
+    }
+
+    dialog .dialog-content {
+        padding: 1.5rem;
+        min-width: auto;
+    }
+
+    dialog .dialog-footer {
+        padding: 1rem 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    dialog .btn-close-dialog,
+    dialog .btn-confirm-dialog {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* ----- DATATABLES ----- */
+    .table-container .dataTables_wrapper .dataTables_filter input {
+        width: 150px;
+    }
+}

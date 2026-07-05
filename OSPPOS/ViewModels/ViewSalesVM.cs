@@ -24,7 +24,7 @@ namespace OSPPOS.ViewModels
         public string? Notes { get; set; }
         public decimal DiscountPercent { get; set; } = 0;
         public decimal Discount { get; set; } = 0;
-        public List<SaleItemVm> Items { get; set; } = [];
+        public List<SaleItemVM> Items { get; set; } = [];
 
         // For initial cash payment
         public decimal CashReceived { get; set; } = 0;

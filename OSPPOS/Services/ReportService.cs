@@ -47,7 +47,7 @@ namespace OSPPOS.Services
             };
         }
 
-        public async Task<DebtorReportVm> GetDebtorReportAsync()
+        public async Task<DebtorReportVM> GetDebtorReportAsync()
         {
             var customers = await ctx.Customers
                 .Include(c => c.SaleOrders)
@@ -58,7 +58,7 @@ namespace OSPPOS.Services
             var debtors = customers.Select(c =>
             {
                 
-                var aging = new DebtorAgingVm { Customer = c };
+                var aging = new DebtorAgingVM { Customer = c };
                 //foreach (var order in unpaidOrders)
                 //{
                 //    var dueDate = order.DueDate ?? order.OrderDate;
@@ -72,10 +72,10 @@ namespace OSPPOS.Services
                 return aging;
             }).Where(a => a.TotalOwed > 0).ToList();
 
-            return new DebtorReportVm { Debtors = debtors };
+            return new DebtorReportVM { Debtors = debtors };
         }
 
-        public async Task<List<TopProductVm>> GetTopProductsAsync(DateTime from, DateTime to, int top = 10)
+        public async Task<List<TopProductVM>> GetTopProductsAsync(DateTime from, DateTime to, int top = 10)
         {
             var items = await ctx.SaleOrderItems
                 .Include(i => i.Product).ThenInclude(p => p.Category)
@@ -85,7 +85,7 @@ namespace OSPPOS.Services
 
             return items
                 .GroupBy(i => i.ProductId)
-                .Select(g => new TopProductVm
+                .Select(g => new TopProductVM
                 {
                     Product = g.First().Product,
                     TotalQtySold = g.Sum(i => i.Quantity),

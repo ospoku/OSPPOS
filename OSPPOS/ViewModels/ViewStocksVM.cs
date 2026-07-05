@@ -21,8 +21,8 @@ namespace OSPPOS.ViewModels
                 public DateTime DateReceived { get; set; }
 
                    public  List<StockBatchItem> StockBatchItems { get; set; }
-                public string SupplierInvoice { get; set; }
-                 public string Notes { get; set; }
+        public string SupplierInvoice { get; set; } = string.Empty;
+        public string Notes { get; set; } = string.Empty;
                    
                 public string UnitCost { get; set; }
           public DateTime ExpiryDate { get; set; }
@@ -33,7 +33,7 @@ namespace OSPPOS.ViewModels
     
         public decimal DiscountPercent { get; set; } = 0;
         public decimal Discount { get; set; } = 0;
-        public List<SaleItemVm> Items { get; set; } = [];
+        public List<SaleItemVM> Items { get; set; } = [];
 
         // For initial cash payment
       

@@ -16,7 +16,7 @@
     var protector = DataProtectionProvider.CreateProtector("IdProtector");
     var stocks = Model.ToList();
 }
-<div class="tab-content tab-content-dim" id="myTabContent">
+<div class="tab-content tab-content-dim" id="divStocksContent">
     <!-- TAB 1: USERS -->
     <div class="tab-pane fade show active tab-pane-dim" id="users" role="tabpanel">
         <div class="tab-card">
@@ -28,7 +28,7 @@
             </div>
             <!-- DATATABLES -->
             <div class="table-container">
-        <table class="table darkTable">
+        <table class="table darkTable" id="stocksTable">
             <thead>
                 <tr>
                     <th>SN</th>
@@ -126,6 +126,17 @@
                                     </button>
                                 </div>
                             </div>
+                                    <div class="dropdown action-dropdown">
+                                        <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                            Select Action
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#"><i class="bi bi-pencil text-primary"></i> Edit</a></li>
+                                            <li><a class="dropdown-item" href="#"><i class="bi bi-eye text-info"></i> View</a></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-trash"></i> Delete</a></li>
+                                        </ul>
+                                    </div>
                         </td>
                     </tr>
                 }
@@ -137,7 +148,7 @@
 </div>
 </div>
 <iframe id="printFrame" style="display:none;"></iframe>
-
+@section scripts {
 <script type="text/javascript">
     function printMemoIframe(memoId) {
         const printFrame = document.getElementById('printFrame');
@@ -146,7 +157,7 @@
             printFrame.contentWindow.focus();
             printFrame.contentWindow.print();
         };
-    }
+    };
 
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.stock-items-trigger').forEach(function (el) {
@@ -162,9 +173,30 @@
             });
         });
     });
-</script>
 
+            document.addEventListener("DOMContentLoaded", (function() {
+              $('#stocksTable').DataTable({
+                pageLength: 5,
+                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                order: [[4, 'desc']],
+                columnDefs: [
+                  { orderable: false, targets: 5 }
+                ],
+                language: {
+                  search: "Search:",
+                  lengthMenu: "Show _MENU_ stocks",
+                  info: "Showing _START_ to _END_ of _TOTAL_ stocks",
+                  infoEmpty: "No stock found",
+                  infoFiltered: "(filtered from _MAX_ total stocks)",
+                  zeroRecords: "No stock found"
+                },
+                 dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+                   '<"row"<"col-sm-12"tr>>' +
+                      '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>'
+              })}))
+</script>
+}
 @await Component.InvokeAsync(nameof(AddStockBatch))
-<dialog id="EditMemoDialog"><div id="EditMemoDialogContent"></div></dialog>
-<dialog id="CommentMemoDialog" class="col-md-6 border-0 rounded p-0"><div id="CommentMemoDialogContent"></div></dialog>
+<dialog id="EditStockDialog"><div id="EditStockDialogContent"></div></dialog>
+
 

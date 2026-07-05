@@ -425,13 +425,13 @@ public class SaleOrderController(ISaleOrderService sales, XContext ctx, INotyfSe
         {
             //notyf.Error("Failed to add sale. Please try again.");
             notyf.Error(result.Error ?? "Failed to add sale.");
-            return ViewComponent(nameof(ViewSales));
+            return ViewComponent(nameof(ViewSaleOrders));
         }
         else
         {
 
             notyf.Success($"Sale added successfully.");
-              return ViewComponent(nameof(ViewSales));
+              return ViewComponent(nameof(ViewSaleOrders));
         }
 
       
@@ -506,9 +506,9 @@ public class SaleOrderController(ISaleOrderService sales, XContext ctx, INotyfSe
         });
     }
 
-    public IActionResult ViewSales()
+    public IActionResult ViewSaleOrders()
     {
-        return ViewComponent(nameof(ViewSales));
+        return ViewComponent(nameof(ViewSaleOrders));
     }
 
     private async Task<string> GenerateOrderNumberAsync()

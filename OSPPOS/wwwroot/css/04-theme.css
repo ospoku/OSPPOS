@@ -1,0 +1,28 @@
+﻿/* ========================================
+   THEME STYLES
+   ======================================== */
+
+/* ----- DIM THEME OVERRIDES (Bootstrap) ----- */
+.bg-dim-dark {
+    background-color: #131a22 !important;
+}
+
+.bg-dim-panel {
+    background-color: #1a222c !important;
+}
+
+.bg-dim-card {
+    background-color: #212b36 !important;
+}
+
+.text-dim-light {
+    color: #e9edf2 !important;
+}
+
+.text-dim-muted {
+    color: #94a3b8 !important;
+}
+
+.border-dim {
+    border-color: #2d3a47 !important;
+}
