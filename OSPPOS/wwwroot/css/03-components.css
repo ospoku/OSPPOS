@@ -144,22 +144,36 @@
         background: #1e2229;
         box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
     }
-
+        .did-floating-input:focus ~ .did-floating-label {
+            top: -10px;
+            font-size: 13px;
+            background: #1e2229;
+        }
     .did-floating-input::placeholder {
         color: #6c757d;
     }
-
+    .did-floating-input:not(:placeholder-shown) ~ .did-floating-label {
+        top: -10px;
+        font-size: 13px;
+    }
 .did-floating-label {
     position: absolute;
-    top: -10px;
+    top: 10px;
     left: 12px;
-    background: #1e2229;
+    background: #1a1d23;
     padding: 0 6px;
     font-size: 0.8rem;
     color: #8c929a;
     pointer-events: none;
     transition: all 0.2s ease;
     font-weight: 500;
+    /*--------------------------*/
+
+
+
+
+    -moz-transition: 0.2s ease all;
+    -webkit-transition: 0.2s ease all;
 }
 
 /* ----- CHECKBOX ----- */

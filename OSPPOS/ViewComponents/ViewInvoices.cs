@@ -11,24 +11,24 @@ namespace OSPPOS.ViewComponents
    
         public IViewComponentResult Invoke()
         {
-            var productList = ctx.Products
-                .Include(p => p.Category)
-                .Include(p => p.Supplier)
-                .Include(p => p.Unit)
-                .OrderBy(p => p.Category.Name)
-                .ThenBy(p => p.Name)
+            var invoiceList = ctx.Invoices
+           
+     
+         
                 .ToList();
 
-            var result = productList.Select(p => new ViewProductsVM
+            var result = invoiceList.Select(i => new ViewInvoicesVM
             {
-                Name = p.Name,
-                Category = p.Category.Name,
-                Unit = p.Unit.Name,
-                WholesalePrice = p.WholesalePrice,
-                ReorderLevel = p.ReorderLevel,
-                IsActive = p.IsActive,
-                CurrentStock=p.CurrentStock,
-                TotalProducts = productList.Count
+      Customer=i.Customer,
+      Discount=i.Discount,
+      DiscountPercent=i.DiscountPercent,
+      CustomerId=i.CustomerId,
+      WalkInCustomerName=i.WalkInCustomerName,
+      DueDate=i.DueDate,
+      InvoiceDate=i.InvoiceDate,
+      InvoiceNumber=i.InvoiceNumber,
+      Items=i.Items,
+      Payments=i.Payments
             }).ToList();
 
             return View(result);

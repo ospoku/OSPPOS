@@ -27,11 +27,11 @@
                                     <label class="did-floating-label">Product Name <span class="text-danger-dark">*</span></label>
                                 </div>
                                 <div class="did-floating-label-content col-md-4">
-                                    <input type="text" class="did-floating-input" placeholder="" value="COF-001" asp-for="@Model.SKU" />
+                                    <input type="text" class="did-floating-input" placeholder=""  asp-for="@Model.SKU" />
                                     <label class="did-floating-label">SKU / Code</label>
                                 </div>
                                 <div class="col-md-4">
-                                    <select class="choices-select" asp-for="@Model.CategoryId" asp-items="@Model.CategoryList">
+                                    <select class="choices-select" id="categoryselect" asp-for="@Model.CategoryId" asp-items="@Model.CategoryList">
                                         <option value="">Select Category</option>
                                     </select>
                                 </div>
@@ -110,7 +110,7 @@
         }
 
 </dialog>
-@section scripts{
+
     <script>
         
         function calcMargin() {
@@ -142,12 +142,27 @@
             }
         });
 
+             // Initialize by ID
+    initializeChoices('#categoryselect');
 
- 
-      
-    
+    // Initialize with custom options
+    initializeChoices('#categoryselect', {
+        searchEnabled: false,
+        placeholderValue: 'Choose...'
+    });
 
-  
+    // Destroy by ID
+    destroyChoices('#categoryselect');
+
+    // Refresh by ID
+    refreshChoices('#categoryselect');
+
+    // Get instance by ID
+    const instance = getChoicesInstance('#categoryselect');
+
+    // Get all instances in a container
+    const instances = getChoicesInContainer('formContainer');
+
 </script>
 
-        }
+        

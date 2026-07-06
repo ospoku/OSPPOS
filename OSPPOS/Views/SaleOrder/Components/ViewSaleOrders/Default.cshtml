@@ -58,7 +58,7 @@
                     </div>
                     <!-- DATATABLES -->
                     <div class="table-container">
-            <table class="table darkTable">
+            <table class="table darkTable" id="saleOrdersTable">
                 <thead>
                     <tr><th>SN</th>
                     <th>Customer</th>
@@ -91,39 +91,24 @@
 
                            <td>
 
-                                <div class="btn-group" role="group">
-                                    <button id="btnGroupDrop1" type="button" class="btn btn-sm btn-rounded btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Select Action
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                    @if(sale.CanEdit)
-                                    {
-
-                                        <button  onclick="openDialogFromData(this)" data-url="EditSale" data-user-id="@protector.Protect(sale.PublicId.ToString())" data-dialog-id="EditMemoDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-edit mr-3 text-warning"></i>Edit</button>
-                                        }
-
-                                      
-
-                                       @if(sale.CanPrint)
-                                       {
-
-                                        <button type="button" class="dropdown-item-custom" onclick="printMemoIframe('@protector.Protect(sale.PublicId.ToString())')">
-                                            <i style="width:15px; height:15px" class="fa fa-print mr-3 text-primary"></i>Print
-                                        </button>
-                                       }
- 
-                                             
-                                                <button type="button" onclick="de" class="dropdown-item-custom"><i style="width:15px; height:15px" class="fa fa-trash mr-3 text-danger"></i>Delete</button>
-                                          
-                                  </div>
-                        </div>
+                        
                                     <div class="dropdown action-dropdown">
                                         <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                             Select Action
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="#"><i class="bi bi-pencil text-primary"></i> Edit</a></li>
-                                            <li><a class="dropdown-item" href="#"><i class="bi bi-eye text-info"></i> View</a></li>
+    @if (sale.CanEdit)
+                                            {
+                                                <li><button class="dropdown-item" onclick="openDialogFromData(this)" data-url="EditSale" data-user-id="@protector.Protect(sale.PublicId.ToString())" data-dialog-id="EditMemoDialog" ><i class="bi bi-pencil text-primary"></i> Edit</button></li>
+                                            }
+
+    @if (sale.CanPrint)
+                                            {
+                                                <li>
+                                                    <button class="dropdown-item" onclick="printMemoIframe('@protector.Protect(sale.PublicId.ToString())')><i class="bi bi-printer text-info">
+                                                        
+                                                Print </button></li >
+                                            }
                                             <li><hr class="dropdown-divider"></li>
                                             <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-trash"></i> Delete</a></li>
                                         </ul>
@@ -143,7 +128,7 @@
   
 
 <iframe id="printFrame" style="display:none;"></iframe>
-
+@section scripts{
 <script type="text/javascript">
     function printMemoIframe(memoId) {
         const printFrame = document.getElementById('printFrame');
@@ -153,8 +138,29 @@
             printFrame.contentWindow.print();
         };
     }
-
+                  document.addEventListener("DOMContentLoaded", (function() {
+                  $('#saleOrdersTable').DataTable({
+                    pageLength: 5,
+                    lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                    order: [[4, 'desc']],
+                    columnDefs: [
+                      { orderable: false, targets: 5 }
+                    ],
+                    language: {
+                      search: "Search:",
+                      lengthMenu: "Show _MENU_ orders",
+                      info: "Showing _START_ to _END_ of _TOTAL_ orders",
+                      infoEmpty: "No order found",
+                      infoFiltered: "(filtered from _MAX_ total orders)",
+                      zeroRecords: "No order found"
+                    },
+                     dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+                       '<"row"<"col-sm-12"tr>>' +
+                          '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>'
+                  })}))
 </script>
+
+}
 
 @await Component.InvokeAsync(nameof(AddSale))
 <dialog id="EditMemoDialog"><div id="EditMemoDialogContent"></div></dialog>

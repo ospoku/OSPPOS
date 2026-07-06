@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OSPPOS.Data;
+using OSPPOS.DTO;
+using OSPPOS.Interfaces;
 using OSPPOS.Models;
 using OSPPOS.Services;
 using OSPPOS.ViewComponents;
@@ -17,7 +19,7 @@ namespace OSPPOS.Controllers
    
 
     [Authorize]
-    public class ProductController(XContext ctx,EntityService entityService, INotyfService notyf) : Controller
+    public class ProductController(XContext ctx,EntityService entityService, INotyfService notyf, IProductService productService) : Controller
     {
         
 
@@ -37,35 +39,54 @@ namespace OSPPOS.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> AddProduct(AddProductVM addProductVM)
         {
-          
 
-            Product addThisProduct = new()
+
+           AddProductDTO addThisProduct = new()
             {
                 Name = addProductVM.Name,
                 Description = addProductVM.Description,
-                CategoryId=addProductVM.CategoryId,
-                SupplierId=addProductVM.SupplierId,
+                CategoryId = addProductVM.CategoryId,
+                SupplierId = addProductVM.SupplierId,
                 CostPrice = addProductVM.CostPrice,
-                IsActive=addProductVM.IsActive,
+                IsActive = addProductVM.IsActive,
                 SellingPrice = addProductVM.SellingPrice,
-                SKU=addProductVM.SKU,
-                ReorderLevel=addProductVM.ReorderLevel,
-                UnitId=addProductVM.UnitId,
-                WholesalePrice=addProductVM.WholesalePrice,
-                CurrentStock=addProductVM.CurrentStock,
+                SKU = addProductVM.SKU,
+                ReorderLevel = addProductVM.ReorderLevel,
+                UnitId = addProductVM.UnitId,
+                WholesalePrice = addProductVM.WholesalePrice,
+                CurrentStock = addProductVM.CurrentStock,
 
             };
 
-            bool result = await entityService.AddEntityAsync(addThisProduct, User);
+            //bool result = await entityService.AddEntityAsync(addThisProduct, User);
 
-            if (!result)
+            //if (!result)
+            //{
+            //    notyf.Error("Failed to add customer. Please try again.");
+            //    return ViewComponent(nameof(ViewProducts)); // reshow dialog with values intact
+            //}
+            //else
+            //{
+
+        //    notyf.Success("Customer added successfully.");
+        //    return ViewComponent(nameof(ViewProducts));
+        //}
+
+        var result = await productService.AddProductAsync(addThisProduct, User);
+
+            if (!result.Success)
             {
                 notyf.Error("Failed to add customer. Please try again.");
                 return ViewComponent(nameof(ViewProducts)); // reshow dialog with values intact
-            }
+    }
+            else
+            {
 
-            notyf.Success("Customer added successfully.");
-            return RedirectToAction(nameof(ViewProducts));
+                notyf.Success("Customer added successfully.");
+                return ViewComponent(nameof(ViewProducts));
+}
+
+
         }
 
         public async Task<IActionResult> Edit(int id)

@@ -11,7 +11,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@model IEnumerable<OSPPOS.ViewModels.ViewProductsVM>;
+@model IEnumerable<OSPPOS.ViewModels.ViewInvoicesVM>;
 @inject Microsoft.AspNetCore.DataProtection.IDataProtectionProvider DataProtectionProvider
 
 @{
@@ -24,7 +24,7 @@
     <div class="tab-pane fade show active tab-pane-dim" id="invoices" role="tabpanel">
         <div class="tab-card">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h6 class="fw-semibold mb-0"><i class="bi bi-tags me-2"></i>Products</h6>
+                <h6 class="fw-semibold mb-0"><i class="bi bi-tags me-2"></i>Invoices</h6>
                 <button class="btn btn-primary btn-sm" id="openInvoiceFormBtn" onclick="document.getElementById('AddInvoiceDialog').showModal()">
                     <i class="bi bi-plus-circle me-1"></i>Add Invoice
                 </button>
@@ -52,46 +52,29 @@
                 </thead>
                 <tbody>
                   
-  @foreach (var p in Model)
+  @foreach (var i in Model)
                 {
-                            <tr class="@(p.IsLowStock ? "table-warning" : "")">
+                            <tr>
                               
-                        <td></td>
-                        <td class="text-muted small">@(p.SKU ?? "—")</td>
+                        <td>@i.InvoiceDate</td>
+                        <td class="text-muted small">@i.InvoiceNumber</td>
                         <td class="ellipsed-text">
-                            <span class="fw-semibold">@p.Name</span>
-                            @if (!p.IsActive)
-                            {
-                                <span class="badge bg-secondary ms-1">Inactive</span>
-                            }
+                          
+                       @i.Customer
                         </td>
                         <td>
-                @p.Category
+            
                         </td>
-                        <td class="small">@p.Unit</td>
-                        <td class="text-end">@p.CostPrice.ToString("N2")</td>
-                        <td class="text-end fw-semibold">@p.SellingPrice.ToString("N2")</td>
-                        <td class="text-end">@p.WholesalePrice.ToString("N2")</td>
+                        <td class="small"></td>
+                        <td class="text-end">@i.AmountPaid.ToString("N2")</td>
+                        <td class="text-end fw-semibold">@i.AmountDue.ToString("N2")</td>
+                        <td class="text-end">@i.DiscountAmount.ToString("N2")</td>
                         <td class="text-end">
-                            <span class="@(p.ProfitMargin > 20 ? "text-success" : p.ProfitMargin > 10 ? "text-warning" : "text-danger")">
-                                @p.ProfitMargin.ToString("N1")%
-                            </span>
+                       
                         </td>
-                        <td class="text-center small">@p.ReorderLevel</td>
+                        <td class="text-center small"></td>
                         <td class="text-center">
-                            @if (p.CurrentStock == 0)
-                            {
-                                <span class="badge bg-danger">Out</span>
-                            }
-                            else if (p.IsLowStock)
-                            {
-                                <span class="badge bg-warning text-dark">@p.CurrentStock</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-success">@p.CurrentStock</span>
-                            }
-                        </td>
+                                       </td>
                            <td>
 
                              @*    <div class="dropdown action-dropdown" role="group">
@@ -143,15 +126,15 @@
     
     <div class="card-footer rounded-bottom-5 border-0 text-muted small">
         <span>@Model.Count().ToString() product(s) &nbsp;|&nbsp;</span>
-        Stock cost value: <strong>GHS @Model.Sum(p => p.CurrentStock * p.CostPrice).ToString("N2")</strong> &nbsp;|&nbsp;
-        Retail value: <strong>GHS @Model.Sum(p => p.CurrentStock * p.SellingPrice).ToString("N2")</strong>
+    @*     Stock cost value: <strong>GHS @Model.Sum(p => p.CurrentStock * p.CostPrice).ToString("N2")</strong> &nbsp;|&nbsp;
+        Retail value: <strong>GHS @Model.Sum(p => p.CurrentStock * p.SellingPrice).ToString("N2")</strong> *@
             </div>
 </div>
 </div>
 </div>
 
 <iframe id="printFrame" style="display:none;"></iframe>
-
+@section scripts{
 <script type="text/javascript">
     function printMemoIframe(memoId) {
         const printFrame = document.getElementById('printFrame');
@@ -183,7 +166,7 @@
           })}))
 
 </script>
-
+}
  @await Component.InvokeAsync(nameof(AddInvoice))
 <dialog id="EditMemoDialog"><div id="EditMemoDialogContent"></div></dialog>
 

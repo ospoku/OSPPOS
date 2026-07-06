@@ -12,12 +12,12 @@ dialog {
     padding: 0;
     background: #23272e;
     color: #e4e6eb;
-    width: min(90vw, 1200px);
-    max-width: 90vw;
-    min-width: 320px;
-    height: 2000px;
-    max-height: min(90vh, 700px);
-    min-height: 200px;
+    width: auto;
+    max-width: auto;
+    min-width: auto;
+    height: auto;
+    max-height: auto;
+    min-height: auto;
     border: 1px solid #2d323a;
     border-radius: 12px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);

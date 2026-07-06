@@ -24,7 +24,7 @@
 
         <!-- Existing custom styles -->
         <link href="~/ospapps/ellipses.css" rel="stylesheet" />
-  @*   <link href="~/ospapps/floatingLabel.css" rel="stylesheet" /> *@
+@*     <link href="~/ospapps/floatingLabel.css" rel="stylesheet" />  *@
     <link href="~/ospapps/darkdatatables.css" rel="stylesheet" />
     <link href="~/ospapps/actionDropdown.css" rel="stylesheet" />
     
@@ -150,8 +150,8 @@
     <script src="~/lib/datatables/js/jquery.datatables.min.js"></script> 
     <script src="~/ospapps/ellipses.js"></script>
     <script src="~/lib/datatables.net-bs5/datatables.bootstrap5.min.js"></script>
- @*     <script src="~/ospapps/choices.js"></script>
-    <script src="~/lib/choices.js/choices.min.js"></script> *@
+@*       <script src="~/ospapps/choices.js"></script> *@
+    <script src="~/lib/choices.js/choices.min.js"></script>
 
     <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
     @RenderSection("Scripts", required: false)
@@ -179,5 +179,6 @@
 
       
     </script>
+    @await Component.InvokeAsync("Notyf")
 </body>
 </html>

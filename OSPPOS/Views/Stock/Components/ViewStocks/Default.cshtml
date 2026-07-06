@@ -97,46 +97,36 @@
                         </td>
 
                         <td>
-                            <div class="btn-group" role="group">
-                                <button id="btnGroupDrop@(i)" type="button"
-                                        class="btn btn-sm btn-rounded btn-outline-primary dropdown-toggle"
-                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Select Action
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="btnGroupDrop@(i)">
-                                    @if (stock.CanEdit)
-                                    {
-                                        <button onclick="openDialogFromData(this)" data-url="EditStock"
-                                                data-user-id="@protector.Protect(stock.PublicId.ToString())"
-                                                data-dialog-id="EditMemoDialog" class="dropdown-item-custom">
-                                            <i style="width:15px; height:15px" class="fa fa-edit mr-3 text-warning"></i>Edit
-                                        </button>
-                                    }
-
-                                    @if (stock.CanPrint)
-                                    {
-                                        <button type="button" class="dropdown-item-custom"
-                                                onclick="printMemoIframe('@protector.Protect(stock.PublicId.ToString())')">
-                                            <i style="width:15px; height:15px" class="fa fa-print mr-3 text-primary"></i>Print
-                                        </button>
-                                    }
-
-                                    <button type="button" onclick="de" class="dropdown-item-custom">
-                                        <i style="width:15px; height:15px" class="fa fa-trash mr-3 text-danger"></i>Delete
-                                    </button>
-                                </div>
-                            </div>
                                     <div class="dropdown action-dropdown">
                                         <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                             Select Action
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="#"><i class="bi bi-pencil text-primary"></i> Edit</a></li>
-                                            <li><a class="dropdown-item" href="#"><i class="bi bi-eye text-info"></i> View</a></li>
+                                    @if (stock.CanEdit)
+                                    {<li>
+                                        <button onclick="openDialogFromData(this)" data-url="EditStock"
+                                                data-user-id="@protector.Protect(stock.PublicId.ToString())"
+                                                data-dialog-id="EditMemoDialog" class="dropdown-item">
+                                           <i class="bi bi-pencil text-primary"></i>Edit
+                                                    </button>
+                                                </li>
+                                    }
+
+                                    @if (stock.CanPrint)
+                                    {<li>
+                                        <button type="button" class="dropdown-item"
+                                                onclick="printMemoIframe('@protector.Protect(stock.PublicId.ToString())')">
+                                                        <i class="bi bi-printer text-info"></i>Print
+                                                    </button>
+                                                </li>
+                                    }
+
                                             <li><hr class="dropdown-divider"></li>
                                             <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-trash"></i> Delete</a></li>
-                                        </ul>
-                                    </div>
+                                    </ul>
+                                </div>
+                        
+                                    
                         </td>
                     </tr>
                 }

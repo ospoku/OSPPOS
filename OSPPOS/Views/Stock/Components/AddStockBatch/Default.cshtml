@@ -286,7 +286,7 @@
 </style> *@
 
 <script>
-    let grnLineIndex = @Model.Items.Count();
+    let grnLineIndex = @Model.Items.Count;
 
     const grnProductOptions = [
         '<option value="">Select product</option>',
@@ -404,124 +404,7 @@
         document.getElementById('addStockBatchForm').submit();
     }
 
-    // Initialize Choices.js for all selects
-    function initializeChoices(element) {
-        if (typeof Choices !== 'undefined') {
-            new Choices(element, {
-                searchEnabled: true,
-                searchPlaceholderValue: 'Search...',
-                placeholder: true,
-                placeholderValue: element.dataset.placeholder || 'Select option...',
-                shouldSort: false,
-                itemSelectText: '',
-                noResultsText: 'No options found',
-                noChoicesText: 'No options available',
-                classNames: {
-                    containerOuter: 'choices choices-dark-grn',
-                    containerInner: 'choices__inner choices__inner-dark',
-                    input: 'choices__input choices__input-dark',
-                    inputCloned: 'choices__input--cloned',
-                    list: 'choices__list',
-                    listItems: 'choices__list--multiple',
-                    listSingle: 'choices__list--single',
-                    listDropdown: 'choices__list--dropdown',
-                    item: 'choices__item',
-                    itemSelectable: 'choices__item--selectable',
-                    itemDisabled: 'choices__item--disabled',
-                    itemChoice: 'choices__item--choice',
-                    placeholder: 'choices__placeholder',
-                    group: 'choices__group',
-                    groupHeading: 'choices__heading',
-                    button: 'choices__button',
-                    activeState: 'is-active',
-                    focusState: 'is-focused',
-                    openState: 'is-open',
-                    disabledState: 'is-disabled',
-                    highlightedState: 'is-highlighted',
-                    selectedState: 'is-selected',
-                    flippedState: 'is-flipped',
-                    loadingState: 'is-loading',
-                    noResults: 'has-no-results',
-                    noChoices: 'has-no-choices'
-                }
-            });
-        }
-    }
 
-    // Initialize on DOM load
-    document.addEventListener('DOMContentLoaded', function () {
-        // Initialize all Choices selects
-        document.querySelectorAll('.choices-select').forEach(select => {
-            initializeChoices(select);
-        });
-
-        // Recalculate totals on load for repopulated lines
-        document.querySelectorAll('#lineItems tr:not(#emptyRow)').forEach(row => {
-            const qty = parseFloat(row.querySelector('input[name*="Quantity"]')?.value) || 0;
-            const cost = parseFloat(row.querySelector('input[name*="UnitCost"]')?.value) || 0;
-            const total = row.querySelector('.line-total');
-            if (total) total.textContent = (qty * cost).toFixed(2);
-        });
-        updateBatchTotal();
-    });
-      // Store Choices instances for cleanup
-        let choicesInstances = [];
-
-        function initializeChoices(selectElement) {
-            if (!selectElement) return;
-
-            // If already a Choices instance, destroy it first
-            if (selectElement._choicesInstance) {
-                selectElement._choicesInstance.destroy();
-            }
-
-            const choices = new Choices(selectElement, {
-                searchEnabled: true,
-                searchPlaceholderValue: 'Search products...',
-                placeholder: true,
-                placeholderValue: selectElement.dataset.placeholder || 'Select option...',
-                shouldSort: false,
-                itemSelectText: '',
-                noResultsText: 'No products found',
-                noChoicesText: 'No products available',
-                searchResultLimit: 20,
-                position: 'bottom',
-                classNames: {
-                    containerOuter: 'choices',
-                    containerInner: 'choices__inner',
-                    input: 'choices__input',
-                    inputCloned: 'choices__input--cloned',
-                    list: 'choices__list',
-                    listItems: 'choices__list--multiple',
-                    listSingle: 'choices__list--single',
-                    listDropdown: 'choices__list--dropdown',
-                    item: 'choices__item',
-                    itemSelectable: 'choices__item--selectable',
-                    itemDisabled: 'choices__item--disabled',
-                    itemChoice: 'choices__item--choice',
-                    placeholder: 'choices__placeholder',
-                    group: 'choices__group',
-                    groupHeading: 'choices__heading',
-                    button: 'choices__button',
-                    activeState: 'is-active',
-                    focusState: 'is-focused',
-                    openState: 'is-open',
-                    disabledState: 'is-disabled',
-                    highlightedState: 'is-highlighted',
-                    selectedState: 'is-selected',
-                    flippedState: 'is-flipped',
-                    loadingState: 'is-loading',
-                    noResults: 'has-no-results',
-                    noChoices: 'has-no-choices'
-                }
-            });
-
-            // Store reference on the element
-            selectElement._choicesInstance = choices;
-            choicesInstances.push(choices);
-
-            return choices;
-        }
 
         let grnLineIndex = 2; // Start after sample rows
 
