@@ -31,7 +31,8 @@ namespace OSPPOS.Services
                 UnitId=addProductDTO.UnitId,
                 CostPrice=addProductDTO.CostPrice,
                 ReorderLevel=addProductDTO.ReorderLevel,
-                Name=addProductDTO.Name,};
+                Name=addProductDTO.Name,
+                WholesalePrice=addProductDTO.WholesalePrice};
              
      
 
