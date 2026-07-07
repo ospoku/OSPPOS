@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
-namespace OSPPOS.DTO
+namespace OSPPOS.DTO.Product
 {
     public class AddProductDTO
     {    // Select Lists

@@ -1,6 +1,7 @@
 ﻿using DocumentFormat.OpenXml.ExtendedProperties;
+using Microsoft.EntityFrameworkCore;
 using OSPPOS.Data;
-using OSPPOS.DTO;
+using OSPPOS.DTO.Product;
 using OSPPOS.Interfaces;
 using OSPPOS.Models;
 using OSPPOS.ViewComponents;
@@ -47,7 +48,7 @@ namespace OSPPOS.Services
                 {
 
 
-                    return (true, "", null);
+                    return (true, "", addThisProduct);
                 }
             }
             catch (Exception ex)
@@ -80,5 +81,22 @@ namespace OSPPOS.Services
         {
             throw new NotImplementedException();
         }
+
+      public async  Task<List<ViewProductsDTO>> ViewProductsAsync(ViewProductsDTO viewProductsDTO)
+
+        {
+            var products= ctx.Products.Select(p => new ViewProductsDTO() 
+            {
+                SKU=p.SKU,
+                SellingPrice=p.SellingPrice,
+                SupplierId=p.SupplierId,
+                Description=p.Description
+          
+            }).ToListAsync();
+
+            return await products;
+        }
+
+     
     }
 }

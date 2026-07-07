@@ -6,28 +6,36 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OSPPOS.Data;
-using OSPPOS.DTO;
+using OSPPOS.DTO.Product;
 using OSPPOS.Interfaces;
 using OSPPOS.Models;
 using OSPPOS.Services;
 using OSPPOS.ViewComponents;
 using OSPPOS.ViewModels;
 using System;
+using System.Threading.Tasks;
 
 namespace OSPPOS.Controllers
 {
-   
-
     [Authorize]
-    public class ProductController(XContext ctx,EntityService entityService, INotyfService notyf, IProductService productService) : Controller
+    public class ProductController(XContext ctx, EntityService entityService, INotyfService notyf, IProductService productService) : Controller
     {
-        
 
-        public IActionResult ViewProducts()
+
+        public async Task<IActionResult> ViewProducts(ViewProductsDTO viewProductsDTO)
         {
 
-            return ViewComponent(nameof(ViewProducts));
+            var results = await productService.ViewProductsAsync(viewProductsDTO);
+            if (results == null||results.Count == 0)
+            {
+                notyf.Error("Failed to display products. Please try again.");
+                return ViewComponent(nameof(ViewProducts));
+            }
 
+   
+
+            return ViewComponent(nameof(ViewProducts),results);
+            
         }
 
         public async Task<IActionResult> AddProduct()
@@ -58,19 +66,6 @@ namespace OSPPOS.Controllers
 
             };
 
-            //bool result = await entityService.AddEntityAsync(addThisProduct, User);
-
-            //if (!result)
-            //{
-            //    notyf.Error("Failed to add customer. Please try again.");
-            //    return ViewComponent(nameof(ViewProducts)); // reshow dialog with values intact
-            //}
-            //else
-            //{
-
-        //    notyf.Success("Customer added successfully.");
-        //    return ViewComponent(nameof(ViewProducts));
-        //}
 
         var result = await productService.AddProductAsync(addThisProduct, User);
 
@@ -78,15 +73,12 @@ namespace OSPPOS.Controllers
             {
                 notyf.Error("Failed to add customer. Please try again.");
                 return ViewComponent(nameof(ViewProducts)); // reshow dialog with values intact
-    }
+            }
             else
             {
-
                 notyf.Success("Customer added successfully.");
                 return ViewComponent(nameof(ViewProducts));
-}
-
-
+             }
         }
 
         public async Task<IActionResult> Edit(int id)
