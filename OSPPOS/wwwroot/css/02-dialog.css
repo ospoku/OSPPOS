@@ -12,11 +12,11 @@ dialog {
     padding: 0;
     background: #23272e;
     color: #e4e6eb;
-    width: auto;
-    max-width: auto;
+    width:fit-content;
+    max-width: fit-content;
     min-width: auto;
-    height: auto;
-    max-height: auto;
+    height: fit-content;
+    max-height: fit-content;
     min-height: auto;
     border: 1px solid #2d323a;
     border-radius: 12px;

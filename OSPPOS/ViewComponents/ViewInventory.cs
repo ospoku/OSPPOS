@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OSPPOS.Data;
@@ -13,6 +14,7 @@ namespace OSPPOS.ViewComponents
         {
             var q = ctx.Products
                 .Include(p => p.Category)
+                .Include(p=>p.Unit)
                 .Include(p => p.Supplier)
                 .Where(p => p.IsActive)
                 .AsQueryable();
@@ -33,7 +35,8 @@ namespace OSPPOS.ViewComponents
             {
                 Products = products,
                 CategoryId = categoryId,
-                Search = search
+                Search = search,
+                
             };
 
             ViewBag.Categories = new SelectList(

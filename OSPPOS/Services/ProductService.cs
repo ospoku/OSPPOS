@@ -90,7 +90,8 @@ namespace OSPPOS.Services
                 SKU=p.SKU,
                 SellingPrice=p.SellingPrice,
                 SupplierId=p.SupplierId,
-                Description=p.Description
+                Description=p.Description,
+                Name=p.Name,
           
             }).ToListAsync();
 

@@ -42,6 +42,7 @@ namespace OSPPOS.ViewComponents
                 ReorderLevel = p.ReorderLevel,
                 IsActive = p.IsActive,
                 CurrentStock=p.CurrentStock,
+                SKU=p.SKU,
                 TotalProducts = productList.Count
             }).ToList();
 

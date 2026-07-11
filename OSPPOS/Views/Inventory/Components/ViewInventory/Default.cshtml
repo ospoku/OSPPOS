@@ -26,220 +26,6 @@
         .GroupBy(p => p.Category?.Name ?? "Uncategorised")
         .OrderBy(g => g.Key);
 }
-
-
-
-
-<div class="card shadow rounded-5 mb-4 bg-dark text-light border-secondary">
-    <div class="d-flex m-3 justify-content-between align-items-center">
-        <h4 class="mb-0 text-light"><i class="fas fa-boxes me-2 text-primary"></i>Stock levels</h4>
-        <div class="d-flex gap-2">
-            <button onclick="window.print()" class="btn btn-sm rounded-5 btn-outline-secondary no-print text-light border-secondary">
-                <i class="fas fa-print me-1"></i>Print
-            </button>
-            <a asp-action="DownloadStock" class="btn btn-sm rounded-5 btn-outline-success no-print">
-                <i class="fas fa-file-excel me-1"></i>Export
-            </a>
-            <a asp-controller="Stock" asp-action="Create" class="btn btn-sm rounded-5 btn-primary no-print">
-                <i class="fas fa-truck-loading me-1"></i>New GRN
-            </a>
-        </div>
-    </div>
-
-    <!-- Summary cards -->
-    <div class="row g-2 m-3">
-        <div class="col-6 col-md-3">
-            <div class="card border-1 shadow-sm text-center py-3 bg-dark text-light border-secondary">
-                <div class="fs-4 fw-bold text-light">@Model.Products.Count</div>
-                <div class="small text-secondary">Total products</div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="card border-1 shadow-sm text-center py-3 bg-dark text-light border-secondary">
-                <div class="fs-4 fw-bold text-danger">@outOfStock</div>
-                <div class="small text-secondary">Out of stock</div>
-                <div class="x-small text-secondary">needs immediate restock</div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="card border-1 shadow-sm text-center py-3 bg-dark text-light border-secondary">
-                <div class="fs-4 fw-bold text-warning">@lowStock</div>
-                <div class="small text-secondary">Low stock</div>
-                <div class="x-small text-secondary">below reorder level</div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="card border-1 shadow-sm text-center py-3 bg-dark text-light border-secondary">
-                <div class="fs-5 fw-bold text-success">GHS @totalRetail.ToString("N2")</div>
-                <div class="small text-secondary">Stock value (retail)</div>
-                <div class="x-small text-secondary">cost: GHS @totalCost.ToString("N2")</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Main table -->
-<div class="card rounded-5 shadow mb-4 bg-dark text-light border-secondary">
-    <div class="card-header py-3 d-flex justify-content-between align-items-center bg-dark border-secondary">
-        <span class="fw-semibold text-light" style="font-size:.85rem">All products — stock position</span>
-        <span class="text-secondary" style="font-size:.78rem">
-            As at @DateTime.Today.ToString("dd MMM yyyy") &middot; @Model.Products.Count items
-        </span>
-    </div>
-
-    <div class="card-body bg-dark">
-        <table class="table dataTables_wrapper align-middle mb-0 text-light" style="font-size:.85rem">
-            <thead class="bg-dark text-light" style="border-bottom: 1px solid #444;">
-                <tr>
-                    <th style="width:80px" class="text-secondary">SKU</th>
-                    <th class="text-secondary">Product</th>
-                    <th class="text-secondary">Type</th>
-                    <th class="text-center text-secondary" style="width:70px">Reorder</th>
-                    <th class="text-center text-secondary" style="width:80px">In stock</th>
-                    <th class="text-secondary" style="min-width:140px">Level</th>
-                    <th class="text-end text-secondary">Cost value</th>
-                    <th class="text-end text-secondary">Retail value</th>
-                    <th class="text-secondary" style="width:80px">Status</th>
-                    <th class="text-secondary" style="width:90px"></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var group in grouped)
-                {
-                    <!-- Category group header -->
-                    <tr style="background: #2a2a2a; border-bottom: 1px solid #444;">
-                        <td colspan="10"
-                            class="text-uppercase fw-semibold text-secondary"
-                            style="font-size:.72rem; letter-spacing:.05em; padding:6px 14px">
-                            <i class="fas fa-folder me-1"></i>@group.Key
-                            <span class="fw-normal ms-1 text-secondary">(@group.Count() products)</span>
-                        </td>
-                    </tr>
-
-                    @foreach (var p in group.OrderBy(p => p.Name))
-                    {
-                        var pct = maxStock > 0 ? (int)((p.CurrentStock / maxStock) * 100) : 0;
-                        var barCls = p.CurrentStock == 0 ? "bg-danger"
-                        : p.IsLowStock ? "bg-warning"
-                        : "bg-success";
-                        var rowCls = p.CurrentStock == 0 ? "table-danger"
-                        : p.IsLowStock ? "table-warning"
-                        : "";
-
-                        <tr class="@rowCls" style="border-bottom: 1px solid #333;">
-                            <td class="text-secondary" style="font-size:.78rem">@(p.SKU ?? "—")</td>
-
-                            <td>
-                                <span class="fw-semibold text-light">@p.Name</span>
-                                <span class="text-secondary ms-1" style="font-size:.75rem">@p.Unit</span>
-                            </td>
-
-                            <td></td>
-
-                            <td class="text-center text-secondary">@p.ReorderLevel</td>
-
-                            <td class="text-center fw-semibold
-                                                @(p.CurrentStock == 0 ? "text-danger"
-                                                                                                : p.IsLowStock ? "text-warning"
-                                                                                                : "text-light")">
-                        @p.CurrentStock
-                    </td>
-
-                            <!-- Progress bar + % -->
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="flex-grow-1 rounded" style="background:#333;height:6px;min-width:60px">
-                                        <div class="rounded @barCls" style="height:6px;width:@(Math.Min(pct, 100))%"></div>
-                                    </div>
-                                    <span class="text-secondary" style="font-size:.72rem;min-width:28px">
-                                        @(p.CurrentStock == 0 ? "Out" : pct + "%")
-                                    </span>
-                                </div>
-                            </td>
-
-                            <td class="text-end text-secondary" style="font-size:.8rem">
-                                GHS @((p.CurrentStock * p.CostPrice).ToString("N2"))
-                            </td>
-                            <td class="text-end fw-semibold text-light">
-                                GHS @((p.CurrentStock * p.SellingPrice).ToString("N2"))
-                            </td>
-
-                            <!-- Status badge -->
-                            <td>
-                        @if (p.CurrentStock == 0)
-                                {
-                                    <span class="badge rounded-pill" style="background:#3d1a1a;color:#ff6b6b;font-size:.7rem">Out</span>
-                                }
-                                else if (p.IsLowStock)
-                                {
-                                    <span class="badge rounded-pill" style="background:#3d2e1a;color:#ffb74d;font-size:.7rem">Low</span>
-                                }
-                                else
-                                {
-                                    <span class="badge rounded-pill" style="background:#1a3d1a;color:#66bb6a;font-size:.7rem">OK</span>
-                                }
-                            </td>
-
-                            <!-- Actions -->
-                            <td>
-                                <div class="d-flex gap-1">
-                                    @if (p.CurrentStock == 0)
-                                    {
-                                        <a asp-controller="Stock" asp-action="Create"
-                                           class="btn btn-sm btn-primary px-2" title="Restock now">
-                                            <i class="fas fa-truck-loading"></i>
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <a asp-action="Movement" asp-route-id="@p.ProductId"
-                                           class="btn btn-sm btn-outline-secondary px-2 text-secondary border-secondary" title="Stock movement">
-                                            <i class="fas fa-exchange-alt"></i>
-                                        </a>
-                                    }
-                                    <a asp-controller="Products" asp-action="Edit" asp-route-id="@p.ProductId"
-                                       class="btn btn-sm btn-outline-secondary px-2 text-secondary border-secondary" title="Edit">
-                                        <i class="fas fa-pencil-alt"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                }
-            </tbody>
-
-            <tfoot class="bg-dark text-light" style="border-top: 1px solid #444;font-size:.8rem">
-                <tr>
-                    <td colspan="6" class="text-secondary">Showing @Model.Products.Count product(s)</td>
-                    <td class="text-end fw-semibold text-light">GHS @totalCost.ToString("N2")</td>
-                    <td class="text-end fw-semibold text-light">GHS @totalRetail.ToString("N2")</td>
-                    <td colspan="2"></td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
-
-    <!-- Legend -->
-    <div class="card-footer d-flex justify-content-between align-items-center bg-dark border-secondary" style="font-size:.78rem">
-        <div class="d-flex gap-3 text-secondary">
-            <span>
-                <span class="d-inline-block rounded me-1" style="width:10px;height:10px;background:#3d1a1a;border:0.5px solid #ff6b6b"></span>
-                Out of stock
-            </span>
-            <span>
-                <span class="d-inline-block rounded me-1" style="width:10px;height:10px;background:#3d2e1a;border:0.5px solid #ffb74d"></span>
-                Low stock
-            </span>
-            <span>
-                <span class="d-inline-block rounded me-1" style="width:10px;height:10px;background:#1a3d1a;border:0.5px solid #66bb6a"></span>
-                OK
-            </span>
-        </div>
-        <div class="text-secondary">
-            <i class="fas fa-exchange-alt me-1"></i>= movement history
-        </div>
-    </div>
-</div>
 <div class="tab-content tab-content-dim" id="divstockContent">
     <!-- TAB: STOCK LEVELS -->
     <div class="tab-pane fade show active tab-pane-dim" id="divstock" role="tabpanel">
@@ -260,7 +46,7 @@
             </div>
 
             <!-- Summary cards -->
-            <div class="row g-2 mb-3">
+             <div class="row g-2 mb-3">
                 <div class="col-6 col-md-3">
                     <div class="card border-0 shadow-sm text-center py-3 bg-dark text-light">
                         <div class="fs-4 fw-bold">@Model.Products.Count</div>
@@ -288,14 +74,15 @@
                         <div class="x-small text-secondary">cost: GHS @totalCost.ToString("N2")</div>
                     </div>
                 </div>
-            </div>
+            </div> 
 
             <!-- DATATABLES -->
             <div class="table-container">
-                <table class="table darkTable" id="stockTable">
+                <table class="table darkTable" id="inventoryTable">
                     <thead>
                         <tr>
                             <th>SKU</th>
+                            
                             <th>Product</th>
                             <th>Category</th>
                             <th>Unit</th>
@@ -330,7 +117,7 @@
                                 : "";
 
                                 <tr class="@rowCls">
-                                    <td class="text-muted small">@(p.SKU ?? "—")</td>
+                                    <td class=" text-white small">@(p.SKU ?? "—")</td>
                                     <td>
                                         <span class="fw-semibold">@p.Name</span>
                                         @if (!p.IsActive)
@@ -338,8 +125,8 @@
                                             <span class="badge bg-secondary ms-1">Inactive</span>
                                         }
                                     </td>
-                                    <td>@p.Category</td>
-                                    <td class="small">@p.Unit</td>
+                                    <td>@p.Category.Name</td>
+                                    <td class="small">@p.Unit.Name</td>
                                     <td class="text-center small">@p.ReorderLevel</td>
                                     <td class="text-center">
                                         @if (p.CurrentStock == 0)
@@ -429,7 +216,7 @@
             </div>
 
             <!-- Footer with totals -->
-            <div class="card-footer rounded-bottom-5 border-0 text-muted small">
+            <div class="card-footer rounded-bottom-5 border-0 text-white small">
                 <span>@Model.Products.Count().ToString() product(s) &nbsp;|&nbsp;</span>
                 Stock cost value: <strong class="text-light">GHS @totalCost.ToString("N2")</strong> &nbsp;|&nbsp;
                 Retail value: <strong class="text-light">GHS @totalRetail.ToString("N2")</strong>
@@ -442,3 +229,36 @@
         </div>
     </div>
 </div>
+@section scripts {
+    <script type="text/javascript">
+        function printMemoIframe(memoId) {
+            const printFrame = document.getElementById('printFrame');
+            printFrame.src = `/Memo/PrintMemo?Id=${memoId}`;
+            printFrame.onload = function () {
+                printFrame.contentWindow.focus();
+                printFrame.contentWindow.print();
+            };
+        };
+
+        document.addEventListener("DOMContentLoaded", (function() {
+              $('#inventoryTable').DataTable({
+                pageLength: 5,
+                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                order: [[4, 'desc']],
+                columnDefs: [
+                  { orderable: false, targets: 5 }
+                ],
+                language: {
+                  search: "Search:",
+                  lengthMenu: "Show _MENU_ products",
+                  info: "Showing _START_ to _END_ of _TOTAL_ products",
+                  infoEmpty: "No product found",
+                  infoFiltered: "(filtered from _MAX_ total products)",
+                  zeroRecords: "No product found"
+                },
+                 dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+                   '<"row"<"col-sm-12"tr>>' +
+                      '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>'
+              })}))
+    </script>
+}

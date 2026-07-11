@@ -13,9 +13,9 @@ namespace OSPPOS.ViewModels
     public class AddProductVM
     {
         // Select Lists
-        public SelectList CategoryList { get; set; }  
-        public SelectList SupplierList { get; set; }
-        public SelectList UnitList { get; set; }
+        public SelectList CategoryList { get; set; } = null!;
+        public SelectList SupplierList { get; set; } = null!;
+        public SelectList UnitList { get; set; } = null!;
 
         // Foreign Keys
         [Required(ErrorMessage = "Please select a category")]
