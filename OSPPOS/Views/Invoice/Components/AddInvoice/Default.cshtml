@@ -1,7 +1,7 @@
 ﻿@using OSPPOS.Models
 @model OSPPOS.ViewModels.AddInvoiceVM;
 
-<dialog id="AddSaleDialog">
+<dialog id="AddInvoiceDialog">
 
 
     <div class="modal-header border-bottom px-3 py-2">
@@ -10,13 +10,13 @@
         </h6>
         <button type="button"
                 class="btn btn-sm btn-outline-danger"
-                onclick="document.getElementById('AddSaleDialog').close()">
+                onclick="document.getElementById('AddInvoiceDialog').close()">
             <i class="fas fa-times me-1"></i>Close
         </button>
     </div>
 
-    @using (Html.BeginForm("AddSale", "Sale", FormMethod.Post,
-        new { id = "addSaleForm" }))
+    @using (Html.BeginForm("AddInvoice", "Invoice", FormMethod.Post,
+        new { id = "addInvoiceForm" }))
     {
         @Html.AntiForgeryToken()
 
@@ -43,22 +43,22 @@
                                 <!-- Credit customer select -->
                                 <div class="col-sm-8" id="creditCustomerGroup">
                                     <select id="customerSelect" 
-                                            class=" dmx-choices"
+                                            class="dmx-choices"
                                             onchange="onCustomerChange(this)" asp-for="CustomerId" asp-items="Model.Customers">
                                         <option value="">-- select customer --</option>
-                                     @*  @foreach (var c in Model.Customers.Where(c => c.IsActive && c.AllowCredit)
+                                   @*    @foreach (var c in Model.Customers.Where(c => c.IsActive && c.AllowCredit)
                                             .OrderBy(c => c.Name))
                                         {
                                             <option value="@c.CustomerId"
                                                     data-limit="@c.CreditLimit"
-                                                    data-debt="@c.TotalDebt"
+                                                   @*  data-debt="@c.TotalDebt" *
                                                     data-allow="@c.AllowCredit.ToString().ToLower()">
                                                 @c.Name
-                                                @(c.TotalDebt > 0
+                                             @*    @(c.TotalDebt > 0
                                                     ? $" — owes GHS {c.TotalDebt:N2}"
-                                                    : "")
+                                                    : "") *
                                             </option>
-                                        }  *@
+                                        }   *@
                                     </select>
 
                                     <!-- Credit info strip -->
@@ -308,8 +308,8 @@
 
 
 <style>
-    #AddSaleDialog { max-width: 900px; width: 95vw; }
-    #AddSaleDialog::backdrop { background: rgba(0,0,0,.45); }
+    #AddInvoiceDialog { max-width: 900px; width: 95vw; }
+    #AddInvoiceDialog::backdrop { background: rgba(0,0,0,.45); }
     .product-row:hover { background: #f0f7ff; }
     .product-row:last-child { border-bottom: none !important; }
     .sale-type-btn { transition: border-color .15s, color .15s; }

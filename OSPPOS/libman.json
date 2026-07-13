@@ -14,31 +14,30 @@
       "provider": "unpkg",
       "library": "@fontsource/roboto-mono@5.2.9",
       "destination": "wwwroot/lib/fontsource/roboto-mono/"
+    },
+    {
+      "library": "bootstrap@5.3.8",
+      "destination": "wwwroot/lib/bootstrap/"
+    },
+    {
+      "library": "tailwindcss@4.3.0",
+      "destination": "wwwroot/css/tailwindcss/"
+    },
+    {
+      "library": "bootstrap-icons@1.13.1",
+      "destination": "wwwroot/icons/bootstrap-icons/"
+    },
+    {
+      "library": "datatables.net-bs5@2.3.8",
+      "destination": "wwwroot/lib/datatables.net-bs5/"
+    },
+    {
+      "library": "datatables.net-rowgroup-bs5@1.6.0",
+      "destination": "wwwroot/lib/datatables.net-rowgroup-bs5/"
+    },
+    {
+      "library": "datatables.net-rowgroup@1.6.0",
+      "destination": "wwwroot/lib/datatables.net-rowgroup/"
     }
-
-  ,
-{
-  "provider": "cdnjs",
-  "library": "bootstrap@5.3.8",
-  "destination": "wwwroot/lib/bootstrap/"
-}
-,
-{
-  "provider": "cdnjs",
-  "library": "tailwindcss@4.3.0",
-  "destination": "wwwroot/css/tailwindcss/"
-}
-,
-{
-  "provider": "cdnjs",
-  "library": "bootstrap-icons@1.13.1",
-  "destination": "wwwroot/icons/bootstrap-icons/"
-}
-,
-{
-  "provider": "cdnjs",
-  "library": "datatables.net-bs5@2.3.8",
-  "destination": "wwwroot/lib/datatables.net-bs5/"
-}
-]
+  ]
 }

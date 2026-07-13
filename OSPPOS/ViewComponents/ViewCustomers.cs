@@ -16,7 +16,12 @@ namespace OSPPOS.ViewComponents
                 Phone=c.Phone,
                 Email=c.Email, 
                 Address=c.Address, 
-                TaxNumber =c.TaxNumber, CreditLimit =c.CreditLimit, AllowCredit =c.AllowCredit,IsActive =c.IsActive,  SaleOrders =c.SaleOrders.Select(s=>s.OrderNumber).ToList(), Payments=c.Payments,
+                TaxNumber =c.TaxNumber, 
+                CreditLimit =c.CreditLimit, 
+                AllowCredit =c.AllowCredit,
+                IsActive =c.IsActive,  
+                SaleOrders =c.SaleOrders.Select(s=>s.OrderNumber).ToList(), 
+                Payments=c.Payments,
  
 }).ToList();
             return View(cust);

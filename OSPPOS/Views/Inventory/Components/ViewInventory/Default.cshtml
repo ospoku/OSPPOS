@@ -26,7 +26,13 @@
         .GroupBy(p => p.Category?.Name ?? "Uncategorised")
         .OrderBy(g => g.Key);
 }
-<div class="tab-content tab-content-dim" id="divstockContent">
+
+
+
+
+
+
+<div class="tab-content tab-content-dim" id="divinventoryContent">
     <!-- TAB: STOCK LEVELS -->
     <div class="tab-pane fade show active tab-pane-dim" id="divstock" role="tabpanel">
         <div class="tab-card">
@@ -44,45 +50,42 @@
                     </a>
                 </div>
             </div>
-
-            <!-- Summary cards -->
-             <div class="row g-2 mb-3">
-                <div class="col-6 col-md-3">
-                    <div class="card border-0 shadow-sm text-center py-3 bg-dark text-light">
-                        <div class="fs-4 fw-bold">@Model.Products.Count</div>
-                        <div class="small text-secondary">Total products</div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="card border-0 shadow-sm text-center py-3 bg-dark text-light">
-                        <div class="fs-4 fw-bold text-danger">@outOfStock</div>
-                        <div class="small text-secondary">Out of stock</div>
-                        <div class="x-small text-secondary">needs immediate restock</div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="card border-0 shadow-sm text-center py-3 bg-dark text-light">
-                        <div class="fs-4 fw-bold text-warning">@lowStock</div>
-                        <div class="small text-secondary">Low stock</div>
-                        <div class="x-small text-secondary">below reorder level</div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="card border-0 shadow-sm text-center py-3 bg-dark text-light">
-                        <div class="fs-5 fw-bold text-success">GHS @totalRetail.ToString("N2")</div>
-                        <div class="small text-secondary">Stock value (retail)</div>
-                        <div class="x-small text-secondary">cost: GHS @totalCost.ToString("N2")</div>
-                    </div>
-                </div>
-            </div> 
-
-            <!-- DATATABLES -->
-            <div class="table-container">
-                <table class="table darkTable" id="inventoryTable">
+<div class="row g-2 mb-3">
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm text-center py-3 bg-dark text-light">
+            <div class="fs-4 fw-bold">@Model.Products.Count</div>
+            <div class="small text-secondary">Total products</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm text-center py-3 bg-dark text-light">
+            <div class="fs-4 fw-bold text-danger">@outOfStock</div>
+            <div class="small text-secondary">Out of stock</div>
+            <div class="x-small text-secondary">needs immediate restock</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm text-center py-3 bg-dark text-light">
+            <div class="fs-4 fw-bold text-warning">@lowStock</div>
+            <div class="small text-secondary">Low stock</div>
+            <div class="x-small text-secondary">below reorder level</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm text-center py-3 bg-dark text-light">
+            <div class="fs-5 fw-bold text-success">GHS @totalRetail.ToString("N2")</div>
+            <div class="small text-secondary">Stock value (retail)</div>
+            <div class="x-small text-secondary">cost: GHS @totalCost.ToString("N2")</div>
+        </div>
+    </div>
+</div>
+<div class="table-container">
+<table class="table darkTable" id="inventoryTable">
+    
                     <thead>
                         <tr>
                             <th>SKU</th>
-                            
+
                             <th>Product</th>
                             <th>Category</th>
                             <th>Unit</th>
@@ -95,28 +98,28 @@
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody>@* 
                         @foreach (var group in grouped)
                         {
                             <!-- Category group header -->
-                            <tr style="background: #2a2a2a;">
+                           @*  <tr style="background: #2a2a2a;">
                                 <td colspan="11" class="text-uppercase fw-semibold text-secondary" style="font-size:.72rem; letter-spacing:.05em; padding:6px 14px;">
                                     <i class="bi bi-folder me-1"></i>@group.Key
                                     <span class="fw-normal ms-1 text-secondary">(@group.Count() products)</span>
                                 </td>
-                            </tr>
+                            </tr> *@
 
-                            @foreach (var p in group.OrderBy(p => p.Name))
-                            {
-                                var pct = maxStock > 0 ? (int)((p.CurrentStock / maxStock) * 100) : 0;
+                           @*  @foreach (var p in group.OrderBy(p => p.Name))
+                            { *@
+                             @*    var pct = maxStock > 0 ? (int)((p.CurrentStock / maxStock) * 100) : 0;
                                 var barCls = p.CurrentStock == 0 ? "bg-danger"
                                 : p.IsLowStock ? "bg-warning"
                                 : "bg-success";
                                 var rowCls = p.CurrentStock == 0 ? "table-danger"
                                 : p.IsLowStock ? "table-warning"
-                                : "";
+                                : ""; *@
 
-                                <tr class="@rowCls">
+                               @*  <tr class="@rowCls">
                                     <td class=" text-white small">@(p.SKU ?? "—")</td>
                                     <td>
                                         <span class="fw-semibold">@p.Name</span>
@@ -208,15 +211,121 @@
                                             </ul>
                                         </div>
                                     </td>
-                                </tr>
-                            }
+                                </tr> *@
+                           @** }
+                        }
+
+      *@               
+  
+  @foreach(var p in Model.Products)
+                        {
+                             var pct = maxStock > 0 ? (int)((p.CurrentStock / maxStock) * 100) : 0;
+                                var barCls = p.CurrentStock == 0 ? "bg-danger"
+                                : p.IsLowStock ? "bg-warning"
+                                : "bg-success";
+                                var rowCls = p.CurrentStock == 0 ? "table-danger"
+                                : p.IsLowStock ? "table-warning"
+                            : "";
+                            <tr class="@rowCls">
+                                <td class=" text-white small">@(p.SKU ?? "—")</td>
+                                <td>
+                                    <span class="fw-semibold">@p.Name</span>
+                                    @if (!p.IsActive)
+                                    {
+                                        <span class="badge bg-secondary ms-1">Inactive</span>
+                                    }
+                                </td>
+                                <td>@p.Category.Name</td>
+                                <td class="small">@p.Unit.Name</td>
+                                <td class="text-center small">@p.ReorderLevel</td>
+                                <td class="text-center">
+                                    @if (p.CurrentStock == 0)
+                                    {
+                                        <span class="badge bg-danger">0</span>
+                                    }
+                                    else if (p.IsLowStock)
+                                    {
+                                        <span class="badge bg-warning text-dark">@p.CurrentStock</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">@p.CurrentStock</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="flex-grow-1 rounded" style="background:#333;height:6px;min-width:60px">
+                                            <div class="rounded @barCls" style="height:6px;width:@(Math.Min(pct, 100))%"></div> 
+                                        </div>
+                                        <span class="text-secondary" style="font-size:.72rem;min-width:28px;">
+                                            @(p.CurrentStock == 0 ? "Out" : pct + "%")
+                                        </span> 
+                                    </div>
+                                </td>
+                                <td class="text-end text-secondary" style="font-size:.8rem;">
+                                    GHS @((p.CurrentStock * p.CostPrice).ToString("N2"))
+                                </td>
+                                <td class="text-end fw-semibold">
+                                    GHS @((p.CurrentStock * p.SellingPrice).ToString("N2"))
+                                </td>
+                                <td class="text-center">
+                                    @if (p.CurrentStock == 0)
+                                    {
+                                        <span class="badge bg-danger">Out</span>
+                                    }
+                                    else if (p.IsLowStock)
+                                    {
+                                        <span class="badge bg-warning text-dark">Low</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">OK</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="dropdown action-dropdown">
+                                        <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                            Select Action
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            @if (p.CurrentStock == 0)
+                                            {
+                                                <li>
+                                                    <a asp-controller="Stock" asp-action="Create" class="dropdown-item text-primary">
+                                                        <i class="bi bi-truck"></i>Restock now
+                                                    </a>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                <li>
+                                                    <a asp-action="Movement" asp-route-id="@p.ProductId" class="dropdown-item text-info">
+                                                        <i class="bi bi-arrow-left-right"></i>Movement history
+                                                    </a>
+                                                </li>
+                                            }
+                                            <li>
+                                                <a asp-controller="Products" asp-action="Edit" asp-route-id="@p.ProductId" class="dropdown-item text-warning">
+                                                    <i class="bi bi-edit"></i>Edit
+                                                </a>
+                                            </li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li>
+                                                <button type="button" class="dropdown-item text-danger">
+                                                    <i class="bi bi-trash"></i>Delete
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            
                         }
                     </tbody>
                 </table>
             </div>
-
-            <!-- Footer with totals -->
-            <div class="card-footer rounded-bottom-5 border-0 text-white small">
+  
+         <div class="card-footer rounded-bottom-5 border-0 text-white small">
                 <span>@Model.Products.Count().ToString() product(s) &nbsp;|&nbsp;</span>
                 Stock cost value: <strong class="text-light">GHS @totalCost.ToString("N2")</strong> &nbsp;|&nbsp;
                 Retail value: <strong class="text-light">GHS @totalRetail.ToString("N2")</strong>
@@ -226,10 +335,15 @@
                     <span class="badge bg-success">OK</span>
                 </span>
             </div>
-        </div>
-    </div>
-</div>
+            </div>
+            </div>
+            </div>
+        
+            
 @section scripts {
+   @*  <link href="~/lib/datatables.net-rowgroup-bs5/rowgroup.bootstrap5.min.css" rel="stylesheet" />
+    <script src="~/lib/datatables.net-rowgroup/datatables.rowgroup.min.js"></script>
+    <script src="~/lib/datatables.net-rowgroup-bs5/rowgroup.bootstrap5.min.js"></script> *@
     <script type="text/javascript">
         function printMemoIframe(memoId) {
             const printFrame = document.getElementById('printFrame');
@@ -244,10 +358,13 @@
               $('#inventoryTable').DataTable({
                 pageLength: 5,
                 lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
-                order: [[4, 'desc']],
+                order: [[2, 'asc']],
                 columnDefs: [
                   { orderable: false, targets: 5 }
                 ],
+                     rowGroup: {
+            dataSrc: 2
+        },
                 language: {
                   search: "Search:",
                   lengthMenu: "Show _MENU_ products",
@@ -259,6 +376,7 @@
                  dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
                    '<"row"<"col-sm-12"tr>>' +
                       '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>'
-              })}))
-    </script>
+              })}));
+       
+                   </script>
 }

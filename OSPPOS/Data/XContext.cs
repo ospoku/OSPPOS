@@ -22,8 +22,8 @@ namespace OSPPOS.Data
         public DbSet<PaymentStatus> PaymentStatuses { get; set; }
        public DbSet<SaleType> SaleTypes { get; set; } 
        public DbSet<Unit> Units { get; set; }
-        
-    
+ 
+    public DbSet<CreditSettings> Credits { get; set; }
        public DbSet<Category> Categories { get; set; }
       
         public DbSet<Permission> Permissions { get; set; }

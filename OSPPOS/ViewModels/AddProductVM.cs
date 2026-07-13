@@ -30,9 +30,9 @@ namespace OSPPOS.ViewModels
         public string Name { get; set; }
 
         [StringLength(1000)]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
-        public string SKU { get; set; }
+        public string? SKU { get; set; }
 
         // Pricing
         [Required(ErrorMessage = "Cost price is required")]

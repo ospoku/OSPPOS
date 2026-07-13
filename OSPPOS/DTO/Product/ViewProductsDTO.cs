@@ -2,19 +2,19 @@
 {
     public class ViewProductsDTO
     {
-       public string CategoryId { get; set; }
-        public string Description { get; set; } = string.Empty;
-        public string ProductCategoryCategoryId { get;    set; }
+       public int CategoryId { get; set; }
+        public string? Description { get; set; } = string.Empty;
+       
       
               public int CurrentStock { get; set; } 
         public decimal SellingPrice { get; set; }
                   public bool IsActive {  get; set; }
         public string SKU { get; set; } = string.Empty;
                 public int SupplierId { get; set; }
-               public string UnitId {  get; set; }
-                 public string CostPrice {  get; set; }
-            public string ReorderLevel { get; set; }
+               public int UnitId {  get; set; }
+                 public decimal CostPrice {  get; set; }
+            public int ReorderLevel { get; set; }
         public string Name { get; set; } = string.Empty;
-        public string WholesalePrice { get; set; }
+        public decimal WholesalePrice { get; set; }
     }
 }

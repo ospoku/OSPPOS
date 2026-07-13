@@ -10,7 +10,15 @@ namespace OSPPOS.ViewComponents
         {
            
 
-            var sale = ctx.SaleOrders.Select(s => new ViewSalesVM {CustomerName=s.Customer.Name, OrderDate=s.OrderDate,OrderNumber=s.OrderNumber }).ToList();
+            var sale = ctx.SaleOrders.Select(s => new ViewSalesVM {
+                CustomerName=s.Customer.Name,
+                OrderDate=s.OrderDate,
+                OrderNumber=s.OrderNumber,
+             Notes=s.Notes,
+                DueDate=s.DueDate,
+               
+            }
+            ).ToList();
 
             return View(sale);
         }

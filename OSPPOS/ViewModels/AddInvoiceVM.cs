@@ -21,7 +21,7 @@ namespace OSPPOS.ViewModels
 
         public string? PaymentReference { get; set; }
         public int PaymentStatusId {  get; set; }
- public SelectList Customers { get; set; }
+        public SelectList Customers { get; set; } = null!;
         public List<CreditInfoVM> CreditInfo { get; set; } = [];
         public List<Product> Products { get; set; } = [];
        

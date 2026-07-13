@@ -35,17 +35,7 @@ namespace OSPPOS.ViewModels
         = false;
         public bool CanInsert { get;set; } = false;
         public bool CanUpdate { get;set; }
-        public int? PageIndex { get; set; }
-        public int? PageSize { get; set; }
-            public int? PageCount { get; set; }
-        public int? PageOffset { get; set; }
-        public int? PageLimit { get; set; }
-        public int? PageTotal { get; set; }
-        public int? PageTotalCount { get;set; }
-        public int? PageTotalOffset { get;set; }
-        public int? PageTotalLimit { get;set; }
-        public int? PageTotalTotalTotal { get;set; }
-        public int? PageTotalTotalCount { get; set; }
+    
         public bool CanPrint {  get; set; }
         public Guid PublicId { get; set; }
     }
