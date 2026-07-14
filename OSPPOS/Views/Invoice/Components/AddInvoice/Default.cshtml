@@ -1,7 +1,7 @@
 ﻿@using OSPPOS.Models
 @model OSPPOS.ViewModels.AddInvoiceVM;
 
-<dialog id="AddInvoiceDialog">
+@* <dialog id="AddInvoiceDialog">
 
 
     <div class="modal-header border-bottom px-3 py-2">
@@ -58,7 +58,7 @@
                                                     ? $" — owes GHS {c.TotalDebt:N2}"
                                                     : "") *
                                             </option>
-                                        }   *@
+                                        }   
                                     </select>
 
                                     <!-- Credit info strip -->
@@ -432,9 +432,1377 @@ document.getElementById('addSaleForm').addEventListener('submit', function (e) {
    
       
     
-    </dialog>
+    </dialog> *@
+
+
+    @section Styles {
+        <style>
+        .sale-left {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-height: 0;
+        }
+
+        .sale-right {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            min-height: 0;
+        }
+
+        /* ── Customer Section ───────────────────────────────────────── */
+        .customer-section {
+            background: #1e2229;
+            border-radius: 10px;
+            padding: 14px 18px;
+            border: 1px solid #2d323a;
+            flex-shrink: 0;
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        body.light-mode .customer-section {
+            background: #ffffff;
+            border-color: #e9ecef;
+        }
+
+        .customer-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            align-items: end;
+        }
+
+        .customer-field {
+            position: relative;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: stretch;
+            position: relative;
+        }
+
+        .input-group-icon {
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            background: #2d323a;
+            border: 1px solid #3d424a;
+            border-right: none;
+            border-radius: 8px 0 0 8px;
+            color: #8a8fa0;
+            transition: background 0.3s, border-color 0.3s, color 0.3s;
+        }
+
+        body.light-mode .input-group-icon {
+            background: #f1f3f5;
+            border-color: #dee2e6;
+            color: #6c757d;
+        }
+
+        .customer-field .form-control,
+        .customer-field .dmx-choices {
+            border-radius: 0 8px 8px 0;
+            border: 1px solid #3d424a;
+            padding: 9px 14px;
+            font-size: 0.875rem;
+            width: 100%;
+            background: #1e2229;
+            color: #e4e6eb;
+            transition: border-color 0.2s, background 0.3s, color 0.3s;
+        }
+
+        body.light-mode .customer-field .form-control,
+        body.light-mode .customer-field .dmx-choices {
+            background: #ffffff;
+            border-color: #dee2e6;
+            color: #1a1a2e;
+        }
+
+        .customer-field .form-control:focus,
+        .customer-field .dmx-choices:focus {
+            border-color: #2d8a4e;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(45, 138, 78, 0.15);
+        }
+
+        .floating-label {
+            position: absolute;
+            left: 44px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8rem;
+            color: #8a8fa0;
+            pointer-events: none;
+            transition: all 0.2s;
+            background: #1e2229;
+            padding: 0 4px;
+        }
+
+        body.light-mode .floating-label {
+            background: #ffffff;
+            color: #868e96;
+        }
+
+        .customer-field .form-control:focus + .floating-label,
+        .customer-field .form-control:not(:placeholder-shown) + .floating-label {
+            top: -6px;
+            font-size: 0.65rem;
+            color: #2d8a4e;
+        }
+
+        .credit-info {
+            margin-top: 6px;
+            padding: 6px 12px;
+            background: #2d2a1e;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            display: none;
+            gap: 16px;
+            color: #8a8fa0;
+            border: 1px solid #3d3a2a;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body.light-mode .credit-info {
+            background: #fff8e1;
+            color: #6c757d;
+            border-color: #f0e6c0;
+        }
+
+        .credit-info.visible {
+            display: flex;
+        }
+
+        .credit-info strong {
+            color: #e4e6eb;
+        }
+
+        body.light-mode .credit-info strong {
+            color: #1a1a2e;
+        }
+
+        .credit-info .text-danger {
+            color: #dc3545 !important;
+        }
+
+        /* ── Product Section ────────────────────────────────────────── */
+        .product-section {
+            background: #1e2229;
+            border-radius: 10px;
+            border: 1px solid #2d323a;
+            overflow: hidden;
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        body.light-mode .product-section {
+            background: #ffffff;
+            border-color: #e9ecef;
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 18px;
+            background: #1a1e26;
+            border-bottom: 1px solid #2d323a;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #e4e6eb;
+            flex-shrink: 0;
+            transition: background 0.3s, border-color 0.3s, color 0.3s;
+        }
+
+        body.light-mode .product-header {
+            background: #fafbfc;
+            border-color: #e9ecef;
+            color: #1a1a2e;
+        }
+
+        .product-hint {
+            font-weight: 400;
+            color: #6a6f80;
+            font-size: 0.7rem;
+        }
+
+        body.light-mode .product-hint {
+            color: #adb5bd;
+        }
+
+        .product-grid {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 4px;
+            min-height: 0;
+        }
+
+            .product-grid::-webkit-scrollbar {
+                width: 4px;
+            }
+
+            .product-grid::-webkit-scrollbar-thumb {
+                background: #3d424a;
+                border-radius: 4px;
+            }
+
+        body.light-mode .product-grid::-webkit-scrollbar-thumb {
+            background: #ced4da;
+        }
+
+        .category-header {
+            padding: 6px 16px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #6a6f80;
+            background: #1a1e26;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body.light-mode .category-header {
+            background: #f8f9fa;
+            color: #868e96;
+        }
+
+        .product-row {
+            display: flex;
+            align-items: center;
+            padding: 8px 14px;
+            border-bottom: 1px solid #2d323a;
+            gap: 12px;
+            transition: background 0.15s, border-color 0.3s;
+            font-size: 0.85rem;
+        }
+
+        body.light-mode .product-row {
+            border-color: #f1f3f5;
+        }
+
+        .product-row:hover {
+            background: #2d323a;
+        }
+
+        body.light-mode .product-row:hover {
+            background: #f0f7ff;
+        }
+
+        .product-row:last-child {
+            border-bottom: none;
+        }
+
+        .product-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .product-name {
+            font-weight: 600;
+            color: #e4e6eb;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .product-name {
+            color: #1a1a2e;
+        }
+
+        .product-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 0.7rem;
+            color: #6a6f80;
+            flex-wrap: wrap;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .product-meta {
+            color: #868e96;
+        }
+
+        .product-price {
+            color: #2d8a4e;
+            font-weight: 600;
+        }
+
+        .product-stock {
+            color: #6a6f80;
+        }
+
+        body.light-mode .product-stock {
+            color: #adb5bd;
+        }
+
+        .product-stock.low-stock {
+            color: #f59f00;
+        }
+
+        .product-qty {
+            width: 74px;
+            flex-shrink: 0;
+        }
+
+            .product-qty .qty-input {
+                width: 100%;
+                padding: 5px 8px;
+                border: 1px solid #3d424a;
+                border-radius: 6px;
+                text-align: center;
+                font-size: 0.85rem;
+                background: #1a1e26;
+                color: #e4e6eb;
+                transition: border-color 0.2s, background 0.3s, color 0.3s;
+            }
+
+        body.light-mode .product-qty .qty-input {
+            background: #ffffff;
+            border-color: #dee2e6;
+            color: #1a1a2e;
+        }
+
+        .product-qty .qty-input:focus {
+            border-color: #2d8a4e;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(45, 138, 78, 0.15);
+        }
+
+        .product-qty .qty-input::-webkit-inner-spin-button {
+            opacity: 0.5;
+        }
+
+        .product-total {
+            width: 76px;
+            text-align: right;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #e4e6eb;
+            flex-shrink: 0;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .product-total {
+            color: #1a1a2e;
+        }
+
+        /* ── Right Column ───────────────────────────────────────────── */
+        .totals-section {
+            background: #1e2229;
+            border-radius: 10px;
+            padding: 14px 18px;
+            border: 1px solid #2d323a;
+            flex-shrink: 0;
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        body.light-mode .totals-section {
+            background: #ffffff;
+            border-color: #e9ecef;
+        }
+
+        .totals-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3px 0;
+            font-size: 0.85rem;
+            color: #b0b5c8;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .totals-row {
+            color: #495057;
+        }
+
+        .totals-label {
+            color: #6a6f80;
+        }
+
+        body.light-mode .totals-label {
+            color: #868e96;
+        }
+
+        .discount-input {
+            width: 90px;
+            padding: 4px 8px;
+            border: 1px solid #3d424a;
+            border-radius: 6px;
+            text-align: right;
+            font-size: 0.85rem;
+            background: #1a1e26;
+            color: #e4e6eb;
+            transition: border-color 0.2s, background 0.3s, color 0.3s;
+        }
+
+        body.light-mode .discount-input {
+            background: #ffffff;
+            border-color: #dee2e6;
+            color: #1a1a2e;
+        }
+
+        .discount-input:focus {
+            border-color: #2d8a4e;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(45, 138, 78, 0.15);
+        }
+
+        .totals-total {
+            border-top: 2px solid #2d323a;
+            padding-top: 8px;
+            margin-top: 4px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #e4e6eb;
+        }
+
+        body.light-mode .totals-total {
+            border-color: #e9ecef;
+            color: #1a1a2e;
+        }
+
+        .total-amount {
+            color: #2d8a4e;
+            font-size: 1.1rem;
+        }
+
+        .payment-section,
+        .reference-section,
+        .tendered-section,
+        .notes-section {
+            background: #1e2229;
+            border-radius: 10px;
+            padding: 12px 18px;
+            border: 1px solid #2d323a;
+            flex-shrink: 0;
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        body.light-mode .payment-section,
+        body.light-mode .reference-section,
+        body.light-mode .tendered-section,
+        body.light-mode .notes-section {
+            background: #ffffff;
+            border-color: #e9ecef;
+        }
+
+        .reference-section {
+            display: none;
+        }
+
+            .reference-section.visible {
+                display: block;
+            }
+
+        .section-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #b0b5c8;
+            margin-bottom: 5px;
+            letter-spacing: 0.02em;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .section-label {
+            color: #495057;
+        }
+
+        .ref-hint {
+            font-weight: 400;
+            color: #6a6f80;
+            font-size: 0.7rem;
+        }
+
+        body.light-mode .ref-hint {
+            color: #adb5bd;
+        }
+
+        .payment-select {
+            width: 100%;
+            padding: 7px 12px;
+            border: 1px solid #3d424a;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            background: #1a1e26;
+            color: #e4e6eb;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.3s, color 0.3s;
+        }
+
+        body.light-mode .payment-select {
+            background: #ffffff;
+            border-color: #dee2e6;
+            color: #1a1a2e;
+        }
+
+        .payment-select:focus {
+            border-color: #2d8a4e;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(45, 138, 78, 0.15);
+        }
+
+        .reference-section .form-control {
+            padding: 7px 12px;
+            border: 1px solid #3d424a;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            width: 100%;
+            background: #1a1e26;
+            color: #e4e6eb;
+            transition: border-color 0.2s, background 0.3s, color 0.3s;
+        }
+
+        body.light-mode .reference-section .form-control {
+            background: #ffffff;
+            border-color: #dee2e6;
+            color: #1a1a2e;
+        }
+
+        .reference-section .form-control:focus {
+            border-color: #2d8a4e;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(45, 138, 78, 0.15);
+        }
+
+        .tendered-section .input-group {
+            margin-bottom: 8px;
+        }
+
+        .tendered-section .input-group-icon {
+            border-radius: 8px 0 0 8px;
+            background: #2d323a;
+        }
+
+        body.light-mode .tendered-section .input-group-icon {
+            background: #f1f3f5;
+        }
+
+        .tendered-section .form-control {
+            border-radius: 0 8px 8px 0;
+            border: 1px solid #3d424a;
+            padding: 7px 14px;
+            font-size: 0.85rem;
+            text-align: right;
+            background: #1a1e26;
+            color: #e4e6eb;
+            transition: border-color 0.2s, background 0.3s, color 0.3s;
+        }
+
+        body.light-mode .tendered-section .form-control {
+            background: #ffffff;
+            border-color: #dee2e6;
+            color: #1a1a2e;
+        }
+
+        .tendered-section .form-control:focus {
+            border-color: #2d8a4e;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(45, 138, 78, 0.15);
+        }
+
+        .change-display {
+            background: #1a2d1a;
+            border: 1px solid #2d4a2d;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 0.8rem;
+            transition: background 0.3s, border-color 0.3s, color 0.3s;
+        }
+
+        body.light-mode .change-display {
+            background: #f0fdf4;
+            border-color: #bbf7d0;
+            color: #1a1a2e;
+        }
+
+        .change-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 2px 0;
+            color: #b0b5c8;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .change-row {
+            color: #495057;
+        }
+
+        .change-label {
+            color: #6a6f80;
+        }
+
+        body.light-mode .change-label {
+            color: #868e96;
+        }
+
+        .change-total {
+            border-top: 1px solid #2d4a2d;
+            padding-top: 5px;
+            margin-top: 3px;
+            font-weight: 700;
+            color: #e4e6eb;
+        }
+
+        body.light-mode .change-total {
+            border-color: #d3f0df;
+            color: #1a1a2e;
+        }
+
+        .change-amount {
+            color: #2d8a4e;
+        }
+
+        .notes-section .form-control {
+            padding: 7px 12px;
+            border: 1px solid #3d424a;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            width: 100%;
+            resize: vertical;
+            min-height: 44px;
+            background: #1a1e26;
+            color: #e4e6eb;
+            transition: border-color 0.2s, background 0.3s, color 0.3s;
+            font-family: inherit;
+        }
+
+        body.light-mode .notes-section .form-control {
+            background: #ffffff;
+            border-color: #dee2e6;
+            color: #1a1a2e;
+        }
+
+        .notes-section .form-control:focus {
+            border-color: #2d8a4e;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(45, 138, 78, 0.15);
+        }
+
+        /* ── Footer ──────────────────────────────────────────────────── */
+        .sale-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 24px;
+            border-top: 1px solid #2d323a;
+            background: #1a1e26;
+            border-radius: 0 0 12px 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+            flex-shrink: 0;
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        body.light-mode .sale-footer {
+            background: #fafbfc;
+            border-color: #e9ecef;
+        }
+
+        .footer-hint {
+            font-size: 0.75rem;
+            color: #6a6f80;
+        }
+
+        body.light-mode .footer-hint {
+            color: #868e96;
+        }
+
+        .footer-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+            .footer-actions .btn {
+                padding: 7px 20px;
+                font-size: 0.85rem;
+                font-weight: 500;
+                border-radius: 8px;
+                transition: all 0.2s;
+                cursor: pointer;
+                border: none;
+            }
+
+            .footer-actions .btn-outline-secondary {
+                border: 1px solid #3d424a;
+                background: transparent;
+                color: #b0b5c8;
+            }
+
+        body.light-mode .footer-actions .btn-outline-secondary {
+            border-color: #dee2e6;
+            color: #495057;
+        }
+
+        .footer-actions .btn-outline-secondary:hover {
+            background: #2d323a;
+            border-color: #6a6f80;
+        }
+
+        body.light-mode .footer-actions .btn-outline-secondary:hover {
+            background: #f1f3f5;
+            border-color: #adb5bd;
+        }
+
+        .footer-actions .btn-success {
+            background: #2d8a4e;
+            color: white;
+            padding: 7px 24px;
+        }
+
+            .footer-actions .btn-success:hover:not(:disabled) {
+                background: #23703f;
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(45, 138, 78, 0.3);
+            }
+
+            .footer-actions .btn-success:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+                transform: none;
+            }
+
+        /* ── Sale Type Toggle ───────────────────────────────────────── */
+        .sale-type-toggle {
+            display: flex;
+            gap: 8px;
+            background: #1a1e26;
+            padding: 4px;
+            border-radius: 10px;
+            flex-shrink: 0;
+            transition: background 0.3s;
+        }
+
+        body.light-mode .sale-type-toggle {
+            background: #f1f3f5;
+        }
+
+        .sale-type-btn {
+            flex: 1;
+            padding: 7px 16px;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            background: transparent;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            color: #6a6f80;
+        }
+
+        body.light-mode .sale-type-btn {
+            color: #6c757d;
+        }
+
+        .sale-type-btn.text-success {
+            color: #2d8a4e;
+            border-color: #2d8a4e;
+            background: #1a1e26;
+        }
+
+        body.light-mode .sale-type-btn.text-success {
+            background: #ffffff;
+        }
+
+        .sale-type-btn.text-warning {
+            color: #f59f00;
+            border-color: #f59f00;
+            background: #1a1e26;
+        }
+
+        body.light-mode .sale-type-btn.text-warning {
+            background: #ffffff;
+        }
+
+        .sale-type-btn.text-muted {
+            color: #6a6f80;
+        }
+
+        body.light-mode .sale-type-btn.text-muted {
+            color: #6c757d;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ── Responsive ───────────────────────────────────────────────── */
+        @@media (max-width: 992px) {
+            .sale-body
+
+        {
+            grid-template-columns: 1fr;
+            gap: 16px;
+            padding: 16px 18px;
+        }
+
+        .sale-right {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        }
+
+        @@media (max-width: 768px) {
+            dialog
+
+        {
+            width: 100vw;
+            height: 100vh;
+            max-height: 100vh;
+            border-radius: 0;
+            transform: translate(-50%, -50%) scale(1);
+            border: none;
+        }
+
+        dialog::backdrop {
+            backdrop-filter: none;
+        }
+
+        .sale-header {
+            border-radius: 0;
+            padding: 12px 16px;
+        }
+
+        .sale-body {
+            grid-template-columns: 1fr;
+            padding: 12px 14px;
+            gap: 12px;
+        }
+
+        .sale-right {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .customer-row {
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+
+        .product-row {
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 6px 10px;
+        }
+
+        .product-qty {
+            width: 64px;
+        }
+
+        .product-total {
+            width: 64px;
+        }
+
+        .sale-footer {
+            flex-direction: column;
+            align-items: stretch;
+            padding: 10px 16px;
+            border-radius: 0;
+        }
+
+        .footer-actions {
+            justify-content: stretch;
+        }
+
+            .footer-actions .btn {
+                flex: 1;
+                text-align: center;
+            }
+
+        .theme-toggle-wrapper {
+            top: 10px;
+            right: 10px;
+            padding: 6px 12px 6px 16px;
+            font-size: 0.8rem;
+        }
+
+            .theme-toggle-wrapper span {
+                font-size: 0.7rem;
+            }
+
+        .sale-header-left {
+            font-size: 0.9rem;
+        }
+
+        .btn-close-dialog {
+            padding: 4px 10px;
+            font-size: 0.7rem;
+        }
+
+        .sale-type-btn {
+            padding: 6px 12px;
+            font-size: 0.7rem;
+        }
+
+        .product-header {
+            font-size: 0.7rem;
+            padding: 8px 14px;
+        }
+
+        .product-name {
+            font-size: 0.8rem;
+        }
+
+        .product-meta {
+            font-size: 0.65rem;
+            gap: 8px;
+        }
+
+        .customer-section {
+            padding: 10px 14px;
+        }
+
+        .totals-section,
+        .payment-section,
+        .reference-section,
+        .tendered-section,
+        .notes-section {
+            padding: 10px 14px;
+        }
+
+        .floating-label {
+            font-size: 0.7rem;
+            left: 38px;
+        }
+
+        .customer-field .form-control,
+        .customer-field .dmx-choices {
+            font-size: 0.8rem;
+            padding: 7px 12px;
+        }
+
+        .input-group-icon {
+            padding: 0 10px;
+            font-size: 0.8rem;
+        }
+
+        }
+
+        @@media (max-width: 480px) {
+            dialog
+
+        {
+            width: 100vw;
+            height: 100vh;
+            max-height: 100vh;
+        }
+
+        .sale-body {
+            padding: 8px 10px;
+            gap: 8px;
+        }
+
+        .product-grid {
+            max-height: none;
+        }
+
+        .product-row {
+            padding: 5px 8px;
+            font-size: 0.75rem;
+        }
+
+        .product-qty {
+            width: 56px;
+        }
+
+            .product-qty .qty-input {
+                padding: 4px 6px;
+                font-size: 0.75rem;
+            }
+
+        .product-total {
+            width: 56px;
+            font-size: 0.7rem;
+        }
+
+        .sale-footer {
+            padding: 8px 12px;
+        }
+
+        .footer-actions .btn {
+            padding: 6px 12px;
+            font-size: 0.75rem;
+        }
+
+        .theme-toggle-wrapper {
+            top: 6px;
+            right: 6px;
+            padding: 4px 10px 4px 12px;
+        }
+
+            .theme-toggle-wrapper span {
+                font-size: 0.6rem;
+                display: none;
+            }
+
+        .theme-toggle {
+            width: 40px;
+            height: 22px;
+        }
+
+            .theme-toggle .toggle-thumb {
+                width: 18px;
+                height: 18px;
+                font-size: 0.6rem;
+            }
+
+        }
+
+        /* ── Dialog Sizing Helper ─────────────────────────────────────── */
+        @@media (min-height: 800px) and (min-width: 1200px) {
+            dialog
+
+        {
+            width: min(85vw, 1100px);
+            height: min(85vh, auto);
+            max-height: 85vh;
+        }}
+
+        
+    </style>
     
+    }}
+<dialog id="AddInvoiceDialog" class="border-0 rounded p-0" style="max-width: 950px; width: 100%;">
+
+    <!-- Header -->
+    <div class="modal-header-custom">
+        <h6 class="m-0 fw-semibold">
+            <i class="fas fa-cash-register me-2 text-success"></i>
+            New Sale</h6>
+     
+        <button type="button" class="btn-close-custom" onclick="document.getElementById('AddInvoiceDialog').close()">
+            <i class="fas fa-times me-1"></i>Close
+        </button>
+    </div>
+
+    <div class="modal-body-custom">
+
+        <!-- LEFT COLUMN -->
+        <div class="card-custom shadow-sm mb-3">
+            <div class="card-header-custom">
+                <h6><i class="fas fa-truck"></i> Customer Details</h6>
+            </div>
+
+        <div class="row">
+            <div class="did-floating-label-content col-md-4">
+                <input type="text" class="did-floating-input" placeholder="" asp-for="@Model.CustomerId" />
+                <label class="did-floating-label">Product Name <span class="text-danger-dark">*</span></label>
+            </div>
+            <div id="creditInfo" class="col-md-8">
+                <span>Limit: <strong id="ciLimit">—</strong></span>
+                <span>Owes: <strong id="ciDebt" class="text-danger">—</strong></span>
+                <span>Available: <strong id="ciAvail">—</strong></span>
+            </div>
+            </div>
+            </div>
+            <!-- Customer Section -->
+     
+
+            <!-- Product Grid -->
+        <div class="card-custom shadow-sm mb-3">
+            <div class="card-header-custom">
+                <h6><i class="fas fa-truck"></i> Customer Details</h6>    <span class="product-hint">Click qty to add · 0 = not ordered</span>
+            </div>
+               
+               
+                <div class="product-grid" id="productGrid">
+                    <!-- Category: Beverages -->
+                    <div class="category-header">Beverages</div>
+
+                    <div class="product-row" data-product-id="1" data-price="5.00" data-stock="50" data-name="Coca-Cola" data-unit="bottle">
+                        <div class="product-info">
+                            <div class="product-name">Coca-Cola</div>
+                            <div class="product-meta">
+                                <span>bottle</span>
+                                <span class="product-price">GHS 5.00</span>
+                                <span class="product-stock">50 in stock</span>
+                            </div>
+                        </div>
+                        <div class="product-qty">
+                            <input type="number" class="qty-input" min="0" max="50" value="0" placeholder="0" oninput="recalc()" />
+                        </div>
+                        <div class="product-total" id="lt_1">—</div>
+                    </div>
+
+                    <div class="product-row" data-product-id="2" data-price="5.00" data-stock="30" data-name="Fanta" data-unit="bottle">
+                        <div class="product-info">
+                            <div class="product-name">Fanta</div>
+                            <div class="product-meta">
+                                <span>bottle</span>
+                                <span class="product-price">GHS 5.00</span>
+                                <span class="product-stock">30 in stock</span>
+                            </div>
+                        </div>
+                        <div class="product-qty">
+                            <input type="number" class="qty-input" min="0" max="30" value="0" placeholder="0" oninput="recalc()" />
+                        </div>
+                        <div class="product-total" id="lt_2">—</div>
+                    </div>
+
+                    <div class="product-row" data-product-id="3" data-price="5.00" data-stock="0" data-name="Sprite" data-unit="bottle">
+                        <div class="product-info">
+                            <div class="product-name">Sprite</div>
+                            <div class="product-meta">
+                                <span>bottle</span>
+                                <span class="product-price">GHS 5.00</span>
+                                <span class="product-stock low-stock">0 in stock</span>
+                            </div>
+                        </div>
+                        <div class="product-qty">
+                            <input type="number" class="qty-input" min="0" max="0" value="0" placeholder="0" oninput="recalc()" disabled />
+                        </div>
+                        <div class="product-total" id="lt_3">—</div>
+                    </div>
+
+                    <!-- Category: Snacks -->
+                    <div class="category-header">Snacks</div>
+
+                    <div class="product-row" data-product-id="4" data-price="3.50" data-stock="100" data-name="Potato Chips" data-unit="pack">
+                        <div class="product-info">
+                            <div class="product-name">Potato Chips</div>
+                            <div class="product-meta">
+                                <span>pack</span>
+                                <span class="product-price">GHS 3.50</span>
+                                <span class="product-stock">100 in stock</span>
+                            </div>
+                        </div>
+                        <div class="product-qty">
+                            <input type="number" class="qty-input" min="0" max="100" value="0" placeholder="0" oninput="recalc()" />
+                        </div>
+                        <div class="product-total" id="lt_4">—</div>
+                    </div>
+
+                    <div class="product-row" data-product-id="5" data-price="2.00" data-stock="75" data-name="Biscuits" data-unit="pack">
+                        <div class="product-info">
+                            <div class="product-name">Biscuits</div>
+                            <div class="product-meta">
+                                <span>pack</span>
+                                <span class="product-price">GHS 2.00</span>
+                                <span class="product-stock">75 in stock</span>
+                            </div>
+                        </div>
+                        <div class="product-qty">
+                            <input type="number" class="qty-input" min="0" max="75" value="0" placeholder="0" oninput="recalc()" />
+                        </div>
+                        <div class="product-total" id="lt_5">—</div>
+                    </div>
+
+                    <div class="product-row" data-product-id="6" data-price="8.00" data-stock="15" data-name="Chocolate Bar" data-unit="bar">
+                        <div class="product-info">
+                            <div class="product-name">Chocolate Bar</div>
+                            <div class="product-meta">
+                                <span>bar</span>
+                                <span class="product-price">GHS 8.00</span>
+                                <span class="product-stock low-stock">15 in stock</span>
+                            </div>
+                        </div>
+                        <div class="product-qty">
+                            <input type="number" class="qty-input" min="0" max="15" value="0" placeholder="0" oninput="recalc()" />
+                        </div>
+                        <div class="product-total" id="lt_6">—</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+       
+        <!-- RIGHT COLUMN -->
+        <div class="card-custom">
+
+            <!-- Totals -->
+            <div class="totals-section">
+                <div class="totals-row">
+                    <span class="totals-label">Subtotal</span>
+                    <span id="subtotalDisplay">GHS 0.00</span>
+                </div>
+                <div class="totals-row">
+                    <span class="totals-label">Discount (GHS)</span>
+                    <input type="number" id="discountField" class="discount-input" min="0" step="0.01" value="0" oninput="recalc()" />
+                </div>
+                <div class="totals-row totals-total">
+                    <span>Total</span>
+                    <span id="totalDisplay" class="total-amount">GHS 0.00</span>
+                </div>
+            </div>
+
+            <!-- Payment Method -->
+            <div class="payment-section">
+                <label class="section-label">Payment method</label>
+                <select id="payMethodSelect" class="payment-select" onchange="onPaymentChange()">
+                    <option value="0">Cash</option>
+                    <option value="1">Mobile Money (MoMo)</option>
+                    <option value="2">Bank transfer</option>
+                    <option value="3">Cheque</option>
+                </select>
+            </div>
+
+            <!-- Payment Reference -->
+            <div class="reference-section" id="referenceGroup">
+                <label class="section-label">Reference <span class="ref-hint">(MoMo ID / cheque #)</span></label>
+                <input type="text" class="form-control" placeholder="Transaction reference…" />
+            </div>
+
+            <!-- Tendered / Change -->
+            <div class="tendered-section" id="tenderedGroup">
+                <div class="input-group">
+                    <span class="input-group-icon"><i class="fas fa-money-bill-wave"></i></span>
+                    <input type="number" class="form-control" id="tenderedField" placeholder="0.00" min="0" step="0.01" value="0" oninput="calcChange()" />
+                    <label class="floating-label" for="tenderedField">Amount Tendered</label>
+                </div>
+
+                <div class="change-display">
+                    <div class="change-row">
+                        <span class="change-label">Tendered</span>
+                        <span id="tenderedDisplay">GHS 0.00</span>
+                    </div>
+                    <div class="change-row change-total">
+                        <span>Change</span>
+                        <span id="changeDisplay" class="change-amount">GHS 0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes -->
+            <div class="notes-section">
+                <label class="section-label">Notes <span class="ref-hint">(optional)</span></label>
+                <textarea class="form-control" rows="2" placeholder="Any notes…"></textarea>
+            </div>
+
+        </div>
+    
+
+    <!-- Footer -->
+    <div class="sale-footer">
+        <span class="footer-hint"><i class="fas fa-info-circle me-1"></i>Stock will be deducted on confirmation</span>
+        <div class="footer-actions">
+            <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('AddInvoiceDialog').close()">
+                Cancel
+            </button>
+            <button id="confirmBtn" class="btn btn-success" disabled>
+                <i class="fas fa-check-circle me-1"></i>
+                Confirm sale — <span id="btnTotal">GHS 0.00</span>
+            </button>
+        </div>
+    </div>
+
+        <div class="modal-header-custom">
+            <h6><i class="fas fa-fw fa-file-alt"></i>Add Product</h6>
+            <button type="button" class="btn-close-custom" onclick="document.getElementById('AddProductDialog').close()">
+                <i class="fas fa-times"></i>Close
+            </button>
+        </div>
+
+        @using (Html.BeginForm("AddProduct", "Product", FormMethod.Post, new { id = "addProductForm" }))
+        {
+            <div class="modal-body-custom">
+                <div class="alert alert-danger small py-2 alert-dark" style="display: none;">Validation summary goes here</div>
+
+                <div class="row g-3">
+                    <!-- Left Column -->
+                    <div class="col-lg-8">
+                        <div class="card-custom shadow-sm mb-3">
+                            <div class="card-header-custom">
+                                <h6><i class="fas fa-box"></i>Product Details</h6>
+                            </div>
+                            <div class="card-body-custom">
+                                <div class="row g-3">
+                                    <div class="did-floating-label-content col-md-8">
+                                        <input type="text" class="did-floating-input" placeholder=""  />
+                                        <label class="did-floating-label">Product Name <span class="text-danger-dark">*</span></label>
+                                    </div>
+                                    
+                                <div id="creditInfo" class="col-md-4">
+                                    <span>Limit: <strong id="ciLimit">—</strong></span>
+                                    <span>Owes: <strong id="ciDebt" class="text-danger">—</strong></span>
+                                    <span>Available: <strong id="ciAvail">—</strong></span>
+                                </div>
+                   
+                                    <textarea class="form-control-dark"  placeholder="Description" style="height:367px"></textarea>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Right Column -->
+                    <div class="col-lg-4">
+                        <div class="card-custom shadow-sm mb-3">
+                            <div class="card-header-custom">
+                                <h6><i class="fas fa-tag"></i>Pricing</h6>
+                            </div>
+                            <div class="card-body-custom">
+                                <div class="did-floating-label-content mb-3">
+                                    <input type="number"  step="0.01" min="0" class="did-floating-input" id="costPrice" oninput="calcMargin()" />
+                                    <label class="did-floating-label">Cost Price (GHS) <span class="text-danger-dark">*</span></label>
+                                </div>
+                                <div class="did-floating-label-content mb-3">
+                                    <input type="number"  step="0.01" min="0" class="did-floating-input" id="sellPrice" oninput="calcMargin()" />
+                                    <label class="did-floating-label">Selling Price (GHS) <span class="text-danger-dark">*</span></label>
+                                </div>
+                                <div class="did-floating-label-content mb-3">
+                                    <input type="number"  step="0.01" min="0" class="did-floating-input" />
+                                    <label class="did-floating-label">Wholesale Price (GHS)</label>
+                                </div>
+                                <div class="margin-display">
+                                    Margin: <strong id="marginDisplay"></strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-custom shadow-sm">
+                            <div class="card-header-custom">
+                                <h6><i class="fas fa-warehouse"></i>Stock Settings</h6>
+                            </div>
+                            <div class="card-body-custom">
+                                <div class="did-floating-label-content mb-3">
+                                    <input type="number"  min="0" class="did-floating-input" />
+                                    <label class="did-floating-label">Opening Stock</label>
+                                </div>
+                                <div class="did-floating-label-content mb-3">
+                                    <input type="number" min="0" class="did-floating-input"  />
+                                    <label class="did-floating-label">Reorder Level</label>
+                                    <div class="form-text-dark">Alert when stock drops to this level.</div>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input type="checkbox" class="form-check-input-dark" id="isActive" checked />
+                                    <label class="form-check-label-dark" for="isActive">Active product</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer-custom">
+              
+            <span class="footer-hint"><i class="fas fa-info-circle me-1"></i>Stock will be deducted on confirmation</span>
+            
+                <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('AddInvoiceDialog').close()">
+                    Cancel
+                </button>
+                <button id="confirmBtn" class="btn btn-success" disabled>
+                    <i class="fas fa-check-circle me-1"></i>
+                    Confirm sale — <span id="btnTotal">GHS 0.00</span>
+                </button>
+            </div>
           
+        }
+
+   
+</dialog>
 
 
-  
+
+
