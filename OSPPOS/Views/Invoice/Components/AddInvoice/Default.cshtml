@@ -2,18 +2,13 @@
 @model OSPPOS.ViewModels.AddInvoiceVM;
 
 <dialog id="AddInvoiceDialog">
-
-
-    <div class="modal-header border-bottom px-3 py-2">
-        <h6 class="m-0 fw-semibold">
-            <i class="fas fa-cash-register me-2 text-success"></i>New Sale
-        </h6>
-        <button type="button"
-                class="btn btn-sm btn-outline-danger"
-                onclick="document.getElementById('AddInvoiceDialog').close()">
-            <i class="fas fa-times me-1"></i>Close
-        </button>
-    </div>
+    
+        <div class="modal-header-custom">
+            <h6><i class="fas fa-fw fa-cash-register"></i>New Sale</h6>
+            <button type="button" class="btn-close-custom" onclick="document.getElementById('AddInvoiceDialog').close()">
+                <i class="fas fa-times"></i>Close
+            </button>
+        </div>
 
     @using (Html.BeginForm("AddInvoice", "Invoice", FormMethod.Post,
         new { id = "addInvoiceForm" }))
@@ -26,7 +21,7 @@
         <input type="hidden" name="Discount"      id="discountInput"     value="0" />
         <input type="hidden" name="CashReceived"  id="cashReceivedInput" value="0" />
 
-        <div class="modal-body px-3 py-3">
+        <div class="modal-body-custom">
             <div class="row g-3">
 
                 <!-- ── LEFT: Customer + Products ── -->
