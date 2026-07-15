@@ -1,5 +1,4 @@
-﻿@using OSPPOS.ViewComponents
-
+﻿
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,8 +27,7 @@
 @*     <link href="~/ospapps/floatingLabel.css" rel="stylesheet" />  *@
     <link href="~/ospapps/darkdatatables.css" rel="stylesheet" />
     <link href="~/ospapps/actionDropdown.css" rel="stylesheet" />
-    @RenderSection("Styles",required:false) 
-   
+    
 </head>
 <body>
     <div class="app-wrapper">
@@ -74,7 +72,7 @@
                     <li class="nav-item"><a asp-action="ViewInventory" asp-controller="Inventory" class="sidebar-link"><i class="bi bi-tags"></i><span>Inventory</span></a></li>
                     <li class="nav-item"><a asp-action="ViewSaleOrders" asp-controller="SaleOrder" class="sidebar-link"><i class="bi bi-cart-plus"></i><span>Sale Orders</span> <span class="badge bg-primary rounded-pill ms-auto">12</span></a></li>
                     <li class="nav-item"><a asp-action="ViewInvoices" asp-controller="Invoice" class="sidebar-link"><i class="bi bi-file-arrow-up"></i><span>Invoices</span> <span class="badge bg-primary rounded-pill ms-auto">12</span></a></li>
-@*                     <li class="nav-item"><a asp-action="AddInvoice" asp-controller="Invoice" class="sidebar-link"><i class="bi bi-file-arrow-up"></i><span>POS</span> <span class="badge bg-primary rounded-pill ms-auto">12</span></a></li> *@
+                    <li class="nav-item"><a asp-action="AddInvoice" asp-controller="Invoice" class="sidebar-link"><i class="bi bi-file-arrow-up"></i><span>POS</span> <span class="badge bg-primary rounded-pill ms-auto">12</span></a></li>
 
                 </ul>
                 <div class="sidebar-heading mt-3">CONTACTS</div>
@@ -182,6 +180,5 @@
       
     </script>
     @await Component.InvokeAsync("Notyf")
-
 </body>
 </html>

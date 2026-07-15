@@ -12,16 +12,17 @@ dialog {
     padding: 0;
     background: #23272e;
     color: #e4e6eb;
-    width: min(95vw, 1200px);
-    height: min(90vh, auto);
-    max-height: 90vh;
+    width:fit-content;
+    max-width: fit-content;
+    min-width: auto;
+    height: fit-content;
+    max-height: fit-content;
+    min-height: auto;
     border: 1px solid #2d323a;
     border-radius: 12px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
     overflow: auto;
     animation: dialogFadeIn 0.2s ease;
-    display: flex;
-    flex-direction: column;
 }
 
     dialog[open] {
