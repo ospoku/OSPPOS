@@ -10,9 +10,8 @@ dialog {
     transform: translate(-50%, -50%);
     margin: 0;
     padding: 0;
-    background: #131A22;
-    color: #e4e6eb;
-    width:fit-content;
+    background: #1a222c;
+    width: fit-content;
     max-width: fit-content;
     min-width: auto;
     height: fit-content;

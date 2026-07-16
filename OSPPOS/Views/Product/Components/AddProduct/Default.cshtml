@@ -31,17 +31,17 @@
                                     <label class="did-floating-label">SKU / Code</label>
                                 </div>
                                 <div class="col-md-4">
-                                    <select class="choices-select" id="categoryselect" asp-for="@Model.CategoryId" asp-items="@Model.CategoryList">
-                                        <option value="">Select Category</option>
+                                    <select class="form-select-dark" id="categoryselect" asp-for="@Model.CategoryId" asp-items="@Model.CategoryList">
+                                    
                                     </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <select class="choices-select" asp-for="@Model.SupplierId" asp-items="@Model.SupplierList">
+                                    <select class="form-select-dark" id="supplierselect" asp-for="@Model.SupplierId" asp-items="@Model.SupplierList">
                                         <option value="">Select Supplier</option>
                                     </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <select class="choices-select" asp-for="@Model.UnitId" asp-items="@Model.UnitList">
+                                    <select class="form-select-dark" id="unitselect"asp-for="@Model.UnitId" asp-items="@Model.UnitList">
                                         <option value="">Select Unit</option>
                                     </select>
 
@@ -142,27 +142,33 @@
             }
         });
 
-             // Initialize by ID
-    initializeChoices('#categoryselect');
-
-    // Initialize with custom options
-    initializeChoices('#categoryselect', {
-        searchEnabled: false,
-        placeholderValue: 'Choose...'
-    });
-
-    // Destroy by ID
-    destroyChoices('#categoryselect');
-
-    // Refresh by ID
-    refreshChoices('#categoryselect');
-
-    // Get instance by ID
-    const instance = getChoicesInstance('#categoryselect');
-
-    // Get all instances in a container
-    const instances = getChoicesInContainer('formContainer');
-
+        document.addEventListener('DOMContentLoaded',function(){
+            const element=document.querySelector('#categoryselect');
+            const choices= new Choices(element,
+                {searchEnabled:true,
+                removeItemButton:true,
+                placeholder:true,
+                placeholderValue:'Select category'
+        }
+            )});
+               document.addEventListener('DOMContentLoaded',function(){
+        const element=document.querySelector('#unitselect');
+        const choices= new Choices(element,
+            {searchEnabled:true,
+            removeItemButton:true,
+            placeholder:true,
+            placeholderValue:'Select unit'
+    }
+        )});
+               document.addEventListener('DOMContentLoaded',function(){
+            const element=document.querySelector('#supplierselect');
+            const choices= new Choices(element,
+                {searchEnabled:true,
+                removeItemButton:true,
+                placeholder:true,
+                placeholderValue:'Select supplier'
+        }
+            )});
 </script>
 
         
