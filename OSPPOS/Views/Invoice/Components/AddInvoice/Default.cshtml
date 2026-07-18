@@ -1,6 +1,167 @@
 ﻿@using OSPPOS.Models
 @model OSPPOS.ViewModels.AddInvoiceVM;
+<style>
+    .sale-body {
+        grid-template-columns: 1fr;
+        padding: 12px 14px;
+        gap: 12px;
+    }
 
+    .sale-right {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .customer-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .product-row {
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 6px 10px;
+    }
+
+    .product-qty {
+        width: 64px;
+    }
+
+    .product-total {
+        width: 64px;
+    }
+
+    .sale-footer {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 10px 16px;
+        border-radius: 0;
+    }
+
+    .footer-actions {
+        justify-content: stretch;
+    }
+
+        .footer-actions .btn {
+            flex: 1;
+            text-align: center;
+        }
+
+    .theme-toggle-wrapper {
+        top: 10px;
+        right: 10px;
+        padding: 6px 12px 6px 16px;
+        font-size: 0.8rem;
+    }
+
+        .theme-toggle-wrapper span {
+            font-size: 0.7rem;
+        }
+
+    .sale-header-left {
+        font-size: 0.9rem;
+    }
+
+    .btn-close-dialog {
+        padding: 4px 10px;
+        font-size: 0.7rem;
+    }
+
+    .sale-type-btn {
+        padding: 6px 12px;
+        font-size: 0.7rem;
+    }
+
+    .product-header {
+        font-size: 0.7rem;
+        padding: 8px 14px;
+    }
+
+    .product-name {
+        font-size: 0.8rem;
+    }
+
+    .product-meta {
+        font-size: 0.65rem;
+        gap: 8px;
+    }
+
+    .customer-section {
+        padding: 10px 14px;
+    }
+
+    .totals-section,
+    .payment-section,
+    .reference-section,
+    .tendered-section,
+    .notes-section {
+        padding: 10px 14px;
+    }
+
+    .floating-label {
+        font-size: 0.7rem;
+        left: 38px;
+    }
+
+    .customer-field .form-control,
+    .customer-field .dmx-choices {
+        font-size: 0.8rem;
+        padding: 7px 12px;
+    }
+
+    .input-group-icon {
+        padding: 0 10px;
+        font-size: 0.8rem;
+    }
+
+    
+
+    @@media (max-width: 480px) {
+        dialog
+
+    {
+        width: 100vw;
+        height: 100vh;
+        max-height: 100vh;
+    }
+
+    .sale-body {
+        padding: 8px 10px;
+        gap: 8px;
+    }
+
+    .product-grid {
+        max-height: none;
+    }
+
+    .product-row {
+        padding: 5px 8px;
+        font-size: 0.75rem;
+    }
+
+    .product-qty {
+        width: 56px;
+    }
+
+        .product-qty .qty-input {
+            padding: 4px 6px;
+            font-size: 0.75rem;
+        }
+
+    .product-total {
+        width: 56px;
+        font-size: 0.7rem;
+    }
+
+    .sale-footer {
+        padding: 8px 12px;
+    }
+
+    .footer-actions .btn {
+        padding: 6px 12px;
+        font-size: 0.75rem;
+    }}
+</style>
 <dialog id="AddInvoiceDialog">
     
         <div class="modal-header-custom">
@@ -29,60 +190,46 @@
 
                     <!-- Customer row -->
                     <div class="card-custom">
-                        <div class="card-body py-2">
-                            <div class="row g-2 align-items-end">
+                        <div class="card-body">
+                            <div class="row justify-content-between align-items-center p-2">
 
 
                                 <!-- Walk-in name (cash) -->
                                 
                                 <!-- Credit customer select -->
-                                <div class="col-sm-8" id="creditCustomerGroup">
+
+                           
+                                <div class="col-md-6" id="creditCustomerGroup">
                                     <select id="customerSelect" 
-                                            class="dmx-choices"
+                                            class="form-select-dark"
                                             onchange="onCustomerChange(this)" asp-for="CustomerId" asp-items="Model.Customers">
                                         <option value="">-- select customer --</option>
-                                   @*    @foreach (var c in Model.Customers.Where(c => c.IsActive && c.AllowCredit)
-                                            .OrderBy(c => c.Name))
-                                        {
-                                            <option value="@c.CustomerId"
-                                                    data-limit="@c.CreditLimit"
-                                                   @*  data-debt="@c.TotalDebt" *
-                                                    data-allow="@c.AllowCredit.ToString().ToLower()">
-                                                @c.Name
-                                             @*    @(c.TotalDebt > 0
-                                                    ? $" — owes GHS {c.TotalDebt:N2}"
-                                                    : "") *
-                                            </option>
-                                        }   *@
+                           
                                     </select>
-
-                                    <!-- Credit info strip -->
-                                    <div id="creditInfo" class="mt-1 px-2 py-1 rounded small"
-                                         style="background:#fff8e1;display:block">
-                                        <span class="text-muted">Limit:</span>
-                                        <strong id="ciLimit">—</strong>
-                                        &nbsp;|&nbsp;
-                                        <span class="text-muted">Owes:</span>
-                                        <strong id="ciDebt" class="text-danger">—</strong>
-                                        &nbsp;|&nbsp;
-                                        <span class="text-muted">Available:</span>
-                                        <strong id="ciAvail">—</strong>
                                     </div>
-                                </div>
+                     
 
                                 <!-- Due date (credit only) -->
-                                <div class="col-sm-6" id="dueDateGroup" style="display:block">
-                                    <div class="input-group">
-                                        <div class="input-group-text">
-                                            <i class="fas fa-calendar-check"></i>
-                                        </div>
-                                        <div class="did-floating-label-content">
+                                <div class="col-md-6" id="dueDateGroup">
+                                            <span style="color:#6A6F80">Due Date</span>
                                     <input type="date" name="DueDate" id="dueDate" asp-for=@Model.DueDate
-                                           class="did-floating-input" asp-format="{0:dd/MMM/yyyy}" />  
-                                           <label class="did-floating-label" for="dueDate">Due Date</label>
+                                           class="did-floating-input text-end" style="width:150px" asp-format="{0:dd/MMM/yyyy}" />  
+                                         
+                           
                                 </div>
-                             </div>
-                                </div>
+                         
+                            </div>
+                            <!-- Credit info strip -->
+                            <div id="creditInfo" class="mb-2 p-2"
+                                 style="display:block">
+                                <span style="color:#6A6f80">Limit:</span>
+                                <strong id="ciLimit">—</strong>
+                                &nbsp;|&nbsp;
+                                <span style="color:#6A6f80">Owes:</span>
+                                <strong id="ciDebt" class="text-danger">—</strong>
+                                &nbsp;|&nbsp;
+                                <span style="color:#6A6f80">Available:</span>
+                                <strong id="ciAvail">—</strong>
                             </div>
                         </div>
                     </div>
@@ -111,16 +258,16 @@
                             @foreach (var group in grouped)
                             {
                                 <!-- Category heading -->
-                                <div class="px-3 py-1 fw-semibold"
+                                <div class="px-3 fw-semibold"
                                      style="font-size:.72rem;text-transform:uppercase;
-                                            letter-spacing:.06em;background:#f8f9fa;
+                                            letter-spacing:.06em;/* background:#f8f9fa; */
                                             color:#6c757d;position:sticky;top:0;z-index:1">
                                     <i class="fas fa-folder me-1"></i>@group.Key
                                 </div>
 
                                 @foreach (var p in group.OrderBy(p => p.Name))
                                 {
-                                    <div class="d-flex align-items-center px-3 py-2
+                                    <div class="d-flex align-items-center px-3 py-1
                                                 border-bottom product-row"
                                          style="font-size:.85rem"
                                          data-product-id="@p.ProductId"
@@ -131,15 +278,16 @@
 
                                         <!-- Product name & price -->
                                         <div class="flex-grow-1">
-                                            <div class="fw-semibold">@p.Name</div>
-                                            <div class="text-muted" style="font-size:.75rem">
-                                                @p.Unit &middot;
-                                                <span class="text-success fw-semibold">
+                                            <div class="fw-semibold text-white">@p.Name</div>
+                                            <div>
+                                                <span class="small" style="color:#6A6F80">
+                                                @p.Unit.Name &middot;
+                                                </span>
+                                                <span class="text-success small">
                                                     GHS @p.SellingPrice.ToString("N2")
                                                 </span>
                                                 &middot;
-                                                <span class="@(p.CurrentStock <= p.ReorderLevel
-                                                    ? "text-warning" : "text-muted")">
+                                                <span class="small @(p.CurrentStock <= p.ReorderLevel ? "text-warning":"")" style="color:#6A6F80">
                                                     @p.CurrentStock in stock
                                                 </span>
                                             </div>
@@ -153,7 +301,7 @@
                                                    style="display:none" />
                                             <input type="number"
                                                    name="Items[@itemIndex].Quantity"
-                                                   class="form-control form-control-sm text-center qty-input"
+                                                   class="did-floating-input form-control-sm text-center qty-input"
                                                    min="0"
                                                    max="@p.CurrentStock"
                                                    value="0"
@@ -162,7 +310,7 @@
                                         </div>
 
                                         <!-- Line total -->
-                                        <div class="text-end ms-2 fw-semibold"
+                                        <div class="text-end ms-2 fw-semibold text-white"
                                              style="width:90px;font-size:.82rem"
                                              id="lt_@p.ProductId">
                                             —
@@ -179,108 +327,102 @@
 
                 <!-- ── RIGHT: Totals + Payment ── -->
                 <div class="col-lg-4">
-                    <div class="card-custom border-1 table-responsive rounded-5 py-3 shadow-sm">
-                        <div class="card-header bg-white border-0 py-2">
-                            <h6 class="mb-0 fw-semibold small">Payment details</h6>
-                        </div>
+                    <div class="card-custom  mb-1 p-1">
+
                         <div class="card-body">
 
                             <!-- Running totals -->
-                            <div class="mb-3 p-2 rounded" style="background:#f8f9fa">
+                            <div class="mb-3 p-2 rounded">
                                 <div class="d-flex justify-content-between small mb-1">
-                                    <span class="text-muted">Subtotal</span>
+                                    <span style="color:#6A6F80">Subtotal</span>
                                     <span id="subtotalDisplay">GHS 0.00</span>
                                 </div>
-                                <div class="d-flex justify-content-between align-items-center small mb-1">
-                                    <span class="text-muted">Discount (GHS)</span>
+                                <div class="d-flex justify-content-between align-items-center small mb-2">
+                                    <span style="color:#6A6F80">Discount <i class="fas fa-cedi-sign"></i></span>
                                     <input type="number" name="Discount" id="discountField"
-                                           class="form-control form-control-sm text-end"
-                                           style="width:90px" min="0" step="0.01"
+                                           class="did-floating-input text-end " style="width:150px"
+                                            min="0" step="0.01"
                                            value="0" oninput="recalc()" />
                                 </div>
                                 <div class="d-flex justify-content-between fw-bold border-top pt-2 mt-1">
-                                    <span>Total</span>
-                                    <span id="totalDisplay" class="text-success fs-6">GHS 0.00</span>
+                                    <span class="text-white">Total</span>
+                                    <span id="totalDisplay" class="text-success fs-6"><i class="fas fa-cedi-sign"></i>0.00</span>
                                 </div>
                             </div>
-
+                            </div>
+                            </div>
                             <!-- Payment method (cash only) -->
-                            <div id="payMethodGroup" class="mb-3">
-                                <label class="form-label small fw-semibold">Payment method</label>
+                 
+                            
                                 <select name="PaymentMethod" id="payMethodSelect"
-                                        class="form-select form-select-sm">
+                                class="form-select-dark mb-1">
                                     <option value="0">Cash</option>
                                     <option value="1">Mobile Money (MoMo)</option>
                                     <option value="2">Bank transfer</option>
                                     <option value="3">Cheque</option>
                                 </select>
-                            </div>
-
+                          
+                         
+                           
                             <!-- Payment reference -->
-                            <div class="mb-3" id="referenceGroup" style="display:block">
-                                <label class="form-label small fw-semibold">
-                                    Reference
-                                    <span class="text-muted fw-normal">(MoMo ID / cheque #)</span>
-                                </label>
-                                <input type="text" name="PaymentReference"
-                                       class="form-control form-control-sm"
-                                       placeholder="Transaction reference…" />
-                            </div>
-
+               
+                    
+                          
+                                <div class="did-floating-label-content mb-1 mt-2">
+                                    <input type="text" name="PaymentReference" class="did-floating-input" placeholder="" />
+                                    <label class="did-floating-label">Reference</label>
+                                </div>
+                   
+                          
                             <!-- Cash tendered + change (cash only) -->
-                            
-                            
+                    <div class="card-custom  mb-1 p-1">
 
-                                <div class="input-group mb-3" id="tenderedGroup">
-                      
-                                    <div class="input-group-text">
-                                    
-                                        <i class="fas fa-cedi-sign"></i> 
-                                    </div>
+                        <div class="card-body">
+                            <div class="mb-3 p-2 rounded">
+                            <div class="d-flex justify-content-between align-items-center small mb-1" id="tenderedGroup">
+
+                        
+                                        <span style="color:#6A6F80">Amount</span>
 
                                     <!-- Floating label + input -->
-                                    <div class="did-floating-label-content">
+                                 
                                         <input type="number" asp-for="@Model.CreditInfo"
                                                class="did-floating-input text-end" name="CashReceived"
-                                               id="tenderedField"
+                                           id="tenderedField" style="width:150px"
                                                placeholder=" " min="0" step="0.01" value="0" oninput="calcChange()" />
-                                        <label class="did-floating-label" for="tenderedField">Amount Tendered</label>
-                                    </div>
+                                
                                 </div>
-                                <div class="mt-2 p-2 rounded"
-                                     style="background:#f0fdf4;border:1px solid #bbf7d0;
-                                            font-size:.82rem">
+                                <div class="mt-1 rounded"
+                                     style="font-size:.82rem">
                                     <div class="d-flex justify-content-between">
-                                        <span class="text-muted">Tendered</span>
-                                        <span id="tenderedDisplay">GHS 0.00</span>
+                                        <span style="color:#6A6F80">Tendered</span>
+                                        <span id="tenderedDisplay" class="text-white">GHS 0.00</span>
                                     </div>
                                     <div class="d-flex justify-content-between fw-bold border-top pt-1 mt-1">
-                                        <span>Change</span>
+                                        <span class="text-white">Change</span>
                                         <span id="changeDisplay" class="text-success">GHS 0.00</span>
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Notes -->
-                            <div class="mb-3 px-3">
-                                <label class="form-label small fw-semibold">
-                                    Notes
-                                    <span class="text-muted fw-normal">(optional)</span>
-                                </label>
-                                <textarea name="Notes" class="form-control form-control-sm"
-                                          rows="2" placeholder="Any notes…"></textarea>
                             </div>
+                            </div>
+                            <!-- Notes -->
+                    
+                                <textarea name="Notes" class="did-floating-input"
+                                          rows="2" placeholder="Any notes…"></textarea>
+                         
 
-                        </div>
+                   
                     </div>
                 </div>
-
-            </div>
+                </div>
+             
+       
     
 
         <!-- Footer -->
-        <div class="modal-footer border-top px-3 py-2 d-flex justify-content-between align-items-center">
-            <span class="text-muted small">
+        <div class="modal-footer-custom border-top px-3 py-2 d-flex justify-content-between align-items-center">
+            <span class=" small" style="color:#6A6F80">
                 <i class="fas fa-info-circle me-1"></i>
                 Stock will be deducted on confirmation
             </span>
@@ -298,17 +440,12 @@
                 </button>
             </div>
         </div>
+
     }
 
 
 
-<style>
-    #AddInvoiceDialog { max-width: 900px; width: 95vw; }
-    #AddInvoiceDialog::backdrop { background: rgba(0,0,0,.45); }
-    .product-row:hover { background: #f0f7ff; }
-    .product-row:last-child { border-bottom: none !important; }
-    .sale-type-btn { transition: border-color .15s, color .15s; }
-</style>
+
 
 <script>
 // ── Sale type ─────────────────────────────────────────────────────────────────

@@ -54,39 +54,24 @@
                         
                             <td class="ellipsed-text">@Supplier.Address</td>
                             <td>
-
-                           
-
-                                <div class="btn-group" role="group">
-                                    <button id="btnGroupDrop1" type="button" class="btn btn-sm btn-rounded btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Select Action
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                    @if(Supplier.CanEdit)
-                                    {
-
-                                        <button  onclick="openDialogFromData(this)" data-url="EditSupplier" data-user-id="@protector.Protect(Supplier.PublicId.ToString())" data-dialog-id="EditSupplierDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-edit mr-3 text-warning"></i>Edit</button>
-                                        }
-
-                                       
-
-                                       @if(Supplier.CanPrint)
-                                       {
-
-                                        <button type="button" class="dropdown-item-custom" onclick="printMemoIframe('@protector.Protect(Supplier.PublicId.ToString())')">
-                                            <i style="width:15px; height:15px" class="fa fa-print mr-3 text-primary"></i>Print
-                                        </button>
-                                       }
-        
-                                                <button type="button" onclick="de" class="dropdown-item-custom"><i style="width:15px; height:15px" class="fa fa-trash mr-3 text-danger"></i>Delete</button>
-                                          
-                                  </div>
-                        </div>
                                     <div class="dropdown action-dropdown">
                                         <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                             Select Action
                                         </button>
                                         <ul class="dropdown-menu">
+                                            @if (Supplier.CanEdit)
+                                            {
+                                                <li onclick="openDialogFromData(this)" data-url="EditSupplier" data-user-id="@protector.Protect(Supplier.PublicId.ToString())" data-dialog-id="EditSupplierDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-edit mr-3 text-warning"></i>Edit</li>
+                                            }
+                                            @if (Supplier.CanPrint)
+                                            {
+
+                                                <li type="button" class="dropdown-item-custom" onclick="printMemoIframe('@protector.Protect(Supplier.PublicId.ToString())')">
+                                                    <i style="width:15px; height:15px" class="fa fa-print mr-3 text-primary"></i>Print
+                                                </li>
+                                            }
+
+                                            <li type="button" onclick="de" class="dropdown-item"><i style="width:15px; height:15px" class="fa fa-trash mr-3 text-danger"></i>Delete</li>
                                             <li><a class="dropdown-item" href="#"><i class="bi bi-pencil text-primary"></i> Edit</a></li>
                                             <li><a class="dropdown-item" href="#"><i class="bi bi-eye text-info"></i> View</a></li>
                                             <li><hr class="dropdown-divider"></li>
