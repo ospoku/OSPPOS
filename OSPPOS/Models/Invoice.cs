@@ -6,7 +6,8 @@ using System.ComponentModel.DataAnnotations;
     namespace OSPPOS.Models
     {
         public class Invoice : TableAudit
-        {
+    {
+        [Key]
             public int Id { get; set; }
 
             public string InvoiceNumber { get; set; } = string.Empty;
@@ -20,15 +21,14 @@ using System.ComponentModel.DataAnnotations;
 
             // Discounts
             public decimal Discount { get; set; } = 0;
-            public decimal DiscountPercent { get; set; } = 0;
+      
 
             // Core calculations
             public decimal SubTotal => Items.Sum(i => i.LineTotal);
 
-            public decimal DiscountAmount =>
-                DiscountPercent > 0 ? SubTotal * DiscountPercent / 100 : Discount;
+  
 
-            public decimal TotalAmount => SubTotal - DiscountAmount;
+            public decimal TotalAmount => SubTotal - Discount;
 
             public decimal AmountPaid => Payments.Sum(p => p.Amount);
 
@@ -37,8 +37,7 @@ using System.ComponentModel.DataAnnotations;
         public Customer? Customer { get; set; }
 
         public string? WalkInCustomerName { get; set; }
-        public string CustomerDisplay =>
-            Customer?.Name ?? WalkInCustomerName ?? "Walk-in";
+        public string? Notes { get; set; }
     }
 
 

@@ -1,127 +1,101 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
-using AspNetCoreHero.ToastNotification.Notyf;
-using DocumentFormat.OpenXml.ExtendedProperties;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using OSPPOS.Data;
-using OSPPOS.Models;
-using OSPPOS.Services;
-using OSPPOS.ViewComponents;
-using OSPPOS.ViewModels;
-using System;
+using OSPPOS.DTO.Invoice;
+using OSPPOS.Interfaces;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace OSPPOS.Controllers
 {
-   
-
     [Authorize]
-    public class InvoiceController(XContext ctx,EntityService entityService, INotyfService notyf) : Controller
+    public class InvoiceController(
+        INotyfService notyf,
+        IInvoiceService invoiceService) : Controller
     {
-        
-
-        public IActionResult ViewInvoices()
+        public async Task<IActionResult> ViewInvoices(ViewInvoicesDTO dto)
         {
-
-            return ViewComponent(nameof(ViewInvoices));
-
-        }
-
-        public async Task<IActionResult> AddProduct()
-        {
-            await PopulateDropDownsAsync();
-            return View(new Product());
+            var invoices = await invoiceService.ViewInvoicesAsync(dto);
+            return ViewComponent(nameof(ViewInvoices), invoices);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddProduct(AddProductVM addProductVM)
+        public async Task<IActionResult> AddInvoice(AddInvoiceDTO dto)
         {
-          
+            var result = await invoiceService.AddInvoiceAsync(dto, User);
 
-            Product addThisProduct = new()
+            if (!result.Success)
             {
-                Name = addProductVM.Name,
-                Description = addProductVM.Description,
-                CategoryId=addProductVM.CategoryId,
-                SupplierId=addProductVM.SupplierId,
-                CostPrice = addProductVM.CostPrice,
-                IsActive=addProductVM.IsActive,
-                SellingPrice = addProductVM.SellingPrice,
-                SKU=addProductVM.SKU,
-                ReorderLevel=addProductVM.ReorderLevel,
-                UnitId=addProductVM.UnitId,
-                WholesalePrice=addProductVM.WholesalePrice,
-                CurrentStock=addProductVM.CurrentStock,
-
-            };
-
-            bool result = await entityService.AddEntityAsync(addThisProduct, User);
-
-            if (!result)
-            {
-                notyf.Error("Failed to add customer. Please try again.");
-                return ViewComponent(nameof(ViewProducts)); // reshow dialog with values intact
+                notyf.Error("Failed to add invoice.");
+                return ViewComponent(nameof(ViewInvoices));
             }
 
-            notyf.Success("Customer added successfully.");
-            return RedirectToAction(nameof(ViewProducts));
+            notyf.Success("Invoice added successfully.");
+            return ViewComponent(nameof(ViewInvoices), result);
         }
 
+        // ✅ EDIT (GET)
         public async Task<IActionResult> Edit(int id)
         {
-            var p = await ctx.Products.FindAsync(id);
-            if (p is null) return NotFound();
+            var invoice = await invoiceService.GetInvoiceForEditAsync(id);
 
-            await PopulateDropDownsAsync();
-            return View(p);
+            if (invoice == null)
+            {
+                notyf.Error("Invoice not found.");
+                return NotFound();
+            }
+
+            return View(invoice); // usually a DTO/ViewModel
         }
 
+        // ✅ EDIT (POST)
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Product model)
+  
+        public async Task<IActionResult> Edit(UpdateInvoiceDTO dto)
         {
             if (!ModelState.IsValid)
             {
-                await PopulateDropDownsAsync();
-                return View(model);
+                return View(dto);
             }
 
-            ctx.Products.Update(model);
-            await ctx.SaveChangesAsync();
+            var result = await invoiceService.UpdateInvoiceAsync(dto, User);
 
-            TempData["Success"] = "Product updated.";
-            return RedirectToAction(nameof(Index));
+            if (!result)
+            {
+                notyf.Error("Failed to update invoice.");
+                return View(dto);
+            }
+
+            notyf.Success("Invoice updated successfully.");
+            return RedirectToAction(nameof(ViewInvoices));
+        }
+
+        public async Task<IActionResult> GetInvoice(int id)
+        {
+            var invoice = await invoiceService.GetInvoiceAsync(id);
+
+            if (invoice == null)
+            {
+                notyf.Error("Invoice not found.");
+                return NotFound();
+            }
+
+            return View(invoice);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> ToggleActive(int id)
+        public async Task<IActionResult> DeleteInvoice(int id)
         {
-            var p = await ctx.Products.FindAsync(id);
-            if (p is null) return NotFound();
+            var success = await invoiceService.DeleteInvoiceAsync(id);
 
-            p.IsActive = !p.IsActive;
-            await ctx   .SaveChangesAsync();
+            if (!success)
+            {
+                notyf.Error("Failed to delete invoice.");
+                return NotFound();
+            }
 
-            return RedirectToAction(nameof(Index));
-        }
-
-        private async Task PopulateDropDownsAsync()
-        {
-            ViewBag.Categories = new SelectList(
-                await ctx.Categories.Where(c => c.IsActive).ToListAsync(), "Id", "Name");
-
-            ViewBag.Suppliers = new SelectList(
-                await ctx.Suppliers.Where(s => s.IsActive).ToListAsync(), "Id", "Name");
-        }
-
-        private async Task<string> GenerateSKUAsync(int categoryId)
-        {
-            var cat = await ctx.Categories.FindAsync(categoryId);
-            var prefix = cat?.Name[..Math.Min(3, cat.Name.Length)].ToUpper() ?? "PRD";
-            var count = await ctx.Products.CountAsync(p => p.CategoryId == categoryId);
-
-            return $"{prefix}-{count + 1:D4}";
+            notyf.Success("Invoice deleted.");
+            return RedirectToAction(nameof(ViewInvoices));
         }
     }
 }
-

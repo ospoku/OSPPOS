@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OSPPOS.Data;
+using OSPPOS.DTO.Customer;
 using OSPPOS.DTO.Product;
 using OSPPOS.Interfaces;
 using OSPPOS.Models;
@@ -18,7 +19,7 @@ using System.Threading.Tasks;
 namespace OSPPOS.Controllers
 {
     [Authorize]
-    public class ProductController(XContext ctx, EntityService entityService, INotyfService notyf, IProductService productService) : Controller
+    public class ProductController(XContext ctx, INotyfService notyf, IProductService productService) : Controller
     {
 
 

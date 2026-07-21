@@ -1,4 +1,5 @@
-﻿using OSPPOS.DTO.Product;
+﻿using OSPPOS.DTO.Customer;
+using OSPPOS.DTO.Product;
 using OSPPOS.Models;
 using OSPPOS.ViewModels;
 using System.Security.Claims;

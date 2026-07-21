@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
-namespace OSPPOS.DTO.Product
+namespace OSPPOS.DTO.Supplier
 {
-    public class AddProductDTO
+    public class AddSupplierDTO
     {    // Select Lists
         public SelectList CategoryList { get; set; }
         public SelectList SupplierList { get; set; }
@@ -39,7 +39,6 @@ namespace OSPPOS.DTO.Product
 
         [Range(0, double.MaxValue)]
         [DataType(DataType.Currency)]
-
         public decimal WholesalePrice { get; set; }
 
         // Stock

@@ -1,167 +1,6 @@
 ﻿@using OSPPOS.Models
 @model OSPPOS.ViewModels.AddInvoiceVM;
-<style>
-    .sale-body {
-        grid-template-columns: 1fr;
-        padding: 12px 14px;
-        gap: 12px;
-    }
 
-    .sale-right {
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
-
-    .customer-row {
-        grid-template-columns: 1fr;
-        gap: 8px;
-    }
-
-    .product-row {
-        flex-wrap: wrap;
-        gap: 6px;
-        padding: 6px 10px;
-    }
-
-    .product-qty {
-        width: 64px;
-    }
-
-    .product-total {
-        width: 64px;
-    }
-
-    .sale-footer {
-        flex-direction: column;
-        align-items: stretch;
-        padding: 10px 16px;
-        border-radius: 0;
-    }
-
-    .footer-actions {
-        justify-content: stretch;
-    }
-
-        .footer-actions .btn {
-            flex: 1;
-            text-align: center;
-        }
-
-    .theme-toggle-wrapper {
-        top: 10px;
-        right: 10px;
-        padding: 6px 12px 6px 16px;
-        font-size: 0.8rem;
-    }
-
-        .theme-toggle-wrapper span {
-            font-size: 0.7rem;
-        }
-
-    .sale-header-left {
-        font-size: 0.9rem;
-    }
-
-    .btn-close-dialog {
-        padding: 4px 10px;
-        font-size: 0.7rem;
-    }
-
-    .sale-type-btn {
-        padding: 6px 12px;
-        font-size: 0.7rem;
-    }
-
-    .product-header {
-        font-size: 0.7rem;
-        padding: 8px 14px;
-    }
-
-    .product-name {
-        font-size: 0.8rem;
-    }
-
-    .product-meta {
-        font-size: 0.65rem;
-        gap: 8px;
-    }
-
-    .customer-section {
-        padding: 10px 14px;
-    }
-
-    .totals-section,
-    .payment-section,
-    .reference-section,
-    .tendered-section,
-    .notes-section {
-        padding: 10px 14px;
-    }
-
-    .floating-label {
-        font-size: 0.7rem;
-        left: 38px;
-    }
-
-    .customer-field .form-control,
-    .customer-field .dmx-choices {
-        font-size: 0.8rem;
-        padding: 7px 12px;
-    }
-
-    .input-group-icon {
-        padding: 0 10px;
-        font-size: 0.8rem;
-    }
-
-    
-
-    @@media (max-width: 480px) {
-        dialog
-
-    {
-        width: 100vw;
-        height: 100vh;
-        max-height: 100vh;
-    }
-
-    .sale-body {
-        padding: 8px 10px;
-        gap: 8px;
-    }
-
-    .product-grid {
-        max-height: none;
-    }
-
-    .product-row {
-        padding: 5px 8px;
-        font-size: 0.75rem;
-    }
-
-    .product-qty {
-        width: 56px;
-    }
-
-        .product-qty .qty-input {
-            padding: 4px 6px;
-            font-size: 0.75rem;
-        }
-
-    .product-total {
-        width: 56px;
-        font-size: 0.7rem;
-    }
-
-    .sale-footer {
-        padding: 8px 12px;
-    }
-
-    .footer-actions .btn {
-        padding: 6px 12px;
-        font-size: 0.75rem;
-    }}
-</style>
 <dialog id="AddInvoiceDialog">
     
         <div class="modal-header-custom">
@@ -223,25 +62,25 @@
                             <div id="creditInfo" class="mb-2 p-2"
                                  style="display:block">
                                 <span style="color:#6A6f80">Limit:</span>
-                                <strong id="ciLimit">—</strong>
+                                <strong id="ciLimit" class="small">—</strong>
                                 &nbsp;|&nbsp;
                                 <span style="color:#6A6f80">Owes:</span>
-                                <strong id="ciDebt" class="text-danger">—</strong>
+                                <strong id="ciDebt" class="text-danger small">—</strong>
                                 &nbsp;|&nbsp;
                                 <span style="color:#6A6f80">Available:</span>
-                                <strong id="ciAvail">—</strong>
+                                <strong id="ciAvail"class="small" >—</strong>
                             </div>
                         </div>
                     </div>
 
                     <!-- Product grid grouped by category -->
-                    <div class="cardcard-custom">
-                        <div class="card-header border-0 py-2 d-flex
+                    <div class="card-custom mt-1 border-1">
+                        <div class="card-header border-1 p-2 d-flex
                                     justify-content-between align-items-center">
-                            <span class="fw-semibold small">
+                            <span class="fw-semibold small text-white">
                                 <i class="fas fa-boxes me-1 text-primary"></i>Products
                             </span>
-                            <span class="text-muted" style="font-size:.75rem">
+                            <span class="text-white" style="font-size:.75rem">
                                 Click qty to add · 0 = not ordered
                             </span>
                         </div>
@@ -267,9 +106,9 @@
 
                                 @foreach (var p in group.OrderBy(p => p.Name))
                                 {
-                                    <div class="d-flex align-items-center px-3 py-1
-                                                border-bottom product-row"
-                                         style="font-size:.85rem"
+                                    <div class="d-flex align-items-center px-3 py-1 product-row"
+                                                 
+                                         style="font-size:.85rem;border-bottom-color:#6A6F80; border-bottom-width:thin; border-bottom-style:solid"
                                          data-product-id="@p.ProductId"
                                          data-price="@p.SellingPrice"
                                          data-stock="@p.CurrentStock"
@@ -355,11 +194,8 @@
                  
                             
                                 <select name="PaymentMethod" id="payMethodSelect"
-                                class="form-select-dark mb-1">
-                                    <option value="0">Cash</option>
-                                    <option value="1">Mobile Money (MoMo)</option>
-                                    <option value="2">Bank transfer</option>
-                                    <option value="3">Cheque</option>
+                                class="form-select-dark mb-1" asp-for="@Model.PaymentMethodId" asp-items="@Model.PaymentMethods">
+                                
                                 </select>
                           
                          

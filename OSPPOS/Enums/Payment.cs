@@ -12,6 +12,7 @@
         Cash = 0,
         MoMo = 1,
         Card = 2,
-        Bank = 3
+        Bank = 3,
+        Cheque=4
     }
 }

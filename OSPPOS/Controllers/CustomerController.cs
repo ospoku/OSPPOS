@@ -15,7 +15,6 @@ namespace OSPPOS.Controllers
         public class CustomerController(XContext ctx, EntityService entityService, INotyfService notyf, IDataProtectionProvider provider) : Controller
         {
     
-
         public IActionResult ViewCustomers() { return ViewComponent(nameof(ViewCustomers)); }
 
             [HttpPost, ValidateAntiForgeryToken]

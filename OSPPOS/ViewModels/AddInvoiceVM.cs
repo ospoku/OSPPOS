@@ -12,21 +12,22 @@ namespace OSPPOS.ViewModels
     {
         public int CustomerId { get; set; }
        
-       
+  
         public DateTime? DueDate { get; set; }
         public string? Notes { get; set; }
-        public decimal DiscountPercent { get; set; } = 0;
+       
         public decimal Discount { get; set; } = 0;
         public List<SaleItemVM> Items { get; set; } = [];
 
         public string? PaymentReference { get; set; }
-        public int PaymentStatusId {  get; set; }
+        public int PaymentMethodId {  get; set; }
+        public SelectList PaymentMethods { get; set; }
         public SelectList Customers { get; set; } = null!;
         public List<CreditInfoVM> CreditInfo { get; set; } = [];
         public List<Product> Products { get; set; } = [];
        
   
-            public decimal InitialPayment { get; set; } = 0;
+         
 
         public Enums.PaymentMethod PaymentMethod { get; set; }
 

@@ -1,6 +1,7 @@
 ﻿using DocumentFormat.OpenXml.ExtendedProperties;
 using Microsoft.EntityFrameworkCore;
 using OSPPOS.Data;
+using OSPPOS.DTO.Customer;
 using OSPPOS.DTO.Product;
 using OSPPOS.Interfaces;
 using OSPPOS.Models;
@@ -13,9 +14,6 @@ namespace OSPPOS.Services
 {
     public class ProductService(XContext ctx, EntityService entityService) : IProductService
     {
-
-
-
         public async Task<(bool Success, string Error, Product? Product)> AddProductAsync(AddProductDTO addProductDTO, ClaimsPrincipal user)
         {
             try

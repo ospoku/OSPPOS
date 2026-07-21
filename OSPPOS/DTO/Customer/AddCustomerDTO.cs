@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
-namespace OSPPOS.DTO.Product
+namespace OSPPOS.DTO.Customer
 {
-    public class AddProductDTO
+    public class AddCustomerDTO
     {    // Select Lists
-        public SelectList CategoryList { get; set; }
-        public SelectList SupplierList { get; set; }
-        public SelectList UnitList { get; set; }
+     
+      
 
         // Foreign Keys
         [Required(ErrorMessage = "Please select a category")]
@@ -21,10 +20,7 @@ namespace OSPPOS.DTO.Product
         [StringLength(200, ErrorMessage = "Name cannot exceed 200 characters")]
         public string Name { get; set; }
 
-        [StringLength(1000)]
-        public string Description { get; set; }
 
-        public string SKU { get; set; }
 
         // Pricing
         [Required(ErrorMessage = "Cost price is required")]
@@ -39,7 +35,6 @@ namespace OSPPOS.DTO.Product
 
         [Range(0, double.MaxValue)]
         [DataType(DataType.Currency)]
-
         public decimal WholesalePrice { get; set; }
 
         // Stock

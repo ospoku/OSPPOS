@@ -37,6 +37,48 @@
     padding: 1rem;
 }
 
+.card-custom::-webkit-scrollbar
+ {
+    width: 6px;
+}
+
+.card-custom::-webkit-scrollbar-track
+ {
+    background: #1a1d23;
+    border-radius: 10px;
+}
+
+.card-custom::-webkit-scrollbar-thumb
+ {
+    background: #3d424a;
+    border-radius: 10px;
+}
+
+    .card-custom::-webkit-scrollbar-thumb:hover
+     {
+        background: #4d525a;
+    }
+
+
+.card-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.card-body::-webkit-scrollbar-track {
+    background: #1a1d23;
+    border-radius: 10px;
+}
+
+.card-body::-webkit-scrollbar-thumb {
+    background: #3d424a;
+    border-radius: 10px;
+}
+
+    .card-body::-webkit-scrollbar-thumb:hover {
+        background: #4d525a;
+    }
+
+
 /* ----- STAT CARDS ----- */
 .stat-card {
     background: #1a222c;

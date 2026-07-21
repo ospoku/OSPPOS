@@ -35,17 +35,17 @@
                 <thead>
                     <tr>
                     <th>SN</th>
-                    <th>SKU</th>
-                    <th>Product</th>
+                    <th>InvoiceDate</th>
+                    <th>InvoiceNumber</th>
                     <th>Category</th>
                     <th>Unit</th>
                     <th class="text-end">Cost</th>
                     <th class="text-end">Sell Price</th>
                     <th class="text-end">Wholesale</th>
-                    <th class="text-end">Margin</th>
+                    <th class="text-end">Discount</th>
                     <th class="text-center">Reorder</th>
                     <th class="text-center">Stock</th>
-               
+               <th></th>
                      
                         <th>Action</th>
                     </tr>
@@ -55,7 +55,7 @@
   @foreach (var i in Model)
                 {
                             <tr>
-                              
+                              <td></td>
                         <td>@i.InvoiceDate</td>
                         <td class="text-muted small">@i.InvoiceNumber</td>
                         <td class="ellipsed-text">

@@ -164,7 +164,7 @@ namespace OSPPOS.Data
                             CustomerId = rand.Next(0, 2) == 1 ? customers[rand.Next(customers.Count)].CustomerId : null,
                             WalkInCustomerName = $"Walk-in {i}",
                             Discount = rand.Next(0, 20),
-                            DiscountPercent = rand.Next(0, 2) == 1 ? 10 : 0,
+                       
                             Items = items
                         };
 

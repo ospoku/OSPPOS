@@ -12,16 +12,12 @@ namespace OSPPOS.ViewComponents
         public IViewComponentResult Invoke()
         {
             var invoiceList = ctx.Invoices
-           
-     
-         
                 .ToList();
 
             var result = invoiceList.Select(i => new ViewInvoicesVM
             {
       Customer=i.Customer,
       Discount=i.Discount,
-      DiscountPercent=i.DiscountPercent,
       CustomerId=i.CustomerId,
       WalkInCustomerName=i.WalkInCustomerName,
       DueDate=i.DueDate,
