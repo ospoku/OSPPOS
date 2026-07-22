@@ -1,101 +1,75 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using OSPPOS.Data;
 using OSPPOS.Models;
 using OSPPOS.Services;
 using OSPPOS.ViewModels;
 
 namespace OSPPOS.Controllers
 {
-    
-        [Authorize]
-        public class CustomerController(XContext ctx, EntityService entityService, INotyfService notyf, IDataProtectionProvider provider) : Controller
+    [Authorize]
+    public class CustomerController : Controller
+    {
+        private readonly CustomerService _customerService;
+        private readonly INotyfService _notyf;
+
+        public CustomerController(CustomerService customerService, INotyfService notyf)
         {
-    
-        public IActionResult ViewCustomers() { return ViewComponent(nameof(ViewCustomers)); }
+            _customerService = customerService;
+            _notyf = notyf;
+        }
 
-            [HttpPost, ValidateAntiForgeryToken]
+        public IActionResult ViewCustomers()
+            => ViewComponent(nameof(ViewCustomers));
 
-        
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> AddCustomer(AddCustomerVM vm)
         {
             if (!ModelState.IsValid)
             {
-                notyf.Error("Enter all fields and try again.");
+                _notyf.Error("Enter all fields and try again.");
                 return ViewComponent(nameof(ViewCustomers));
             }
 
-            var addThisCustomer = new Customer
-            {
-                Name = vm.Name,
-                Email = vm.Email,
-                Phone = vm.Phone,
-                Address = vm.Address,
-                TaxNumber = vm.TaxNumber,
-                CreditLimit = vm.AllowCredit ? vm.CreditLimit : 0,
-                AllowCredit = vm.AllowCredit,
-                IsActive = vm.IsActive
-            };
-
-            bool result = await entityService.AddEntityAsync(addThisCustomer, User);
+            var result = await _customerService.AddCustomerAsync(vm, User);
 
             if (!result)
             {
-                notyf.Error("Failed to add customer. Please try again.");
-                return ViewComponent(nameof(ViewCustomers), new { vm }); // reshow dialog with values intact
+                _notyf.Error("Failed to add customer.");
+                return ViewComponent(nameof(ViewCustomers), new { vm });
             }
 
-            notyf.Success("Customer added successfully.");
+            _notyf.Success("Customer added successfully.");
             return RedirectToAction(nameof(ViewCustomers));
         }
+
         [HttpGet]
-        public IActionResult EditCustomer(Guid Id) => ViewComponent(nameof(EditCustomer), Id);
+        public IActionResult EditCustomer(Guid id)
+            => ViewComponent(nameof(EditCustomer), id);
 
         [HttpPost]
-        public async Task<IActionResult> EditCustomerAsync(Guid id, Customer customer)
+        public async Task<IActionResult> EditCustomerAsync(Customer customer)
         {
-            try
-            {
-                var customerToUpdate = await ctx.Customers.FirstOrDefaultAsync(a => a.PublicId == customer.PublicId);
-                if (customerToUpdate == null)
-                {
-                    return NotFound();
-                }
+            var result = await _customerService.UpdateCustomerAsync(customer);
 
-                customerToUpdate.Address = customer.Address;
-                customerToUpdate.TaxNumber = customer.TaxNumber;
-                
-                ctx.Customers.Attach(customerToUpdate);
-                ctx.Customers.Entry(customerToUpdate).State = EntityState.Modified;
-
-                if (await ctx.SaveChangesAsync() > 0)
-                {
-                    notyf.Success("Record successfully updated.");
-                    return RedirectToAction("ViewLetters");
-                }
-                else
-                {
-                    notyf.Error("Document saving failed.");
-                    return ViewComponent(nameof(ViewCustomers));
-                }
-            }
-            catch (Exception ex)
+            if (!result)
             {
-                return RedirectToAction("Error", "Home", new { message = "An error occurred while updating the document: " + ex.Message });
+                _notyf.Error("Update failed.");
+                return ViewComponent(nameof(ViewCustomers));
             }
+
+            _notyf.Success("Record updated.");
+            return RedirectToAction(nameof(ViewCustomers));
         }
+
         public async Task<IActionResult> Statement(int id)
-            {
-                var c = await ctx.Customers
-                    .Include(x => x.SaleOrders).ThenInclude(o => o.Items).ThenInclude(i => i.Product)
-                    .Include(x => x.SaleOrders)
-                    .FirstOrDefaultAsync(x => x.CustomerId == id);
-                if (c is null) return NotFound();
-                return View(c);
-            }
+        {
+            var customer = await _customerService.GetCustomerStatementAsync(id);
+
+            if (customer == null)
+                return NotFound();
+
+            return View(customer);
         }
     }
-
+}
