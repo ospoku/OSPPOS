@@ -6,7 +6,7 @@ using OSPPOS.ViewModels;
 namespace OSPPOS.ViewComponents
 {
 
-    public class ViewInvoices(XContext ctx) : ViewComponent
+    public class ViewInvoices(XContext ctx) : Microsoft.AspNetCore.Mvc.ViewComponent
     {
    
         public IViewComponentResult Invoke()

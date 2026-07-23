@@ -7,7 +7,7 @@ using OSPPOS.ViewModels;
 
 namespace OSPPOS.ViewComponents
 {
-    public class ViewRoles( RoleManager<AppRole> roleManager) : ViewComponent
+    public class ViewRoles( RoleManager<AppRole> roleManager) : Microsoft.AspNetCore.Mvc.ViewComponent
     {
        
         public readonly RoleManager<AppRole> rol=roleManager;

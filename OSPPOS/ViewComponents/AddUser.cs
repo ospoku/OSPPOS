@@ -7,7 +7,7 @@ using OSPPOS.ViewModels;
 
 namespace OSPPOS.ViewComponents
 {
-    public class AddUser:ViewComponent
+    public class AddUser: Microsoft.AspNetCore.Mvc.ViewComponent
     {
         public readonly XContext prx;
         public readonly UserManager<AppUser> usm;

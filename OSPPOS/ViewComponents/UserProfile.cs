@@ -6,7 +6,7 @@ using OSPPOS.Models;
 
 namespace OSPPOS.ViewComponents
 {
-    public class UserProfile(UserManager<AppUser>userManager):ViewComponent
+    public class UserProfile(UserManager<AppUser>userManager): Microsoft.AspNetCore.Mvc.ViewComponent
     {
         public readonly UserManager<AppUser> usm = userManager;
         public IViewComponentResult Invoke()

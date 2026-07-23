@@ -7,7 +7,7 @@ using OSPPOS.ViewModels;
 
 namespace OSPPOS.ViewComponents
 {
-    public class ViewInventory(XContext ctx) : ViewComponent
+    public class ViewInventory(XContext ctx) : Microsoft.AspNetCore.Mvc.ViewComponent
     {
 
         public async Task<IViewComponentResult> InvokeAsync(int? categoryId, string? search)

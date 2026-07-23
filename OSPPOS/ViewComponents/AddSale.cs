@@ -8,7 +8,7 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace OSPPOS.ViewComponents
 {
-    public class AddSale(XContext ctx) : ViewComponent
+    public class AddSale(XContext ctx) : Microsoft.AspNetCore.Mvc.ViewComponent
     {
 
 

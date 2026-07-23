@@ -5,7 +5,7 @@ using OSPPOS.ViewModels;
 
 namespace OSPPOS.ViewComponents
 {
-    public class AddStockBatch(XContext ctx) : ViewComponent
+    public class AddStockBatch(XContext ctx) : Microsoft.AspNetCore.Mvc.ViewComponent
     {
         public IViewComponentResult Invoke(AddStockBatchVM vm)
         {

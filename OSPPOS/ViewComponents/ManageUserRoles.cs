@@ -9,7 +9,7 @@ using System.Web;
 
 namespace OSPPOS.ViewComponents
 {
-    public class ManageUserRoles(XContext dContext, UserManager<AppUser> userManager, RoleManager<AppRole> roleManager,IDataProtectionProvider provider) : ViewComponent
+    public class ManageUserRoles(XContext dContext, UserManager<AppUser> userManager, RoleManager<AppRole> roleManager,IDataProtectionProvider provider) : Microsoft.AspNetCore.Mvc.ViewComponent
     {
         public readonly XContext dcx = dContext;
         public readonly UserManager<AppUser> usm = userManager;

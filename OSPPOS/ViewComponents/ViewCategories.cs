@@ -4,7 +4,7 @@ using OSPPOS.ViewModels;
 
 namespace OSPPOS.ViewComponents
 {
-    public class ViewCategories(XContext dContext) : ViewComponent
+    public class ViewCategories(XContext dContext) : Microsoft.AspNetCore.Mvc.ViewComponent
     {
         public readonly XContext dcx = dContext;
        

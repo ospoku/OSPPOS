@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace OSPPOS.ViewComponents
 {
-    public class ViewCustomers(XContext ctx):ViewComponent
+    public class ViewCustomers(XContext ctx): Microsoft.AspNetCore.Mvc.ViewComponent
     {
         public IViewComponentResult Invoke()
         {

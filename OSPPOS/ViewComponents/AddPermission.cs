@@ -4,7 +4,7 @@ using OSPPOS.ViewModels;
 
 namespace OSPPOS.ViewComponents
 {
-    public class AddPermission:ViewComponent
+    public class AddPermission: Microsoft.AspNetCore.Mvc.ViewComponent
     {
         public IViewComponentResult Invoke()
         {

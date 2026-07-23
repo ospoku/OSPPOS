@@ -8,18 +8,11 @@ using OSPPOS.ViewModels;
 
 namespace OSPPOS.ViewComponents
 {
-    public class AddRole:ViewComponent
+    public class AddRole(XContext xContext, UserManager<AppUser> userManager, RoleManager<AppRole> roleManager) : ViewComponent
     {
-        public readonly XContext ctx;
-        public readonly UserManager<AppUser> usm;
-        public readonly RoleManager<AppRole> rmg;
-
-        public AddRole(XContext xContext,UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
-        {
-            usm = userManager;
-            ctx = xContext;
-            rmg = roleManager;
-        }
+        public readonly XContext ctx = xContext;
+        public readonly UserManager<AppUser> usm = userManager;
+        public readonly RoleManager<AppRole> rmg = roleManager;
 
         public IViewComponentResult Invoke()
         {

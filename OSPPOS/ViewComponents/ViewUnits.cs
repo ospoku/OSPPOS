@@ -7,7 +7,7 @@ using OSPPOS.ViewModels;
 
 namespace OSPPOS.ViewComponents
 {
-    public class ViewUnits(XContext dContext) : ViewComponent
+    public class ViewUnits(XContext dContext) : Microsoft.AspNetCore.Mvc.ViewComponent
     {
         public readonly XContext dcx = dContext;
        

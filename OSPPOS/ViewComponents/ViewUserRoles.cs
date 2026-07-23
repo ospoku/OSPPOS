@@ -1,11 +1,12 @@
 ﻿
-using Microsoft.AspNetCore.Mvc;
+
 
 using Microsoft.AspNetCore.Identity;
 using OSPPOS.Models;
 using OSPPOS.Data;
 
 using OSPPOS.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 
 namespace OSPPOS.ViewComponents
 {

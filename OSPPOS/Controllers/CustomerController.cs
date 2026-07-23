@@ -1,45 +1,58 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OSPPOS.DTO.Customer;
+using OSPPOS.DTO.Product;
+using OSPPOS.Interfaces;
 using OSPPOS.Models;
 using OSPPOS.Services;
+using OSPPOS.ViewComponents;
 using OSPPOS.ViewModels;
 
 namespace OSPPOS.Controllers
 {
     [Authorize]
-    public class CustomerController : Controller
+    public class CustomerController(ICustomerService customerService, INotyfService notyf) : Controller
     {
-        private readonly CustomerService _customerService;
-        private readonly INotyfService _notyf;
 
-        public CustomerController(CustomerService customerService, INotyfService notyf)
+
+        public async Task< IActionResult> ViewCustomers(ViewCustomersDTO viewCustomersDTO)
         {
-            _customerService = customerService;
-            _notyf = notyf;
+            var customers = await customerService.ViewCustomersAsync(viewCustomersDTO);
+
+      
+            if (customers == null || customers.Count == 0)
+            {
+                notyf.Error("Failed to display customers. Please try again.");
+                return ViewComponent(nameof(ViewCustomers));
+            }
+
+
+
+            return ViewComponent(nameof(ViewCustomers), customers);
+
         }
 
-        public IActionResult ViewCustomers()
-            => ViewComponent(nameof(ViewCustomers));
+        
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> AddCustomer(AddCustomerVM vm)
         {
             if (!ModelState.IsValid)
             {
-                _notyf.Error("Enter all fields and try again.");
+                notyf.Error("Enter all fields and try again.");
                 return ViewComponent(nameof(ViewCustomers));
             }
 
-            var result = await _customerService.AddCustomerAsync(vm, User);
+            var result = await customerService.AddCustomerAsync(vm, User);
 
             if (!result)
             {
-                _notyf.Error("Failed to add customer.");
+                notyf.Error("Failed to add customer.");
                 return ViewComponent(nameof(ViewCustomers), new { vm });
             }
 
-            _notyf.Success("Customer added successfully.");
+            notyf.Success("Customer added successfully.");
             return RedirectToAction(nameof(ViewCustomers));
         }
 
@@ -50,21 +63,21 @@ namespace OSPPOS.Controllers
         [HttpPost]
         public async Task<IActionResult> EditCustomerAsync(Customer customer)
         {
-            var result = await _customerService.UpdateCustomerAsync(customer);
+            var result = await customerService.UpdateCustomerAsync(customer);
 
             if (!result)
             {
-                _notyf.Error("Update failed.");
+                notyf.Error("Update failed.");
                 return ViewComponent(nameof(ViewCustomers));
             }
 
-            _notyf.Success("Record updated.");
+            notyf.Success("Record updated.");
             return RedirectToAction(nameof(ViewCustomers));
         }
 
         public async Task<IActionResult> Statement(int id)
         {
-            var customer = await _customerService.GetCustomerStatementAsync(id);
+            var customer = await customerService.GetCustomerStatementAsync(id);
 
             if (customer == null)
                 return NotFound();

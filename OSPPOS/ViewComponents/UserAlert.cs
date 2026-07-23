@@ -3,7 +3,7 @@
 
 namespace OSPPOS.ViewComponents
 {
-    public class UserAlert:ViewComponent
+    public class UserAlert: Microsoft.AspNetCore.Mvc.ViewComponent
     {
 
         public IViewComponentResult Invoke()

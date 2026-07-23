@@ -8,7 +8,7 @@ using OSPPOS.ViewModels;
 
 namespace OSPPOS.ViewComponents
 {
-    public class UserMessages(UserManager<AppUser> userManager, XContext context):ViewComponent
+    public class UserMessages(UserManager<AppUser> userManager, XContext context): Microsoft.AspNetCore.Mvc.ViewComponent
     {
         public readonly UserManager<AppUser> usm= userManager;
         public readonly XContext xtc= context;

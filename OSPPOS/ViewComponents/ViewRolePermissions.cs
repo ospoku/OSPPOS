@@ -14,7 +14,7 @@ using OSPPOS.ViewModels;
 
 namespace OSPPOS.ViewComponents
 {
-    public class ViewRolePermissions : ViewComponent
+    public class ViewRolePermissions : Microsoft.AspNetCore.Mvc.ViewComponent
     {
         private readonly XContext _context;
         private readonly RoleManager<AppRole> _roleManager;

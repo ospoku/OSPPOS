@@ -2,11 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using OSPPOS.Models;
 using OSPPOS.ViewModels;
-using static DMX.Constants.Permissions;
 
-namespace DMX.ViewComponents
+namespace OSPPOS.ViewComponents
 {
-    public class EditProfile(UserManager<AppUser> userManager, RoleManager<AppRole> rolManager) : ViewComponent
+    public class EditProfile(UserManager<AppUser> userManager, RoleManager<AppRole> rolManager) :ViewComponent
     {
         public readonly UserManager<AppUser> usm = userManager;
         public readonly RoleManager<AppRole> rol = rolManager;

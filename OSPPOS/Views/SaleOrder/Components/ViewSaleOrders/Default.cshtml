@@ -1,10 +1,10 @@
 ﻿
-@using DMX.Models;  
+@using System.Web
+@using DMX.Models;
 @using DMX.ViewComponents
 @using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Identity
-@using System.Web
 @using Microsoft.AspNetCore.DataProtection
+@using Microsoft.AspNetCore.Identity
 @using OSPPOS.Models
 @using OSPPOS.ViewComponents
 @inject UserManager<AppUser> usm;
@@ -73,10 +73,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                      @foreach (var sale in Model)
+                        @{
+                            var count = 1;
+                        }
+                        @foreach (var sale in Model)
                 {
                     <tr>
-                        <td></td>
+                        <td>@count</td>
 
                         <td>@sale.CustomerName</td>
                         <td>@sale.OrderNumber</td>
@@ -114,8 +117,9 @@
                                         </ul>
                                     </div>
                         </td>
-                    </tr>
-             }
+                            </tr>
+                            count++;
+                        }
                 </tbody>
             </table>
        </div>

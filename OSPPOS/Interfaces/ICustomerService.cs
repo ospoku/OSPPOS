@@ -1,4 +1,5 @@
-﻿using OSPPOS.Models;
+﻿using OSPPOS.DTO.Customer;
+using OSPPOS.Models;
 using OSPPOS.ViewModels;
 using System.Security.Claims;
 
@@ -11,6 +12,7 @@ namespace OSPPOS.Interfaces
             Task<bool> AddCustomerAsync(AddCustomerVM vm, ClaimsPrincipal user);
 
             Task<Customer?> GetCustomerForEdit(Guid publicId);
+        Task<List<ViewCustomersDTO>> ViewCustomersAsync(ViewCustomersDTO viewCustomersDTO);
 
             Task<bool> UpdateCustomerAsync(Customer customer);
 

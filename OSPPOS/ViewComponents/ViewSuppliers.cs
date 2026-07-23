@@ -4,7 +4,7 @@ using OSPPOS.ViewModels;
 
 namespace OSPPOS.ViewComponents
 {
-    public class ViewSuppliers(XContext ctx):ViewComponent
+    public class ViewSuppliers(XContext ctx): Microsoft.AspNetCore.Mvc.ViewComponent
     {
         public IViewComponentResult Invoke()
         { 

@@ -1,192 +1,219 @@
-﻿   
-
+﻿@using System.Web
 @using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Identity
-@using System.Web
 @using Microsoft.AspNetCore.DataProtection
+@using Microsoft.AspNetCore.Identity
 @using OSPPOS.Models
 @using OSPPOS.ViewComponents
 @model IEnumerable<OSPPOS.ViewModels.ViewStocksVM>
+
 @inject UserManager<AppUser> usm
-@inject Microsoft.AspNetCore.DataProtection.IDataProtectionProvider DataProtectionProvider
+@inject IDataProtectionProvider DataProtectionProvider
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    // Optional: create protector in view (same purpose string)
     var protector = DataProtectionProvider.CreateProtector("IdProtector");
     var stocks = Model.ToList();
 }
+
 <div class="tab-content tab-content-dim" id="divStocksContent">
-    <!-- TAB 1: USERS -->
     <div class="tab-pane fade show active tab-pane-dim" id="users" role="tabpanel">
         <div class="tab-card">
+
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h6 class="fw-semibold mb-0"><i class="bi bi-people me-2"></i>Stocks</h6>
-                <button class="btn btn-primary btn-sm" id="openFormBtn2" onclick="document.getElementById('AddStockBatchDialog').showModal()">
+                <h6 class="fw-semibold mb-0">
+                    <i class="bi bi-people me-2"></i>Stocks
+                </h6>
+
+                <button class="btn btn-primary btn-sm"
+                        onclick="document.getElementById('AddStockBatchDialog').showModal()">
                     <i class="bi bi-plus-circle me-1"></i>Add Stock
                 </button>
             </div>
-            <!-- DATATABLES -->
+
             <div class="table-container">
-        <table class="table darkTable" id="stocksTable">
-            <thead>
-                <tr>
-                    <th>SN</th>
-                    <th>Supplier</th>
-                    <th>Supplier Invoice</th>
-                    <th>Received Date</th>
-                    <th>Notes</th>
-                    <th>Items</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (var i = 0; i < stocks.Count; i++)
-                {
-                    var stock = stocks[i];
-                    var items = stock.StockBatchItems?.ToList() ?? new List<OSPPOS.Models.StockBatchItem>();
-                    var itemsTemplateId = $"stockItemsTemplate-{i}";
+                <table class="table darkTable" id="stocksTable">
+                    <thead>
+                        <tr>
+                            <th>SN</th>
+                            <th>Supplier</th>
+                            <th>Supplier Invoice</th>
+                            <th>Received Date</th>
+                            <th>Notes</th>
+                            <th>Items</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
 
-                    <tr>
-                        <td>@(i + 1)</td>
-                        <td>@stock.SupplierId</td>
-                        <td>@stock.SupplierInvoice</td>
-                        <td>@stock.DateReceived</td>
-                        <td class="ellipsed-text">@stock.Notes</td>
+                    <tbody>
+                        @for (var i = 0; i < stocks.Count; i++)
+                        {
+                            var stock = stocks[i];
+                            var items = stock.StockBatchItems?.ToList() ?? new List<StockBatchItem>();
+                            var itemsTemplateId = $"stockItemsTemplate-{i}";
 
-                        <td>
-                            <button type="button"
-                                    class="btn btn-sm btn-link p-0 stock-items-trigger"
-                                    data-bs-toggle="popover"
-                                    data-bs-trigger="hover focus"
-                                    data-bs-html="true"
-                                    data-bs-placement="left"
-                                    data-content-target="@itemsTemplateId">
-                                @items.Count() item(s)
-                            </button>
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>@stock.SupplierId</td>
+                                <td>@stock.SupplierInvoice</td>
+                                <td>@stock.DateReceived.ToString("yyyy-MM-dd")</td>
+                                <td class="ellipsed-text">@stock.Notes</td>
 
-                            <!-- Hidden popover content template; read via JS, never shown directly -->
-                            <div id="@itemsTemplateId" class="d-none">
-                                @if (items.Any())
-                                {
-                                    <div style="max-height:200px;overflow:auto;min-width:180px">
-                                        <table class="table table-sm mb-0" style="font-size:.78rem">
-                                            <thead>
-                                                <tr>
-                                                    <th>Product</th>
-                                                    <th class="text-end">Qty</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach (var item in items)
-                                                {
-                                                    <tr>
-                                                        <td>@item.Product?.Name</td>
-                                                        <td class="text-end">@item.Quantity</td>
-                                                    </tr>
-                                                }
-                                            </tbody>
-                                        </table>
+                                <!-- ✅ ITEMS BUTTON -->
+                                <td>
+                                    <button type="button"
+                                            class="btn btn-sm btn-link p-0"
+                                            onclick="openStockItemsModal(@i)">
+                                        @items.Count() item(s)
+                                    </button>
+
+                                    <!-- Hidden template -->
+                                    <div id="@itemsTemplateId" class="d-none">
+                                        @if (items.Any())
+                                        {
+                                            <div style="max-height:300px;overflow:auto">
+                                                <table class="table table-sm mb-0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Product</th>
+                                                            <th class="text-end">Qty</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var item in items)
+                                                        {
+                                                            <tr>
+                                                                <td>@item.Product?.Name</td>
+                                                                <td class="text-end">@item.Quantity</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">No items</span>
+                                        }
                                     </div>
-                                }
-                                else
-                                {
-                                    <span class="text-muted">No items</span>
-                                }
-                            </div>
-                        </td>
+                                </td>
 
-                        <td>
+                                <!-- ACTIONS -->
+                                <td>
                                     <div class="dropdown action-dropdown">
-                                        <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                        <button class="dropdown-toggle" data-bs-toggle="dropdown">
                                             Select Action
                                         </button>
-                                        <ul class="dropdown-menu">
-                                    @if (stock.CanEdit)
-                                    {<li>
-                                        <button onclick="openDialogFromData(this)" data-url="EditStock"
-                                                data-user-id="@protector.Protect(stock.PublicId.ToString())"
-                                                data-dialog-id="EditMemoDialog" class="dropdown-item">
-                                           <i class="bi bi-pencil text-primary"></i>Edit
-                                                    </button>
-                                                </li>
-                                    }
 
-                                    @if (stock.CanPrint)
-                                    {<li>
-                                        <button type="button" class="dropdown-item"
-                                                onclick="printMemoIframe('@protector.Protect(stock.PublicId.ToString())')">
-                                                        <i class="bi bi-printer text-info"></i>Print
+                                        <ul class="dropdown-menu">
+
+                                            @if (stock.CanEdit)
+                                            {
+                                                <li>
+                                                    <button class="dropdown-item"
+                                                            onclick="openDialogFromData(this)"
+                                                            data-url="EditStock"
+                                                            data-user-id="@protector.Protect(stock.PublicId.ToString())"
+                                                            data-dialog-id="EditStockDialog">
+                                                        <i class="bi bi-pencil text-primary"></i> Edit
                                                     </button>
                                                 </li>
-                                    }
+                                            }
+
+                                            @if (stock.CanPrint)
+                                            {
+                                                <li>
+                                                    <button class="dropdown-item"
+                                                            onclick="printMemoIframe('@protector.Protect(stock.PublicId.ToString())')">
+                                                        <i class="bi bi-printer text-info"></i> Print
+                                                    </button>
+                                                </li>
+                                            }
 
                                             <li><hr class="dropdown-divider"></li>
-                                            <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-trash"></i> Delete</a></li>
-                                    </ul>
-                                </div>
-                        
-                                    
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+
+                                            <li>
+                                                <a class="dropdown-item text-danger" href="#">
+                                                    <i class="bi bi-trash"></i> Delete
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
     </div>
-    
 </div>
+
+<!-- ✅ MODAL -->
+<div class="modal fade" id="stockItemsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Stock Items</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body" id="stockItemsModalContent">
+                <!-- Injected content -->
+            </div>
+
+        </div>
+    </div>
 </div>
-</div>
+
 <iframe id="printFrame" style="display:none;"></iframe>
+
 @section scripts {
-<script type="text/javascript">
-    function printMemoIframe(memoId) {
-        const printFrame = document.getElementById('printFrame');
-        printFrame.src = `/Memo/PrintMemo?Id=${memoId}`;
-        printFrame.onload = function () {
-            printFrame.contentWindow.focus();
-            printFrame.contentWindow.print();
-        };
-    };
+    <script>
 
-    document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.stock-items-trigger').forEach(function (el) {
-            new bootstrap.Popover(el, {
-                html: true,
-                trigger: 'hover focus',
-                placement: el.getAttribute('data-bs-placement') || 'top',
-                content: function () {
-                    const targetId = this.getAttribute('data-content-target');
-                    const target = document.getElementById(targetId);
-                    return target ? target.innerHTML : '';
-                }
-            });
-        });
-    });
+        function openStockItemsModal(index) {
+            const template = document.getElementById(`stockItemsTemplate-${index}`);
+            const modalContent = document.getElementById('stockItemsModalContent');
 
-            document.addEventListener("DOMContentLoaded", (function() {
-              $('#stocksTable').DataTable({
+            modalContent.innerHTML = template ? template.innerHTML : "No items";
+
+            const modal = new bootstrap.Modal(document.getElementById('stockItemsModal'));
+            modal.show();
+        }
+
+        function printMemoIframe(memoId) {
+            const frame = document.getElementById('printFrame');
+            frame.src = `/Memo/PrintMemo?Id=${memoId}`;
+            frame.onload = function () {
+                frame.contentWindow.focus();
+                frame.contentWindow.print();
+            };
+        }
+
+        $(document).ready(function () {
+            $('#stocksTable').DataTable({
                 pageLength: 5,
                 lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
-                order: [[4, 'desc']],
+                order: [[3, 'desc']],
                 columnDefs: [
-                  { orderable: false, targets: 5 }
+                    { orderable: false, targets: 5 }
                 ],
                 language: {
-                  search: "Search:",
-                  lengthMenu: "Show _MENU_ stocks",
-                  info: "Showing _START_ to _END_ of _TOTAL_ stocks",
-                  infoEmpty: "No stock found",
-                  infoFiltered: "(filtered from _MAX_ total stocks)",
-                  zeroRecords: "No stock found"
+                    search: "Search:",
+                    lengthMenu: "Show _MENU_ stocks",
+                    info: "Showing _START_ to _END_ of _TOTAL_ stocks",
+                    zeroRecords: "No stock found"
                 },
-                 dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
-                   '<"row"<"col-sm-12"tr>>' +
-                      '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>'
-              })}))
-</script>
+                  dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+               '<"row"<"col-sm-12"tr>>' +
+                  '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>'})})
+
+    </script>
 }
+
 @await Component.InvokeAsync(nameof(AddStockBatch))
-<dialog id="EditStockDialog"><div id="EditStockDialogContent"></div></dialog>
 
-
+<dialog id="EditStockDialog">
+    <div id="EditStockDialogContent"></div>
+</dialog>

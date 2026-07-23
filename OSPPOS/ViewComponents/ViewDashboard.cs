@@ -4,7 +4,7 @@ using OSPPOS.ViewModels;
 
 namespace OSPPOS.ViewComponents
 {
-    public class ViewDashboard(XContext context) : ViewComponent
+    public class ViewDashboard(XContext context) : Microsoft.AspNetCore.Mvc.ViewComponent
     {
         public readonly XContext ctx = context;
 

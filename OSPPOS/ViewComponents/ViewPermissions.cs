@@ -8,7 +8,7 @@ using OSPPOS.ViewModels;
 
 namespace OSPPOS.ViewComponents
 {
-    public class ViewPermissions(XContext dContext) : ViewComponent
+    public class ViewPermissions(XContext dContext) : Microsoft.AspNetCore.Mvc.ViewComponent
     {
         public readonly XContext dcx = dContext;
         public IViewComponentResult Invoke()

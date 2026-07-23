@@ -7,7 +7,7 @@ using OSPPOS.ViewModels;
 
 namespace OSPPOS.ViewComponents
 {
-    public class AddInvoice(XContext ctx):ViewComponent
+    public class AddInvoice(XContext ctx): Microsoft.AspNetCore.Mvc.ViewComponent
     {
 
         public async Task<IViewComponentResult> InvokeAsync()

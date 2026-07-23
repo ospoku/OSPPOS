@@ -6,7 +6,7 @@ using OSPPOS.ViewModels;
 
 namespace OSPPOS.ViewComponents
 {
-    public class ViewStocks(XContext ctx) : ViewComponent
+    public class ViewStocks(XContext ctx) : Microsoft.AspNetCore.Mvc.ViewComponent
     {
        
 

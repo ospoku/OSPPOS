@@ -3,7 +3,7 @@ using OSPPOS.ViewModels;
 
 namespace OSPPOS.ViewComponents
 {
-    public class EditSupplier : ViewComponent
+    public class EditSupplier : Microsoft.AspNetCore.Mvc.ViewComponent
     {
       
         public IViewComponentResult Invoke()

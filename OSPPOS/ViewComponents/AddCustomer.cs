@@ -3,7 +3,7 @@ using OSPPOS.ViewModels;
 
 namespace OSPPOS.ViewComponents
 {
-    public class AddCustomer():ViewComponent
+    public class AddCustomer(): ViewComponent
     {
         public IViewComponentResult Invoke()
         {

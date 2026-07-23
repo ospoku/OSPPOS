@@ -1,10 +1,10 @@
 ﻿
-@using DMX.Models;  
+@using System.Web
+@using DMX.Models;
 @using DMX.ViewComponents
 @using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Identity
-@using System.Web
 @using Microsoft.AspNetCore.DataProtection
+@using Microsoft.AspNetCore.Identity
 @using OSPPOS.Models
 @using OSPPOS.ViewComponents
 @inject UserManager<AppUser> usm;
@@ -51,12 +51,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                  
+                        @{
+                            var count = 1;
+                        }
+
   @foreach (var p in Model)
                 {
                             <tr class="@(p.IsLowStock ? "table-warning" : "")">
                               
-                        <td></td>
+                        <td>@count</td>
                         <td class="text-white small">@(p.SKU ?? "—")</td>
                         <td class="ellipsed-text">
                             <span class="fw-semibold">@p.Name</span>
@@ -122,12 +125,13 @@
                                                 <button type="button" class="dropdown-item text-danger"><i class="bi bi-trash"></i>Delete</button>
                                             </li>
                                             </ul>
-                                    </div> 
-                       
-                               
-                        </td>
-                    </tr>
-             }
+                                    </div>
+
+
+                                </td>     
+                            </tr>
+                            count++;
+                        }
                 </tbody>
             </table>
        </div>

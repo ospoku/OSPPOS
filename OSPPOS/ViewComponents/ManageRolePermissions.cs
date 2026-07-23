@@ -64,7 +64,7 @@ namespace OSPPOS.ViewComponents
 
 
 
-    public class ManageRolePermissions : ViewComponent
+    public class ManageRolePermissions : Microsoft.AspNetCore.Mvc.ViewComponent
     {
         private readonly RoleManager<AppRole> _roleManager;
         private readonly XContext ctx;

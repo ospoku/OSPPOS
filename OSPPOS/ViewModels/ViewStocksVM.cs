@@ -23,17 +23,10 @@ namespace OSPPOS.ViewModels
                    public  List<StockBatchItem> StockBatchItems { get; set; }
         public string SupplierInvoice { get; set; } = string.Empty;
         public string Notes { get; set; } = string.Empty;
-                   
-                public string UnitCost { get; set; }
+           
           public DateTime ExpiryDate { get; set; }
        
-       
-    
-        public DateTime? DueDate { get; set; }
-    
-        public decimal DiscountPercent { get; set; } = 0;
-        public decimal Discount { get; set; } = 0;
-        public List<SaleItemVM> Items { get; set; } = [];
+        public Guid PublicId { get; set; }
 
         // For initial cash payment
       
@@ -44,7 +37,7 @@ namespace OSPPOS.ViewModels
         public bool CanInsert { get; set; }
         public bool CanUpdate { get; set; }
         public bool CanPrint { get; set; }
-        public string PublicId { get; set; }
+     
     }
 }
 
