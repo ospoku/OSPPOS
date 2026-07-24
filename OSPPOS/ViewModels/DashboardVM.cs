@@ -10,7 +10,8 @@ namespace OSPPOS.ViewModels
             public decimal TotalOutstanding { get; set; }
             public int LowStockCount { get; set; }
             public int TodayTransactions { get; set; }
-    
+            public List<Product> LowStockItems { get; set; } = [];
+            public List<SaleOrder> RecentSales { get; set; } = [];
         }
     }
 

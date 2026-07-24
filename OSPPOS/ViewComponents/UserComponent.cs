@@ -6,7 +6,7 @@ using OSPPOS.ViewModels;
 
 
 
-namespace OSPPOS.ViewComponents
+namespace DMX.ViewComponents
 {
     public class UserComponent  (UserManager < AppUser > userManager): ViewComponent
     {
