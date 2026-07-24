@@ -13,7 +13,7 @@ namespace OSPPOS.ViewModels
         public List<string>? SelectedClaimValues { get; set; }
 
         // NEW grouped list for UI table
-        public List<ModulePermissionVM> ModulePermissions { get; set; }
+     
     }
 
 }

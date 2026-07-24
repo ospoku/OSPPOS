@@ -290,29 +290,7 @@ namespace DMX.Controllers
             result = await usm.AddToRolesAsync(user, model.UserRoles.Where(x => x.Selected).Select(y => y.RoleName));
             return RedirectToAction(nameof(ViewUserRoles));
         }
-        [HttpPost]
-        public async Task <IActionResult> AddPermission(AddPermissionVM addPermissionVM)
-        {
-            Permission addThisPermission = new()
-            {
-                Action = addPermissionVM.ActionName,
-                Module=addPermissionVM.ModuleName,
-                Description= addPermissionVM.Description,
-            };
-            bool result = await ens.AddEntityAsync(addThisPermission, User);
-            if (!result)
-            {
-                notyf.Error("An error occurred while processing the request.", 5);
-              
-                return ViewComponent(nameof(UserManagement),addPermissionVM);
-            }
-            else
-            {
-                notyf.Success("Permission successfully created");
-
-                return ViewComponent(nameof(UserManagement));
-            }
-        }
+       
         
 
 

@@ -1,0 +1,180 @@
+﻿
+@using System.Web
+@using DMX.Models;
+@using DMX.ViewComponents
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.DataProtection
+@using Microsoft.AspNetCore.Identity
+@using OSPPOS.Models
+@using OSPPOS.ViewComponents
+@inject UserManager<AppUser> usm;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model IEnumerable<OSPPOS.ViewModels.ViewPatientsVM>;
+@inject Microsoft.AspNetCore.DataProtection.IDataProtectionProvider DataProtectionProvider
+
+@{
+    // Optional: create protector in view (same purpose string)
+    var protector = DataProtectionProvider.CreateProtector("IdProtector");
+  
+}
+<div class="tab-content tab-content-dim" id="divproductsContent">
+    <!-- TAB 1: USERS -->
+    <div class="tab-pane fade show active tab-pane-dim" id="divproducts" role="tabpanel">
+        <div class="tab-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-semibold mb-0"><i class="bi bi-tags me-2"></i>Products</h6>
+                <button class="btn btn-primary btn-sm" id="openAddProductFormBtn" onclick="document.getElementById('AddProductDialog').showModal()">
+                    <i class="bi bi-plus-circle me-1"></i>Add Product
+                </button>
+            </div>
+            <!-- DATATABLES -->
+            <div class="table-container">
+            <table class="table darkTable" id="productsTable">
+                <thead>
+                    <tr>
+                    <th>SN</th>
+                    <th>SKU</th>
+                    <th>Product</th>
+                    <th>Category</th>
+                    <th>Unit</th>
+                    <th class="text-end">Cost</th>
+                    <th class="text-end">Sell Price</th>
+                    <th class="text-end">Wholesale</th>
+                    <th class="text-end">Margin</th>
+                    <th class="text-center">Reorder</th>
+                    <th class="text-center">Stock</th>
+               
+                     
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        @{
+                            var count = 1;
+                        }
+
+  @foreach (var p in Model)
+                {
+                            <tr >
+                              
+                        <td>@count</td>
+                        <td class="text-white small"></td>
+                        <td class="ellipsed-text">
+                            <span class="fw-semibold"></span>
+                          
+                                <span class="badge bg-secondary ms-1">Inactive</span>
+                            
+                        </td>
+                        <td>
+            
+                        </td>
+                        <td class="small"></td>
+                        <td class="text-end"></td>
+                        <td class="text-end fw-semibold"></td>
+                        <td class="text-end"></td>
+                        <td class="text-end">
+                            <span>
+                            </span>
+                        </td>
+                        <td class="text-center small"></td>
+                        <td class="text-center">
+                           
+                         
+                        </td>
+                           <td>
+
+                                    <div class="dropdown action-dropdown">
+                                        <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                            Select Action
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                    @if(p.CanEdit)
+                                    {
+
+                                      <li><button class="dropdown-item text-warning" onclick="openDialogFromData(this)" data-url="EditProduct" data-user-id="@protector.Protect(p.PublicId.ToString())" data-dialog-id="EditProductDialog"><i class=" bi bi-edit"></i>Edit</button></li>
+                                        
+                                    }
+
+  
+                                       @if(p.CanPrint)
+                                       {
+<li>
+                                        <button type="button" class="dropdown-item text-primary" onclick="printMemoIframe('@protector.Protect(p.PublicId.ToString())')">
+                                            <i class="bi bi-printer"></i>Print
+                                                    </button>
+                                                </li>
+                                       }
+
+                                          
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li>
+                                                <button type="button" class="dropdown-item text-danger"><i class="bi bi-trash"></i>Delete</button>
+                                            </li>
+                                            </ul>
+                                    </div>
+
+
+                                </td>     
+                            </tr>
+                            count++;
+                        }
+                </tbody>
+            </table>
+       </div>
+    
+
+    
+    <div class="card-footer rounded-bottom-5 border-0 text-muted small">
+        <span>@Model.Count().ToString() product(s) &nbsp;|&nbsp;</span>
+        Stock cost value: <strong></strong> &nbsp;|&nbsp;
+        Retail value: <strong></strong>
+            </div>
+</div>
+</div>
+</div>
+
+<iframe id="printFrame" style="display:none;"></iframe>
+@section scripts {
+<script type="text/javascript">
+    function printMemoIframe(memoId) {
+        const printFrame = document.getElementById('printFrame');
+        printFrame.src = `/Memo/PrintMemo?Id=${memoId}`;
+        printFrame.onload = function () {
+            printFrame.contentWindow.focus();
+            printFrame.contentWindow.print();
+        };
+    };
+
+    document.addEventListener("DOMContentLoaded", (function() {
+          $('#productsTable').DataTable({
+            pageLength: 5,
+            lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+            order: [[4, 'desc']],
+            columnDefs: [
+              { orderable: false, targets: 5 }
+            ],
+            language: {
+              search: "Search:",
+              lengthMenu: "Show _MENU_ products",
+              info: "Showing _START_ to _END_ of _TOTAL_ products",
+              infoEmpty: "No product found",
+              infoFiltered: "(filtered from _MAX_ total products)",
+              zeroRecords: "No product found"
+            },
+             dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+               '<"row"<"col-sm-12"tr>>' +
+                  '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>'
+          })}))
+    
+          
+</script>
+}
+@await Component.InvokeAsync(nameof(AddPatient))
+<dialog id="EditProductDialog"><div id="EditProductDialogContent"></div></dialog>
+
+
+
+
+
