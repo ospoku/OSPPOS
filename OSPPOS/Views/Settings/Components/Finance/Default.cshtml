@@ -1,0 +1,627 @@
+﻿<div class="d-flex justify-content-center">
+    <div class="card-custom col-md-10 col-lg-8">
+        <div class="card-header-custom">
+            <h4 class="mb-0"><i class="bi bi-wallet2"></i> Financial Settings</h4>
+            <small class="text-light">Configure system-wide financial preferences</small>
+        </div>
+        <div class="card-body-custom p-4">
+            <form id="financialSettingsForm" method="post" action="@Url.Action("UpdateFinancialSettings", "Settings")">
+                @Html.AntiForgeryToken()
+
+                <!-- ==================== CURRENCY SETTINGS ==================== -->
+                <h5 class="border-bottom pb-2 mb-3">
+                    <i class="bi bi-currency-dollar"></i> Currency Settings
+                </h5>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="did-floating-label-content">
+                            <select class="did-floating-select" id="currencyCode" name="CurrencyCode">
+                                <option value="USD" selected="@(Model?.CurrencyCode == "USD")">USD - US Dollar</option>
+                                <option value="EUR" selected="@(Model?.CurrencyCode == "EUR")">EUR - Euro</option>
+                                <option value="GBP" selected="@(Model?.CurrencyCode == "GBP")">GBP - British Pound</option>
+                                <option value="CAD" selected="@(Model?.CurrencyCode == "CAD")">CAD - Canadian Dollar</option>
+                                <option value="AUD" selected="@(Model?.CurrencyCode == "AUD")">AUD - Australian Dollar</option>
+                                <option value="JPY" selected="@(Model?.CurrencyCode == "JPY")">JPY - Japanese Yen</option>
+                                <option value="CNY" selected="@(Model?.CurrencyCode == "CNY")">CNY - Chinese Yuan</option>
+                                <option value="INR" selected="@(Model?.CurrencyCode == "INR")">INR - Indian Rupee</option>
+                                <option value="NGN" selected="@(Model?.CurrencyCode == "NGN")">NGN - Nigerian Naira</option>
+                                <option value="ZAR" selected="@(Model?.CurrencyCode == "ZAR")">ZAR - South African Rand</option>
+                            </select>
+                            <label for="currencyCode" class="did-floating-label">
+                                <i class="bi bi-currency-dollar"></i> Currency <span class="text-danger">*</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="did-floating-label-content">
+                            <input type="text" class="did-floating-input" id="currencySymbol" name="CurrencySymbol"
+                                   placeholder=" " value="@Model?.CurrencySymbol ?? " $"" />
+                            <label for="currencySymbol" class="did-floating-label">
+                                <i class="bi bi-hash"></i> Currency Symbol <span class="text-danger">*</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="did-floating-label-content">
+                            <select class="did-floating-select" id="decimalPlaces" name="DecimalPlaces">
+                                <option value="0" selected="@(Model?.DecimalPlaces == 0)">0 (No decimals)</option>
+                                <option value="2" selected="@(Model?.DecimalPlaces == 2)">2 (Standard)</option>
+                                <option value="3" selected="@(Model?.DecimalPlaces == 3)">3 (Precision)</option>
+                                <option value="4" selected="@(Model?.DecimalPlaces == 4)">4 (High precision)</option>
+                            </select>
+                            <label for="decimalPlaces" class="did-floating-label">
+                                <i class="bi bi-123"></i> Decimal Places
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="did-floating-label-content">
+                            <input type="text" class="did-floating-input" id="thousandSeparator" name="ThousandSeparator"
+                                   placeholder=" " value="@Model?.ThousandSeparator ?? " ,"" maxlength="1" />
+                            <label for="thousandSeparator" class="did-floating-label">
+                                <i class="bi bi-commas"></i> Thousand Separator
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="did-floating-label-content">
+                            <input type="text" class="did-floating-input" id="decimalSeparator" name="DecimalSeparator"
+                                   placeholder=" " value="@Model?.DecimalSeparator ?? " ." maxlength="1" />
+                            <label for="decimalSeparator" class="did-floating-label">
+                                <i class="bi bi-dot"></i> Decimal Separator
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="currencyPosition" name="CurrencyPosition"
+                                   @(Model?.CurrencyPosition == "left" ? "checked" : "") />
+                            <label class="form-check-label" for="currencyPosition">
+                                <i class="bi bi-arrow-left"></i> Show currency symbol on left
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="spaceBetweenCurrency" name="SpaceBetweenCurrency"
+                                   @(Model?.SpaceBetweenCurrency == true ? "checked" : "") />
+                            <label class="form-check-label" for="spaceBetweenCurrency">
+                                <i class="bi bi-arrows-expand"></i> Add space between currency and amount
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== TAX SETTINGS ==================== -->
+                <h5 class="border-bottom pb-2 mb-3 mt-4">
+                    <i class="bi bi-receipt"></i> Tax Settings
+                </h5>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="did-floating-label-content">
+                            <input type="text" class="did-floating-input" id="taxName" name="TaxName"
+                                   placeholder=" " value="@Model?.TaxName ?? " VAT"" />
+                            <label for="taxName" class="did-floating-label">
+                                <i class="bi bi-tag"></i> Tax Name/Label
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="did-floating-label-content">
+                            <input type="text" class="did-floating-input" id="taxId" name="TaxId"
+                                   placeholder=" " value="@Model?.TaxId" />
+                            <label for="taxId" class="did-floating-label">
+                                <i class="bi bi-credit-card"></i> Tax ID / VAT Number
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="did-floating-label-content">
+                            <input type="number" class="did-floating-input" id="defaultTaxRate" name="DefaultTaxRate"
+                                   placeholder=" " value="@Model?.DefaultTaxRate ?? 0" step="0.01" min="0" max="100" />
+                            <label for="defaultTaxRate" class="did-floating-label">
+                                <i class="bi bi-percent"></i> Default Tax Rate (%)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="did-floating-label-content">
+                            <select class="did-floating-select" id="taxCalculationMethod" name="TaxCalculationMethod">
+                                <option value="exclusive" selected="@(Model?.TaxCalculationMethod == "exclusive")">Exclusive (Add to price)</option>
+                                <option value="inclusive" selected="@(Model?.TaxCalculationMethod == "inclusive")">Inclusive (Included in price)</option>
+                            </select>
+                            <label for="taxCalculationMethod" class="did-floating-label">
+                                <i class="bi bi-calculator"></i> Tax Calculation Method
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="did-floating-label-content">
+                            <select class="did-floating-select" id="taxRounding" name="TaxRounding">
+                                <option value="nearest" selected="@(Model?.TaxRounding == "nearest")">Nearest</option>
+                                <option value="up" selected="@(Model?.TaxRounding == "up")">Round Up</option>
+                                <option value="down" selected="@(Model?.TaxRounding == "down")">Round Down</option>
+                            </select>
+                            <label for="taxRounding" class="did-floating-label">
+                                <i class="bi bi-arrow-up-down"></i> Tax Rounding
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="taxPerItem" name="TaxPerItem"
+                                   @(Model?.TaxPerItem == true ? "checked" : "") />
+                            <label class="form-check-label" for="taxPerItem">
+                                <i class="bi bi-box"></i> Apply tax per item (vs subtotal)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="showTaxBreakdown" name="ShowTaxBreakdown"
+                                   @(Model?.ShowTaxBreakdown == true ? "checked" : "") />
+                            <label class="form-check-label" for="showTaxBreakdown">
+                                <i class="bi bi-eye"></i> Show tax breakdown on invoices
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== INVOICE SETTINGS ==================== -->
+                <h5 class="border-bottom pb-2 mb-3 mt-4">
+                    <i class="bi bi-file-text"></i> Invoice Settings
+                </h5>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="did-floating-label-content">
+                            <input type="text" class="did-floating-input" id="invoicePrefix" name="InvoicePrefix"
+                                   placeholder=" " value="@Model?.InvoicePrefix ?? " INV-"" />
+                            <label for="invoicePrefix" class="did-floating-label">
+                                <i class="bi bi-hash"></i> Invoice Number Prefix
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="did-floating-label-content">
+                            <input type="number" class="did-floating-input" id="invoiceStartNumber" name="InvoiceStartNumber"
+                                   placeholder=" " value="@Model?.InvoiceStartNumber ?? 1001" />
+                            <label for="invoiceStartNumber" class="did-floating-label">
+                                <i class="bi bi-123"></i> Starting Invoice Number
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="did-floating-label-content">
+                            <select class="did-floating-select" id="invoiceDateFormat" name="InvoiceDateFormat">
+                                <option value="MM/dd/yyyy" selected="@(Model?.InvoiceDateFormat == "MM/dd/yyyy")">MM/dd/yyyy</option>
+                                <option value="dd/MM/yyyy" selected="@(Model?.InvoiceDateFormat == "dd/MM/yyyy")">dd/MM/yyyy</option>
+                                <option value="yyyy-MM-dd" selected="@(Model?.InvoiceDateFormat == "yyyy-MM-dd")">yyyy-MM-dd</option>
+                                <option value="dd MMM yyyy" selected="@(Model?.InvoiceDateFormat == "dd MMM yyyy")">dd MMM yyyy</option>
+                                <option value="MMMM dd, yyyy" selected="@(Model?.InvoiceDateFormat == "MMMM dd, yyyy")">MMMM dd, yyyy</option>
+                            </select>
+                            <label for="invoiceDateFormat" class="did-floating-label">
+                                <i class="bi bi-calendar"></i> Invoice Date Format
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="did-floating-label-content">
+                            <select class="did-floating-select" id="paymentTerms" name="PaymentTerms">
+                                <option value="0" selected="@(Model?.PaymentTerms == 0)">Due on Receipt</option>
+                                <option value="7" selected="@(Model?.PaymentTerms == 7)">Net 7</option>
+                                <option value="14" selected="@(Model?.PaymentTerms == 14)">Net 14</option>
+                                <option value="30" selected="@(Model?.PaymentTerms == 30)">Net 30</option>
+                                <option value="45" selected="@(Model?.PaymentTerms == 45)">Net 45</option>
+                                <option value="60" selected="@(Model?.PaymentTerms == 60)">Net 60</option>
+                                <option value="90" selected="@(Model?.PaymentTerms == 90)">Net 90</option>
+                            </select>
+                            <label for="paymentTerms" class="did-floating-label">
+                                <i class="bi bi-clock"></i> Default Payment Terms
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="autoGenerateInvoice" name="AutoGenerateInvoice"
+                                   @(Model?.AutoGenerateInvoice == true ? "checked" : "") />
+                            <label class="form-check-label" for="autoGenerateInvoice">
+                                <i class="bi bi-auto"></i> Auto-generate invoice numbers
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="sendInvoiceEmail" name="SendInvoiceEmail"
+                                   @(Model?.SendInvoiceEmail == true ? "checked" : "") />
+                            <label class="form-check-label" for="sendInvoiceEmail">
+                                <i class="bi bi-envelope"></i> Auto-email invoices
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="includeLogo" name="IncludeLogo"
+                                   @(Model?.IncludeLogo == true ? "checked" : "") />
+                            <label class="form-check-label" for="includeLogo">
+                                <i class="bi bi-image"></i> Include logo on invoices
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== PAYMENT GATEWAY SETTINGS ==================== -->
+                <h5 class="border-bottom pb-2 mb-3 mt-4">
+                    <i class="bi bi-credit-card"></i> Payment Gateway Settings
+                </h5>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="did-floating-label-content">
+                            <select class="did-floating-select" id="primaryGateway" name="PrimaryGateway">
+                                <option value="stripe" selected="@(Model?.PrimaryGateway == "stripe")">Stripe</option>
+                                <option value="paypal" selected="@(Model?.PrimaryGateway == "paypal")">PayPal</option>
+                                <option value="square" selected="@(Model?.PrimaryGateway == "square")">Square</option>
+                                <option value="flutterwave" selected="@(Model?.PrimaryGateway == "flutterwave")">Flutterwave</option>
+                                <option value="paystack" selected="@(Model?.PrimaryGateway == "paystack")">Paystack</option>
+                                <option value="razorpay" selected="@(Model?.PrimaryGateway == "razorpay")">Razorpay</option>
+                                <option value="none" selected="@(Model?.PrimaryGateway == "none")">None (Cash/Manual only)</option>
+                            </select>
+                            <label for="primaryGateway" class="did-floating-label">
+                                <i class="bi bi-plug"></i> Primary Payment Gateway
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="did-floating-label-content">
+                            <select class="did-floating-select" id="secondaryGateway" name="SecondaryGateway">
+                                <option value="none" selected="@(Model?.SecondaryGateway == "none")">None</option>
+                                <option value="stripe" selected="@(Model?.SecondaryGateway == "stripe")">Stripe</option>
+                                <option value="paypal" selected="@(Model?.SecondaryGateway == "paypal")">PayPal</option>
+                                <option value="square" selected="@(Model?.SecondaryGateway == "square")">Square</option>
+                                <option value="flutterwave" selected="@(Model?.SecondaryGateway == "flutterwave")">Flutterwave</option>
+                                <option value="paystack" selected="@(Model?.SecondaryGateway == "paystack")">Paystack</option>
+                            </select>
+                            <label for="secondaryGateway" class="did-floating-label">
+                                <i class="bi bi-plug"></i> Backup Payment Gateway
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="did-floating-label-content">
+                            <input type="text" class="did-floating-input" id="gatewayApiKey" name="GatewayApiKey"
+                                   placeholder=" " value="@Model?.GatewayApiKey" />
+                            <label for="gatewayApiKey" class="did-floating-label">
+                                <i class="bi bi-key"></i> API Key (Public)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="did-floating-label-content">
+                            <input type="password" class="did-floating-input" id="gatewaySecretKey" name="GatewaySecretKey"
+                                   placeholder=" " value="@Model?.GatewaySecretKey" />
+                            <label for="gatewaySecretKey" class="did-floating-label">
+                                <i class="bi bi-shield-lock"></i> Secret Key (Private)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="enableTestMode" name="EnableTestMode"
+                                   @(Model?.EnableTestMode == true ? "checked" : "") />
+                            <label class="form-check-label" for="enableTestMode">
+                                <i class="bi bi-flask"></i> Enable Test/Sandbox Mode
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="allowMultipleGateways" name="AllowMultipleGateways"
+                                   @(Model?.AllowMultipleGateways == true ? "checked" : "") />
+                            <label class="form-check-label" for="allowMultipleGateways">
+                                <i class="bi bi-grid"></i> Allow multiple gateways
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="saveCards" name="SaveCards"
+                                   @(Model?.SaveCards == true ? "checked" : "") />
+                            <label class="form-check-label" for="saveCards">
+                                <i class="bi bi-card-list"></i> Allow saved cards
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== FISCAL YEAR ==================== -->
+                <h5 class="border-bottom pb-2 mb-3 mt-4">
+                    <i class="bi bi-calendar2-week"></i> Fiscal Year Settings
+                </h5>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="did-floating-label-content">
+                            <select class="did-floating-select" id="fiscalYearStart" name="FiscalYearStart">
+                                <option value="1" selected="@(Model?.FiscalYearStart == 1)">January</option>
+                                <option value="2" selected="@(Model?.FiscalYearStart == 2)">February</option>
+                                <option value="3" selected="@(Model?.FiscalYearStart == 3)">March</option>
+                                <option value="4" selected="@(Model?.FiscalYearStart == 4)">April</option>
+                                <option value="5" selected="@(Model?.FiscalYearStart == 5)">May</option>
+                                <option value="6" selected="@(Model?.FiscalYearStart == 6)">June</option>
+                                <option value="7" selected="@(Model?.FiscalYearStart == 7)">July</option>
+                                <option value="8" selected="@(Model?.FiscalYearStart == 8)">August</option>
+                                <option value="9" selected="@(Model?.FiscalYearStart == 9)">September</option>
+                                <option value="10" selected="@(Model?.FiscalYearStart == 10)">October</option>
+                                <option value="11" selected="@(Model?.FiscalYearStart == 11)">November</option>
+                                <option value="12" selected="@(Model?.FiscalYearStart == 12)">December</option>
+                            </select>
+                            <label for="fiscalYearStart" class="did-floating-label">
+                                <i class="bi bi-calendar2"></i> Fiscal Year Start Month
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="did-floating-label-content">
+                            <select class="did-floating-select" id="accountingMethod" name="AccountingMethod">
+                                <option value="accrual" selected="@(Model?.AccountingMethod == "accrual")">Accrual</option>
+                                <option value="cash" selected="@(Model?.AccountingMethod == "cash")">Cash</option>
+                            </select>
+                            <label for="accountingMethod" class="did-floating-label">
+                                <i class="bi bi-book"></i> Accounting Method
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="did-floating-label-content">
+                            <select class="did-floating-select" id="reportingCurrency" name="ReportingCurrency">
+                                <option value="USD" selected="@(Model?.ReportingCurrency == "USD")">USD - US Dollar</option>
+                                <option value="EUR" selected="@(Model?.ReportingCurrency == "EUR")">EUR - Euro</option>
+                                <option value="GBP" selected="@(Model?.ReportingCurrency == "GBP")">GBP - British Pound</option>
+                            </select>
+                            <label for="reportingCurrency" class="did-floating-label">
+                                <i class="bi bi-currency-exchange"></i> Reporting Currency
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== FORM ACTIONS ==================== -->
+                <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                    <button type="button" class="btn btn-secondary" onclick="window.history.back()">
+                        <i class="bi bi-x-circle"></i> Cancel
+                    </button>
+                    <button type="reset" class="btn btn-warning">
+                        <i class="bi bi-arrow-counterclockwise"></i> Reset
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Save Financial Settings
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Floating Label Styles -->
+<style>
+    .did-floating-label-content {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .did-floating-input,
+    .did-floating-select {
+        width: 100%;
+        height: 52px;
+        padding: 14px 12px 0 12px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        background: #fff;
+        font-size: 15px;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        color: #212529;
+    }
+
+        .did-floating-input:focus,
+        .did-floating-select:focus {
+            border-color: #0d6efd;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+
+    .did-floating-label {
+        position: absolute;
+        top: 16px;
+        left: 12px;
+        font-weight: normal;
+        color: #6c757d;
+        pointer-events: none;
+        transition: all 0.2s ease-in-out;
+        background-color: transparent;
+        padding: 0 4px;
+        font-size: 15px;
+    }
+
+    .did-floating-input:focus ~ .did-floating-label,
+    .did-floating-input:not(:placeholder-shown) ~ .did-floating-label,
+    .did-floating-select:focus ~ .did-floating-label,
+    .did-floating-select:not([value=""]):valid ~ .did-floating-label {
+        top: 6px;
+        font-size: 11px;
+        color: #0d6efd;
+        background-color: #fff;
+    }
+
+    .did-floating-input:focus ~ .did-floating-label {
+        color: #0d6efd;
+    }
+
+    .did-floating-input:not(:placeholder-shown) ~ .did-floating-label {
+        color: #495057;
+    }
+
+    .did-floating-select:focus ~ .did-floating-label {
+        color: #0d6efd;
+    }
+
+    .card-custom {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+        margin: 20px 0;
+    }
+
+    .card-header-custom {
+        background: linear-gradient(135deg, #0d6efd, #0a58ca);
+        color: white;
+        padding: 18px 24px;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .card-body-custom {
+        padding: 20px 24px 30px;
+    }
+
+    .form-check {
+        padding-top: 8px;
+    }
+
+    .form-check-input {
+        margin-top: 8px;
+    }
+
+    .form-check-label {
+        font-weight: 400;
+        color: #495057;
+    }
+
+    h5 i {
+        color: #0d6efd;
+    }
+
+    .border-bottom {
+        border-color: #e9ecef !important;
+    }
+
+    @@media (max-width: 768px) {
+        .card-body-custom
+
+    {
+        padding: 16px;
+    }
+
+    .did-floating-input,
+    .did-floating-select {
+        height: 46px;
+        font-size: 14px;
+    }
+
+    .did-floating-label {
+        top: 14px;
+        font-size: 14px;
+    }
+
+    .did-floating-input:focus ~ .did-floating-label,
+    .did-floating-input:not(:placeholder-shown) ~ .did-floating-label {
+        top: 5px;
+        font-size: 10px;
+    }
+
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle select elements for floating labels
+        document.querySelectorAll('.did-floating-select').forEach(select => {
+            if (select.value && select.value !== '') {
+                select.classList.add('has-value');
+            }
+
+            select.addEventListener('change', function() {
+                if (this.value && this.value !== '') {
+                    this.classList.add('has-value');
+                } else {
+                    this.classList.remove('has-value');
+                }
+            });
+        });
+
+        // Form validation
+        const form = document.getElementById('financialSettingsForm');
+
+        form.addEventListener('submit', function(e) {
+            const currencyCode = document.getElementById('currencyCode');
+            const currencySymbol = document.getElementById('currencySymbol');
+            const defaultTaxRate = document.getElementById('defaultTaxRate');
+            let isValid = true;
+
+            // Validate currency code
+            if (!currencyCode.value) {
+                currencyCode.style.borderColor = '#dc3545';
+                isValid = false;
+            } else {
+                currencyCode.style.borderColor = '#ced4da';
+            }
+
+            // Validate currency symbol
+            if (!currencySymbol.value.trim()) {
+                currencySymbol.style.borderColor = '#dc3545';
+                isValid = false;
+            } else {
+                currencySymbol.style.borderColor = '#ced4da';
+            }
+
+            // Validate tax rate
+            if (defaultTaxRate.value && (parseFloat(defaultTaxRate.value) < 0 || parseFloat(defaultTaxRate.value) > 100)) {
+                defaultTaxRate.style.borderColor = '#dc3545';
+                isValid = false;
+            } else {
+                defaultTaxRate.style.borderColor = '#ced4da';
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+                alert('Please fix the highlighted fields before submitting.');
+            }
+        });
+
+        // Remove error styling on input
+        document.querySelectorAll('.did-floating-input, .did-floating-select').forEach(input => {
+            input.addEventListener('input', function() {
+                this.style.borderColor = '#ced4da';
+            });
+            input.addEventListener('change', function() {
+                this.style.borderColor = '#ced4da';
+            });
+        });
+    });
+</script>
