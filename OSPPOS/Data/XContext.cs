@@ -27,7 +27,7 @@ namespace OSPPOS.Data
        public DbSet<Category> Categories { get; set; }
       
         public DbSet<Permission> Permissions { get; set; }
-     
+     public DbSet<InvoiceItem> InvoiceItems { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<StockBatch> StockBatches { get; set; }

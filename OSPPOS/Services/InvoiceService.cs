@@ -44,6 +44,66 @@ namespace OSPPOS.Services
                 return (false, fullError, null);
             }  
         }
+
+        public async Task<(bool Success, string Error, Invoice? Invoice)> AddInvoiceAsync(
+    AddInvoiceDTO dto,
+    ClaimsPrincipal user)
+        {
+            using var transaction = await ctx.Database.BeginTransactionAsync();
+
+            try
+            {
+                var invoiceNumber = await GenerateInvoiceNumberAsync();
+
+                Invoice invoice = new()
+                {
+                    CustomerId = dto.CustomerId,
+                    Discount = dto.Discount,
+                    DueDate = dto.DueDate,
+                    Notes = dto.Notes,
+                    InvoiceNumber = invoiceNumber,
+                    InvoiceDate = DateTime.UtcNow,
+                    WalkInCustomerName = dto.WalkInCustomer
+                };
+
+                ctx.Invoices.Add(invoice);
+                await ctx.SaveChangesAsync();
+
+                // 🔥 HANDLE ITEMS + STOCK
+                foreach (var item in dto.Items)
+                {
+                    var product = await ctx.Products.FindAsync(item.ProductId);
+
+                    if (product == null)
+                        throw new Exception($"Product {item.ProductId} not found");
+
+                    if (product.Quantity < item.Quantity)
+                        throw new Exception($"Not enough stock for {product.Name}");
+
+                    // Reduce stock
+                    product.Quantity -= item.Quantity;
+
+                    // Add invoice item
+                    ctx.InvoiceItems.Add(new InvoiceItem
+                    {
+                        InvoiceId = invoice.Id,
+                        ProductId = item.ProductId,
+                        Quantity = item.Quantity,
+                        Price = product.Price
+                    });
+                }
+
+                await ctx.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return (true, "", invoice);
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return (false, ex.ToString(), null);
+            }
+        }
         public Task<List<SaleOrder>> GetOrdersAsync(DateTime? from, DateTime? to, PaymentStatus? status, SaleType? type)
         {
             throw new NotImplementedException();
