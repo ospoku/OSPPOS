@@ -54,11 +54,7 @@ namespace OSPPOS.Services
                 var fullError = ex.ToString(); // includes stack trace
                 return (false, fullError, null);
             }
-
-          
         }
-
-
 
         public Task<string> GenerateOrderNumberAsync()
         {

@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations;
         [Key]
             public int Id { get; set; }
 
-            public string InvoiceNumber { get; set; } = string.Empty;
+            public string InvoiceNumber { get; set; }
 
             public DateTime InvoiceDate { get; set; }
             public DateTime? DueDate { get; set; }
@@ -40,10 +40,7 @@ using System.ComponentModel.DataAnnotations;
         public string? Notes { get; set; }
     }
 
-
-
-    
-        public class InvoiceItem
+        public class InvoiceItem:TableAudit
         {
             [Key]
             public int Id { get; set; }

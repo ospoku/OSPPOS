@@ -14,96 +14,165 @@ namespace OSPPOS.Services
 {
     public class InvoiceService(XContext ctx, EntityService entityService) : IInvoiceService
     {
-        public async Task<(bool Success, string Error, Invoice? Invoice)> AddInvoiceAsync(AddInvoiceDTO addInvoiceDTO, ClaimsPrincipal user)
+    //    public async Task<(bool Success, string Error, Invoice? Invoice)> AddInvoiceAsync(AddInvoiceDTO addInvoiceDTO, ClaimsPrincipal user)
+    //    {
+    //        try
+    //        {
+    //            Invoice addThisInvoice = new()
+    //            {
+    //                CustomerId = addInvoiceDTO.CustomerId,
+    //                Discount = addInvoiceDTO.Discount,
+    //                DueDate = addInvoiceDTO.DueDate,
+    //                Notes = addInvoiceDTO.Notes,
+    //                InvoiceNumber = addInvoiceDTO.InvoiceNumber,
+    //                InvoiceDate = addInvoiceDTO.InvoiceDate,
+    //                WalkInCustomerName = addInvoiceDTO.WalkInCustomer
+    //};
+    //            bool result = await entityService.AddEntityAsync(addThisInvoice, user);
+    //            if (!result)
+    //            {
+    //                return (false, "Error!", null);
+    //            }
+    //            else
+    //            {
+    //                return (true, "", addThisInvoice);
+    //            }
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            var fullError = ex.ToString(); // includes stack trace
+    //            return (false, fullError, null);
+    //        }  
+    //    }
+
+    //    public async Task<(bool Success, string Error, Invoice? Invoice)> AddInvoiceAsync(
+    //AddInvoiceDTO addInvoiceDTO,
+    //ClaimsPrincipal user)
+    //    {
+    //        using var transaction = await ctx.Database.BeginTransactionAsync();
+
+    //        try
+    //        {
+
+
+    //            Invoice addThisInvoice = new()
+    //            {
+    //                CustomerId = addInvoiceDTO.CustomerId,
+    //                Discount = addInvoiceDTO.Discount,
+    //                DueDate = addInvoiceDTO.DueDate,
+    //                Notes = addInvoiceDTO.Notes,
+
+    //                InvoiceDate = DateTime.UtcNow,
+    //                WalkInCustomerName = addInvoiceDTO.WalkInCustomer,
+    //                InvoiceNumber = addInvoiceDTO.InvoiceNumber
+    //            };
+    //            bool result = await entityService.AddEntityAsync(addThisInvoice, user);
+    //            if (!result)
+    //            {
+    //                return (false, "Error!", null);
+    //            }
+    //            else
+    //            {
+    //                return (true, "", addThisInvoice);
+    //            }
+
+    //            // 🔥 HANDLE ITEMS + STOCK
+    //            foreach (var item in addInvoiceDTO.Items)
+    //            {
+    //                var product = await ctx.Products.FindAsync(item.ProductId);
+
+    //                if (product == null)
+    //                    throw new Exception($"Product {item.ProductId} not found");
+
+    //                if (product.CurrentStock < item.Quantity)
+    //                    throw new Exception($"Not enough stock for {product.Name}");
+
+    //                // Reduce stock
+    //                product.CurrentStock -= item.Quantity;
+
+    //                // Add invoice item
+    //                ctx.InvoiceItems.Add(new InvoiceItem
+    //                {
+    //                    InvoiceId = invoice.Id,
+    //                    ProductId = item.ProductId,
+    //                    Quantity = item.Quantity,
+    //                    UnitPrice = product.CostPrice
+    //                });
+
+
+
+    //                await transaction.CommitAsync();
+
+    //                return (true, "", invoice);
+    //            }
+    //        }
+
+    //        catch (Exception ex)
+    //        {
+    //            await transaction.RollbackAsync();
+    //            return (false, ex.ToString(), null);
+    //        }
+    //    }
+
+        public async Task<(bool Success, string Error, Invoice? Invoice)> AddInvoiceAsync(
+    AddInvoiceDTO addInvoiceDTO,
+    ClaimsPrincipal user)
         {
-            try
-            {
+            using var transaction = await ctx.Database.BeginTransactionAsync();
+
+            //try
+            //{
                 Invoice addThisInvoice = new()
                 {
                     CustomerId = addInvoiceDTO.CustomerId,
                     Discount = addInvoiceDTO.Discount,
                     DueDate = addInvoiceDTO.DueDate,
                     Notes = addInvoiceDTO.Notes,
-                    InvoiceNumber = addInvoiceDTO.InvoiceNumber,
-                    InvoiceDate = addInvoiceDTO.InvoiceDate,
-                    WalkInCustomerName = addInvoiceDTO.WalkInCustomer
-    };
-                bool result = await entityService.AddEntityAsync(addThisInvoice, user);
-                if (!result)
-                {
-                    return (false, "Error!", null);
-                }
-                else
-                {
-                    return (true, "", addThisInvoice);
-                }
-            }
-            catch (Exception ex)
-            {
-                var fullError = ex.ToString(); // includes stack trace
-                return (false, fullError, null);
-            }  
-        }
-
-        public async Task<(bool Success, string Error, Invoice? Invoice)> AddInvoiceAsync(
-    AddInvoiceDTO dto,
-    ClaimsPrincipal user)
-        {
-            using var transaction = await ctx.Database.BeginTransactionAsync();
-
-            try
-            {
-                var invoiceNumber = await GenerateInvoiceNumberAsync();
-
-                Invoice invoice = new()
-                {
-                    CustomerId = dto.CustomerId,
-                    Discount = dto.Discount,
-                    DueDate = dto.DueDate,
-                    Notes = dto.Notes,
-                    InvoiceNumber = invoiceNumber,
                     InvoiceDate = DateTime.UtcNow,
-                    WalkInCustomerName = dto.WalkInCustomer
+                    WalkInCustomerName = addInvoiceDTO.WalkInCustomer,
+                    InvoiceNumber = addInvoiceDTO.InvoiceNumber
                 };
 
-                ctx.Invoices.Add(invoice);
-                await ctx.SaveChangesAsync();
+                bool result = await entityService.AddEntityAsync(addThisInvoice, user);
+
+                if (!result)
+                    return (false, "Error saving invoice", null);
 
                 // 🔥 HANDLE ITEMS + STOCK
-                foreach (var item in dto.Items)
+                foreach (var item in addInvoiceDTO.Items)
                 {
                     var product = await ctx.Products.FindAsync(item.ProductId);
 
                     if (product == null)
                         throw new Exception($"Product {item.ProductId} not found");
 
-                    if (product.Quantity < item.Quantity)
+                    if (product.CurrentStock < item.Quantity)
                         throw new Exception($"Not enough stock for {product.Name}");
 
                     // Reduce stock
-                    product.Quantity -= item.Quantity;
+                    product.CurrentStock -= item.Quantity;
 
                     // Add invoice item
-                    ctx.InvoiceItems.Add(new InvoiceItem
+                    addThisInvoice.Items.Add(new InvoiceItem
                     {
-                        InvoiceId = invoice.Id,
                         ProductId = item.ProductId,
                         Quantity = item.Quantity,
-                        Price = product.Price
+                        UnitPrice = product.CostPrice,
+                        
                     });
                 }
 
-                await ctx.SaveChangesAsync();
+           
                 await transaction.CommitAsync();
 
-                return (true, "", invoice);
+                return (true, "", addThisInvoice);
             }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                return (false, ex.ToString(), null);
-            }
-        }
+            //catch (Exception ex)
+            //{
+            //    await transaction.RollbackAsync();
+            //    return (false, ex.Message, null);
+            //}
+        //}
         public Task<List<SaleOrder>> GetOrdersAsync(DateTime? from, DateTime? to, PaymentStatus? status, SaleType? type)
         {
             throw new NotImplementedException();

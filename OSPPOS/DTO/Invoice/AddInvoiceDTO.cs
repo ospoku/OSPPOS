@@ -13,7 +13,7 @@ namespace OSPPOS.DTO.Invoice
     
         public int CustomerId { get; set; }
 
-     
+        public List<AddInvoiceItemDTO> Items { get; set; } = [];
         public string? Notes { get; set; }
         public string InvoiceNumber { get; set; } = string.Empty;
         public decimal Discount { get; set; }
