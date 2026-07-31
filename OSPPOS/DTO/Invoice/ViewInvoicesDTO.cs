@@ -1,4 +1,5 @@
-﻿using OSPPOS.Models;
+﻿
+using OSPPOS.Models;
 
 namespace OSPPOS.DTO.Invoice
 {
@@ -22,7 +23,7 @@ namespace OSPPOS.DTO.Invoice
 
         // Relationships
         public ICollection<InvoiceItem> Items { get; set; } = [];
-        public ICollection<Payment> Payments { get; set; } = [];
+        public ICollection<OSPPOS.Models.Payment> Payments { get; set; } = [];
 
         // Discounts
         public decimal Discount { get; set; } = 0;

@@ -51,12 +51,15 @@
                     </tr>
                 </thead>
                 <tbody>
+                        @{
+                            var count = 1;
+                        }
                   
   @foreach (var i in Model)
                 {
                             <tr>
-                              <td></td>
-                        <td>@i.InvoiceDate</td>
+                              <td>@count</td>
+                        <td>@i.InvoiceDate.ToString("yyyy-MMM-dd HH:mm:ss")</td>
                         <td class="text-muted small">@i.InvoiceNumber</td>
                         <td class="ellipsed-text">
                           
@@ -117,7 +120,9 @@
                                     </div>
                         </td>
                     </tr>
+                            count ++;
              }
+            
                 </tbody>
             </table>
        </div>

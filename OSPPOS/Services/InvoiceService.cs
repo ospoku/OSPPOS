@@ -133,10 +133,7 @@ namespace OSPPOS.Services
                     InvoiceNumber = addInvoiceDTO.InvoiceNumber
                 };
 
-                bool result = await entityService.AddEntityAsync(addThisInvoice, user);
-
-                if (!result)
-                    return (false, "Error saving invoice", null);
+       
 
                 // 🔥 HANDLE ITEMS + STOCK
                 foreach (var item in addInvoiceDTO.Items)
@@ -162,8 +159,11 @@ namespace OSPPOS.Services
                     });
                 }
 
-           
-                await transaction.CommitAsync();
+           await entityService.SaveAsync(user);
+
+       
+
+            await transaction.CommitAsync();
 
                 return (true, "", addThisInvoice);
             }

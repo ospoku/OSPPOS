@@ -1,6 +1,6 @@
 ﻿namespace OSPPOS.ViewModels
 {
-    public class CustomerSelectListVM
+    public class ViewCustomerSettingsVM
     {
        
             public int CustomerId { get; set; }

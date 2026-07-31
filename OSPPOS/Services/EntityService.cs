@@ -50,8 +50,15 @@ namespace OSPPOS.Services
                 return false;
             }
         }
- 
-       
+        public async Task<bool> SaveAsync(ClaimsPrincipal userClaim)
+        {
+            var user = await usm.GetUserAsync(userClaim);
+            if (user == null)
+                return false;
+
+            return await dcx.SaveChangesAsync(user.Id) > 0;
+        }
+
         public async Task<bool> DeleteEntityAsync<T>(T model, ClaimsPrincipal userClaim) where T : class
         {
             var user = await usm.GetUserAsync(userClaim);
