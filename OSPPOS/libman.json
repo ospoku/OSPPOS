@@ -38,6 +38,10 @@
     {
       "library": "datatables.net-rowgroup@1.6.0",
       "destination": "wwwroot/lib/datatables.net-rowgroup/"
+    },
+    {
+      "library": "gridjs@6.2.0",
+      "destination": "wwwroot/lib/gridjs/"
     }
   ]
 }
