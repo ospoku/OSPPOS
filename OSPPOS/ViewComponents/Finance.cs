@@ -2,7 +2,7 @@
 
 namespace OSPPOS.ViewComponents
 {
-    public class ErrorPage : ViewComponent
+    public class Finance:ViewComponent
     {
         public IViewComponentResult Invoke()
         {

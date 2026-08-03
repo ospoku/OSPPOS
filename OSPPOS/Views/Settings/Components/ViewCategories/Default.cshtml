@@ -11,7 +11,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@model IEnumerable<OSPPOS.ViewModels.ViewCustomersVM>;
+@model IEnumerable<OSPPOS.ViewModels.ViewCategoriesVM>;
 @inject Microsoft.AspNetCore.DataProtection.IDataProtectionProvider DataProtectionProvider
 
 @{
@@ -38,13 +38,9 @@
                             <th>Phone</th>
                             <th>Email</th>
                             <th>Address</th>
-                            <th>Tax Number</th>
+                        
                             <th>IsActive</th>
-                            <th>Allow Credit</th>
-                            <th>Credit Limit</th>
-                            <th>Sales Order</th>
-                            <th>Payments</th>
-                            <th>Total Debt</th>
+                        
                             <th class="text-end">Actions</th>
                         </tr>
                     </thead>
@@ -60,13 +56,9 @@
                             <td class="ellipsed-text">
                                 @customer.Address
                             </td>
-                            <td>@customer.TaxNumber</td>
+                          
                             <td ><span class="status-badge status-active">@customer.IsActive</span></td>
-                            <td>@customer.AllowCredit</td>
-                                <td>@customer.CreditLimit</td>
-                                <td>@customer.SaleOrders.Count()</td>
-                                <td>@customer.Payments.Count()</td>
-                                <td>@customer.TotalDebt</td>
+                          
                  
                                 <td>
                                 <div class="dropdown action-dropdown">
@@ -107,7 +99,7 @@
 
   </div>
 
-    @await Component.InvokeAsync(nameof(AddCustomer))
+     @await Component.InvokeAsync(nameof(AddCategory))
 
     <dialog id="EditCustomerDialog">
         <div id="EditCustomerDialogContent"></div>

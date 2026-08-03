@@ -2,8 +2,9 @@
 
 namespace OSPPOS.ViewComponents
 {
-    public class ErrorPage : ViewComponent
+    public class AddUnit:ViewComponent
     {
+
         public IViewComponentResult Invoke()
         {
             return View();

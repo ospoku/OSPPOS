@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
 using OSPPOS.Data;
 using OSPPOS.Helpers;
 using OSPPOS.Models;
@@ -18,7 +17,7 @@ using System.Security.Claims;
 using System.Web;
 
 
-namespace DMX.Controllers
+namespace OSPPOS.Controllers
 {
     public class PermissionController(XContext xContext, UserManager<AppUser> userManager, RoleManager<AppRole> roleManager, SignInManager<AppUser> signinmanager, IWebHostEnvironment environment, EntityService entityService, INotyfService notyfService, IDataProtectionProvider dataProvider) : Controller
     {
@@ -284,7 +283,7 @@ namespace DMX.Controllers
         public async Task<IActionResult> ManageUserRoles(string Id, ManageUserRolesVM model)
         {
             var unprotectedId = protector.Unprotect(Id);
-            var user = await usm.FindByIdAsync((unprotectedId));
+            var user = await usm.FindByIdAsync(unprotectedId);
             var roles = await usm.GetRolesAsync(user);
             var result = await usm.RemoveFromRolesAsync(user, roles);
             result = await usm.AddToRolesAsync(user, model.UserRoles.Where(x => x.Selected).Select(y => y.RoleName));

@@ -1,12 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using OSPPOS.Models;
-using System.ComponentModel.DataAnnotations;
-
-
-
-
-namespace OSPPOS.ViewModels
+﻿namespace OSPPOS.ViewModels
 {
     public class ViewCategoriesVM
     {
@@ -18,15 +10,14 @@ namespace OSPPOS.ViewModels
         public string? Address { get; set; }
         public bool IsActive { get; set; } = true;
  
-        public ICollection<Product> Products { get; set; } = [];
-        public ICollection<StockBatch> StockBatches { get; set; } = [];
+    
         public bool CanEdit { get; set; }
         public bool CanDelete { get; set; }
         public bool CanInsert { get; set; } public bool CanUpdate { get; set; } 
         public bool CanPrint { get; set; }
         public Guid PublicId { get; set; }
-        public string Code { get; internal set; }
-        public string? Description { get; internal set; }
+        public string Code { get;  set; }
+        public string? Description { get;  set; }
     }
 }
 
