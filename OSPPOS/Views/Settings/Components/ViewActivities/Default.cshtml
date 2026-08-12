@@ -47,24 +47,24 @@
                         </tr>
                     </thead>
                     <tbody>
-                                     @foreach (var customer in Model)
+                                  @*    @foreach (var customer in Model) *@
                 {
                         <tr>
                             
-                                <td class="ellipsed-text">@customer.Name</td>
-                            <td class="ellipsed-text"> @customer.Phone</td>
+                                <td class="ellipsed-text"></td>
+                            <td class="ellipsed-text"></td>
 
-                            <td class="ellipsed-text">@customer.Email</td>
+                            <td class="ellipsed-text"></td>
                             <td class="ellipsed-text">
-                                @customer.Address
+                              
                             </td>
-                            <td>@customer.Phone</td>
-                            <td ><span class="status-badge status-active">@customer.IsActive</span></td>
-                            <td>@customer.Email</td>
-                                <td>@customer.Address</td>
-                                <td>@customer.Address</td>
-                                <td>@customer.Address</td>
-                                <td>@customer.Address</td>
+                            <td></td>
+                            <td ><span class="status-badge status-active"></span></td>
+                            <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                  
                                 <td>
                                 <div class="dropdown action-dropdown">
@@ -72,18 +72,18 @@
                                         Select Action
                                     </button>
                                     <ul class="dropdown-menu">
-                                            @if (customer.CanEdit)
-                                            {
+                                         @*    @if (customer.CanEdit)
+                                            { *@
 
-                                                <li onclick="openDialogFromData(this)" data-url="EditCustomer" data-user-id="@protector.Protect(customer.PublicId.ToString())" data-dialog-id="EditCustomerDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-edit mr-3 text-warning"></i>Edit</li>
-                                            }
-                                            @if (customer.CanPrint)
-                                            {
+                                                <li onclick="openDialogFromData(this)" data-url="EditCustomer" data-user-id="@protector.Protect("")" data-dialog-id="EditCustomerDialog" class="dropdown-item-custom"><i style="width:15px; height:15px" class=" fa fa-edit mr-3 text-warning"></i>Edit</li>
+                                        @*     } *@
+                                           @*  @if (customer.CanPrint)
+                                            { *@
 
-                                                <li type="button" class="dropdown-item-custom" onclick="printcustomerIframe('@protector.Protect(customer.PublicId.ToString())')">
+                                                <li type="button" class="dropdown-item-custom" onclick="printcustomerIframe('@protector.Protect("")">
                                                     <i style="width:15px; height:15px" class="fa fa-print mr-3 text-primary"></i>Print
                                                 </li>
-                                            }
+                                           @*  } *@
                                         <li><a class="dropdown-item" href="#"><i class="bi bi-pencil text-primary"></i> Edit</a></li>
                                         <li><a class="dropdown-item" href="#"><i class="bi bi-eye text-info"></i> View</a></li>
                                         <li><hr class="dropdown-divider"></li>
@@ -104,8 +104,7 @@
     </div>
 
   </div>
-@* 
-    @await Component.InvokeAsync(nameof(AddCustomer)) *@
+
 
     <dialog id="EditCustomerDialog">
         <div id="EditCustomerDialogContent"></div>
