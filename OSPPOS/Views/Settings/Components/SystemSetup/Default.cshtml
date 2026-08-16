@@ -1,4 +1,4 @@
-﻿@using DMX.ViewComponents
+﻿
 @using OSPPOS.ViewComponents
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -26,13 +26,13 @@
 
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#units" type="button" role="tab">
+        <button class="nav-link" id="units-tab" data-bs-toggle="tab" data-bs-target="#units" type="button" role="tab">
             <i class="bi bi-boxes"></i>Units <span class="badge">12</span>
         </button>
      
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="analytics-tab" data-bs-toggle="tab" data-bs-target="#analytics" type="button" role="tab">
+        <button class="nav-link" id="categories-tab" data-bs-toggle="tab" data-bs-target="#categories" type="button" role="tab">
             <i class="bi bi-grid"></i>Categories
         </button>
      
@@ -51,19 +51,19 @@
     </li>
    
         <li class="nav-item" role="presentation">
-        <button class="nav-link" id="organization-tab" data-bs-toggle="tab" data-bs-target="#customerSettings" type="button" role="tab">
+        <button class="nav-link" id="customersettings-tab" data-bs-toggle="tab" data-bs-target="#customerSettings" type="button" role="tab">
             <i class="bi bi-building"></i>Customer Settings
         </button>
 
     </li>
            <li class="nav-item" role="presentation">
-        <button class="nav-link" id="organization-tab" data-bs-toggle="tab" data-bs-target="#finance" type="button" role="tab">
+        <button class="nav-link" id="finance-tab" data-bs-toggle="tab" data-bs-target="#finance" type="button" role="tab">
             <i class="bi bi-coin"></i>Finance
         </button>
 
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="organization-tab" data-bs-toggle="tab" data-bs-target="backup" type="button" role="tab">
+        <button class="nav-link" id="backup-tab" data-bs-toggle="tab" data-bs-target="#backup" type="button" role="tab">
             <i class="bi bi-upload"></i>Backup
         </button>
 
@@ -92,7 +92,7 @@
     </div>
     <!-- ... other panes ... -->
 </div>
-@section scripts{
+ @section scripts{
     <script>
           document.addEventListener("DOMContentLoaded", (function() {
               $('#unitsTable').DataTable({
@@ -115,4 +115,4 @@
                      '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>'
               })}));
     </script>
-}
+} 

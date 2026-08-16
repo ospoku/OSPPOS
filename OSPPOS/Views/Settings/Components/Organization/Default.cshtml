@@ -1,70 +1,317 @@
-﻿
+﻿<style>
+    /* ========================================
+           COMPONENT STYLES (in-text for Organization form)
+           ======================================== */
+
+    /* ----- CARDS ----- */
+    .card-custom {
+        border: 1px solid #2d323a;
+        border-radius: 10px;
+        background: #1e2229;
+        transition: all 0.3s ease;
+    }
+
+        .card-custom:hover {
+            border-color: #3d424a;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+    .card-header-custom {
+        padding: 0.75rem 1rem;
+        background: transparent;
+        border-bottom: 1px solid #2d323a;
+    }
+
+        .card-header-custom h6 {
+            font-weight: 600;
+            color: #e4e6eb;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+            .card-header-custom h6 i {
+                color: #667eea;
+                margin-right: 8px;
+            }
+
+    .card-body-custom {
+        padding: 1rem;
+    }
+
+    .card-custom::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .card-custom::-webkit-scrollbar-track {
+        background: #1a1d23;
+        border-radius: 10px;
+    }
+
+    .card-custom::-webkit-scrollbar-thumb {
+        background: #3d424a;
+        border-radius: 10px;
+    }
+
+        .card-custom::-webkit-scrollbar-thumb:hover {
+            background: #4d525a;
+        }
+
+    /* ----- FLOATING LABELS ----- */
+    .did-floating-label-content {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    .did-floating-input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1.5px solid #2d323a;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        background: #1a1d23;
+        color: #e4e6eb;
+    }
+
+        .did-floating-input:focus {
+            border-color: #667eea;
+            outline: 0;
+            background: #1e2229;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+        }
+
+            .did-floating-input:focus ~ .did-floating-label {
+                top: -10px;
+                font-size: 13px;
+                background: #1e2229;
+                color: #667eea;
+            }
+
+        .did-floating-input::placeholder {
+            color: #6c757d;
+        }
+
+        .did-floating-input:not(:placeholder-shown) ~ .did-floating-label {
+            top: -10px;
+            font-size: 13px;
+            background: #1a1d23;
+            color: #8c929a;
+        }
+
+    .did-floating-label {
+        position: absolute;
+        top: 10px;
+        left: 12px;
+        background: #1a1d23;
+        padding: 0 6px;
+        font-size: 0.8rem;
+        color: #8c929a;
+        pointer-events: none;
+        transition: all 0.2s ease;
+        font-weight: 500;
+        -moz-transition: 0.2s ease all;
+        -webkit-transition: 0.2s ease all;
+    }
+
+    /* Extra polish for the address heading + buttons area */
+    .card-body-custom h5 {
+        color: #e4e6eb;
+        font-size: 1rem;
+    }
+
+        .card-body-custom h5 i {
+            color: #667eea;
+            margin-right: 6px;
+        }
+
+    .card-body-custom hr {
+        border-color: #2d323a;
+        opacity: 1;
+    }
+
+    .card-body-custom .border-top {
+        border-color: #2d323a !important;
+    }
+</style>
+
+
+
 @using OSPPOS.ViewComponents
 
-<div class="d-flex justify-content-center">
-    <div class="card-custom col-md-8 col-lg-6">
-        <div class="card-header-custom">
-            <h6 class="mb-0"><i class="bi bi-building"></i> Organization Details</h6>
+ <div class="d-flex justify-content-center">
+    <div class="col-md-8 col-lg-6" style="border: 1px solid #2d323a;border-radius: 10px;background: #1e2229;transition: all 0.3s ease;">
+        <div  style=" padding: 0.75rem 1rem;
+        background: transparent;
+        border-bottom: 1px solid #2d323a;">
+            <h6 class="mb-0" style="      font-weight: 600;
+            color: #e4e6eb;
+            margin: 0;
+            font-size: 0.9rem;">
+                <i class="bi bi-building"></i> Organization Details
+            </h6>
         </div>
         <div class="card-body-custom p-4">
             <form id="organizationForm" method="post" action="@Url.Action("UpdateOrganization", "Home")">
                 @Html.AntiForgeryToken()
 
                 <!-- Basic Information -->
-                <div class="did-floating-label-content">
-                    <input type="text" class="did-floating-input" id="orgName" name="OrganizationName"
+                <div style="   position: relative;
+        margin-bottom: 1.5rem;">
+                    <input type="text" style="    width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1.5px solid #2d323a;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        background: #1a1d23;
+        color: #e4e6eb;" id="orgName" name="OrganizationName"
                            placeholder=" " required value="@Model?.OrganizationName" />
-                    <label for="orgName" class="did-floating-label">Organization Name <span class="text-danger">*</span></label>
+                    <label for="orgName" style="       position: absolute;
+        top: 10px;
+        left: 12px;
+        background: #1a1d23;
+        padding: 0 6px;
+        font-size: 0.8rem;
+        color: #8c929a;
+        pointer-events: none;
+        transition: all 0.2s ease;
+        font-weight: 500;
+        -moz-transition: 0.2s ease all;
+        -webkit-transition: 0.2s ease all;">Organization Name <span class="text-danger">*</span></label>
                 </div>
 
-                <div class="did-floating-label-content">
-                    <input type="email" class="did-floating-input" id="orgEmail" name="Email"
+                <div style="     position: relative;
+        margin-bottom: 1.5rem;">
+                    <input type="email" style="    width: 100%;padding: 0.75rem 1rem;border: 1.5px solid #2d323a;border-radius: 8px;font-size: 0.95rem;transition: all 0.3s ease; background: #1a1d23;color: #e4e6eb;" id="orgEmail" name="Email"
                            placeholder=" " required value="@Model?.Email" />
-                    <label for="orgEmail" class="did-floating-label">Email Address <span class="text-danger">*</span></label>
+                    <label for="orgEmail" style="       position: absolute;
+        top: 10px;
+        left: 12px;
+        background: #1a1d23;
+        padding: 0 6px;
+        font-size: 0.8rem;
+        color: #8c929a;
+        pointer-events: none;
+        transition: all 0.2s ease;
+        font-weight: 500;
+        -moz-transition: 0.2s ease all;
+        -webkit-transition: 0.2s ease all;">Email Address <span class="text-danger">*</span></label>
                 </div>
 
-                <div class="did-floating-label-content">
-                    <input type="tel" class="did-floating-input" id="orgPhone" name="Phone"
+                <div style="     position: relative;
+        margin-bottom: 1.5rem;">
+                    <input type="tel" style="    width: 100%;padding: 0.75rem 1rem;border: 1.5px solid #2d323a;border-radius: 8px;font-size: 0.95rem;transition: all 0.3s ease; background: #1a1d23;color: #e4e6eb;" id="orgPhone" name="Phone"
                            placeholder=" " value="@Model?.Phone" />
-                    <label for="orgPhone" class="did-floating-label">Phone Number</label>
+                    <label for="orgPhone" style="       position: absolute;
+        top: 10px;
+        left: 12px;
+        background: #1a1d23;
+        padding: 0 6px;
+        font-size: 0.8rem;
+        color: #8c929a;
+        pointer-events: none;
+        transition: all 0.2s ease;
+        font-weight: 500;
+        -moz-transition: 0.2s ease all;
+        -webkit-transition: 0.2s ease all;">Phone Number</label>
                 </div>
 
-                <div class="did-floating-label-content">
-                    <input type="url" class="did-floating-input" id="orgWebsite" name="Website"
+                <div style="position: relative;
+        margin-bottom: 1.5rem;">
+                    <input type="url" style=" width: 100%;padding: 0.75rem 1rem;border: 1.5px solid #2d323a;border-radius: 8px;font-size: 0.95rem;transition: all 0.3s ease; background: #1a1d23;color: #e4e6eb;" id="orgWebsite" name="Website"
                            placeholder=" " value="@Model?.Website" />
-                    <label for="orgWebsite" class="did-floating-label">Website</label>
+                    <label for="orgWebsite" style="       position: absolute;
+        top: 10px;
+        left: 12px;
+        background: #1a1d23;
+        padding: 0 6px;
+        font-size: 0.8rem;
+        color: #8c929a;
+        pointer-events: none;
+        transition: all 0.2s ease;
+        font-weight: 500;
+        -moz-transition: 0.2s ease all;
+        -webkit-transition: 0.2s ease all;">Website</label>
                 </div>
 
                 <!-- Address Information -->
                 <hr class="my-4" />
                 <h5 class="mb-3"><i class="bi bi-geo-alt"></i> Address Information</h5>
 
-                <div class="did-floating-label-content">
-                    <input type="text" class="did-floating-input" id="orgAddress" name="Address"
+                <div style="     position: relative;
+        margin-bottom: 1.5rem;">
+                    <input type="text" style="  width: 100%;padding: 0.75rem 1rem;border: 1.5px solid #2d323a;border-radius: 8px;font-size: 0.95rem;transition: all 0.3s ease; background: #1a1d23;color: #e4e6eb;" id="orgAddress" name="Address"
                            placeholder=" " value="@Model?.Address" />
-                    <label for="orgAddress" class="did-floating-label">Street Address</label>
+                    <label for="orgAddress" style="       position: absolute;
+        top: 10px;
+        left: 12px;
+        background: #1a1d23;
+        padding: 0 6px;
+        font-size: 0.8rem;
+        color: #8c929a;
+        pointer-events: none;
+        transition: all 0.2s ease;
+        font-weight: 500;
+        -moz-transition: 0.2s ease all;
+        -webkit-transition: 0.2s ease all;">Street Address</label>
                 </div>
 
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="did-floating-label-content">
-                            <input type="text" class="did-floating-input" id="orgCity" name="City"
+                        <div style="position: relative;
+        margin-bottom: 1.5rem;">
+                            <input type="text" style="    width: 100%;padding: 0.75rem 1rem;border: 1.5px solid #2d323a;border-radius: 8px;font-size: 0.95rem;transition: all 0.3s ease; background: #1a1d23;color: #e4e6eb;" id="orgCity" name="City"
                                    placeholder=" " value="@Model?.City" />
-                            <label for="orgCity" class="did-floating-label">City</label>
+                            <label for="orgCity" style="       position: absolute;
+        top: 10px;
+        left: 12px;
+        background: #1a1d23;
+        padding: 0 6px;
+        font-size: 0.8rem;
+        color: #8c929a;
+        pointer-events: none;
+        transition: all 0.2s ease;
+        font-weight: 500;
+        -moz-transition: 0.2s ease all;
+        -webkit-transition: 0.2s ease all;">City</label>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="did-floating-label-content">
-                            <input type="text" class="did-floating-input" id="orgState" name="State"
+                        <div style="     position: relative;
+        margin-bottom: 1.5rem;">
+                            <input type="text" style="    width: 100%;padding: 0.75rem 1rem;border: 1.5px solid #2d323a;border-radius: 8px;font-size: 0.95rem;transition: all 0.3s ease; background: #1a1d23;color: #e4e6eb;" id="orgState" name="State"
                                    placeholder=" " value="@Model?.State" />
-                            <label for="orgState" class="did-floating-label">State/Province</label>
+                            <label for="orgState" style="       position: absolute;
+        top: 10px;
+        left: 12px;
+        background: #1a1d23;
+        padding: 0 6px;
+        font-size: 0.8rem;
+        color: #8c929a;
+        pointer-events: none;
+        transition: all 0.2s ease;
+        font-weight: 500;
+        -moz-transition: 0.2s ease all;
+        -webkit-transition: 0.2s ease all;">State/Province</label>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="did-floating-label-content">
-                            <input type="text" class="did-floating-input" id="orgZip" name="ZipCode"
+                        <div style=" position: relative;
+        margin-bottom: 1.5rem;">
+                            <input type="text" style="    width: 100%;padding: 0.75rem 1rem;border: 1.5px solid #2d323a;border-radius: 8px;font-size: 0.95rem;transition: all 0.3s ease; background: #1a1d23;color: #e4e6eb;" id="orgZip" name="ZipCode"
                                    placeholder=" " value="@Model?.ZipCode" />
-                            <label for="orgZip" class="did-floating-label">ZIP/Postal Code</label>
+                            <label for="orgZip" style="       position: absolute;
+        top: 10px;
+        left: 12px;
+        background: #1a1d23;
+        padding: 0 6px;
+        font-size: 0.8rem;
+        color: #8c929a;
+        pointer-events: none;
+        transition: all 0.2s ease;
+        font-weight: 500;
+        -moz-transition: 0.2s ease all;
+        -webkit-transition: 0.2s ease all;">ZIP/Postal Code</label>
                         </div>
                     </div>
                 </div>
@@ -86,12 +333,11 @@
             </form>
         </div>
     </div>
-</div>
-
-<!-- Floating Label Styles -->
+ </div> 
 
 
-<!-- Script for select floating label support -->
+
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Handle select elements for floating labels
@@ -111,7 +357,7 @@
             });
         });
 
-        // Form validation
+        Form validation
         const form = document.getElementById('organizationForm');
 
         form.addEventListener('submit', function(e) {
@@ -152,51 +398,11 @@
             });
         });
     });
-</script>
+</script>  
 
 
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Form validation
-        const form = document.getElementById('organizationForm');
 
-        form.addEventListener('submit', function(e) {
-            const orgName = document.getElementById('orgName');
-            const orgEmail = document.getElementById('orgEmail');
-            let isValid = true;
 
-            // Validate organization name
-            if (orgName.value.trim().length < 2) {
-                alert('Organization name must be at least 2 characters long.');
-                orgName.classList.add('is-invalid');
-                isValid = false;
-            } else {
-                orgName.classList.remove('is-invalid');
-            }
 
-            // Validate email
-            const emailPattern = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
-            if (!emailPattern.test(orgEmail.value)) {
-                alert('Please enter a valid email address.');
-                orgEmail.classList.add('is-invalid');
-                isValid = false;
-            } else {
-                orgEmail.classList.remove('is-invalid');
-            }
-
-            if (!isValid) {
-                e.preventDefault();
-            }
-        });
-
-        // Remove invalid class on input
-        document.querySelectorAll('.form-control, .form-select').forEach(input => {
-            input.addEventListener('input', function() {
-                this.classList.remove('is-invalid');
-            });
-        });
-    });
-</script>
-
-   
+       
