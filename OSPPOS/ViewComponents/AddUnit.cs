@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OSPPOS.ViewModels;
 
 namespace OSPPOS.ViewComponents
 {
@@ -7,7 +8,10 @@ namespace OSPPOS.ViewComponents
 
         public IViewComponentResult Invoke()
         {
-            return View();
+            AddUnitVM addUnitVM = new() { }; 
+
+
+            return View(addUnitVM);
         }
     }
 }

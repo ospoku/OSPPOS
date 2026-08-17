@@ -220,7 +220,7 @@
         margin-bottom: 1.5rem;">
                     <input type="url" style=" width: 100%;padding: 0.75rem 1rem;border: 1.5px solid #2d323a;border-radius: 8px;font-size: 0.95rem;transition: all 0.3s ease; background: #1a1d23;color: #e4e6eb;" id="orgWebsite" name="Website"
                            placeholder=" " value="@Model?.Website" />
-                    <label for="orgWebsite" style="       position: absolute;
+                    <label for="orgWebsite" style="position: absolute;
         top: 10px;
         left: 12px;
         background: #1a1d23;
@@ -238,11 +238,11 @@
                 <hr class="my-4" />
                 <h5 class="mb-3"><i class="bi bi-geo-alt"></i> Address Information</h5>
 
-                <div style="     position: relative;
+                <div style=" position: relative;
         margin-bottom: 1.5rem;">
                     <input type="text" style="  width: 100%;padding: 0.75rem 1rem;border: 1.5px solid #2d323a;border-radius: 8px;font-size: 0.95rem;transition: all 0.3s ease; background: #1a1d23;color: #e4e6eb;" id="orgAddress" name="Address"
                            placeholder=" " value="@Model?.Address" />
-                    <label for="orgAddress" style="       position: absolute;
+                    <label for="orgAddress" style="position: absolute;
         top: 10px;
         left: 12px;
         background: #1a1d23;
@@ -315,9 +315,6 @@
                         </div>
                     </div>
                 </div>
-
-             
-
                 <!-- Form Actions -->
                 <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
                     <button type="button" class="btn btn-secondary" onclick="window.history.back()">
@@ -357,7 +354,7 @@
             });
         });
 
-        Form validation
+        //Form validation
         const form = document.getElementById('organizationForm');
 
         form.addEventListener('submit', function(e) {
