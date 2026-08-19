@@ -1,16 +1,10 @@
 ﻿
 @model OSPPOS.ViewModels.AddUnitVM;
 
-<div class="slide-panel" style="position: fixed;
-    top: 0;
-    right: -300px; /* Hide panel off-screen initially */
-    width: 300px;
-    height: 100%;
-    background: #f8f9fa;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
-    transition: right 0.3s ease;
-    z-index: 1000;
-    padding: 20px;" data-panel="unitPanel" id="unitPanel">
+<div class="slide-panel"
+     data-panel="unitPanel"
+     id="unitPanel">
+
     <div class="card">
         <div class="card-header">
                 <h6 class="d-inline">Add Travel Type</h6>
